@@ -5,9 +5,9 @@ export default [
         title: '管理员功能',
         icon: 'folder-o',
         children: [
-            {path: '/admin/page1', title: '功能 1'},
-            {path: '/admin/page2', title: '功能 2'},
-            {path: '/admin/page3', title: '功能 3'},
+            {path: '/account', title: '账户管理'},
+            {path: '/question', title: '题目管理'},
+            {path: '/score', title: '成绩管理'},
         ]
     }
 ]
