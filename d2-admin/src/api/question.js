@@ -1,0 +1,27 @@
+import request from '@/plugin/axios'
+
+/**
+ * 查看所有题目
+ * @param page 页数，从 1 开始
+ * @param size 每页大小
+ */
+export function get_all_questions (page, size) {
+  return request({
+    url: '/questions',
+    method: 'get',
+    page,
+    size
+  })
+}
+
+/**
+ * 查看某题目的详情
+ * @param id 题目ID
+ */
+export function get_question (id) {
+  return request({
+    url: '/question/' + id,
+    method: 'get',
+    id
+  })
+}

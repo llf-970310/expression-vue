@@ -13,7 +13,7 @@ export default {
       path: '',
       name: `${pre}question`,
       component: () => import('@/pages/question'),
-      meta: {...meta, title: '问题管理'}
+      meta: {...meta, title: '题目管理'}
     },
   ])('admin-')
 }

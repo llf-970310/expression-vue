@@ -2,16 +2,93 @@
 <template>
   <d2-container :filename="filename">
     <template slot="header">题目管理</template>
-    题目管理 TODO
+
+    <!--查看题目详情-->
+    <div>
+      <!--通过题号搜索-->
+      <el-row>
+        <el-col :span="10" :offset="7">
+          <el-form :inline="true" :model="questionSearchForm" :rules="questionSearchRules" ref="questionSearchForm">
+            <el-form-item label="题目编号" prop="questionId">
+              <el-input v-model="questionSearchForm.questionId" placeholder="请输入题号"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="searchQuestion">查询题目</el-button>
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
+
+      <!--该题目详情-->
+      <div v-if="searchedQuestionId !== ''">
+        <question-detail :question-id="searchedQuestionId"></question-detail>
+      </div>
+
+      <!--所有题目-->
+
+    </div>
   </d2-container>
 </template>
 
 <script>
+  import QuestionDetail from './detail/index'
+  import {get_all_questions} from '@api/question'
+
   export default {
-    name: "index",
-    data () {
+    name: "question",
+    components: {
+      'question-detail': QuestionDetail
+    },
+    data() {
+      const validateQuestionId = (rule, value, callback) => {
+        // console.log('value: ' + value)
+        let reg = /^[0-9]+$/
+        if (!reg.test(value)) {
+          return callback(new Error('题号只包含数字'))
+        } else {
+          callback()
+        }
+      }
       return {
-        filename: __filename
+        filename: __filename,
+
+        // 题目搜索部分
+        questionSearchForm: {
+          questionId: ''
+        },
+        questionSearchRules: {
+          questionId: [{required: true, trigger: 'blur', validator: validateQuestionId}]
+        },
+
+        // 要查看的题目详情部分
+        searchedQuestionId: '',
+
+        // 所有题目部分
+        allQuestions: []
+      }
+    },
+    mounted: function () {
+      new Promise((resolve, reject) => {
+        get_all_questions(1, 50).then(res => {
+          // console.log(res)
+          this.allQuestions = res
+          resolve()
+        }).catch(err => {
+          console.log('err: ', err)
+          reject(err)
+        })
+      }).then().catch()
+    },
+    methods: {
+      searchQuestion() {
+        this.$refs['questionSearchForm'].validate((valid) => {
+          if (valid) {
+            this.searchedQuestionId = this.questionSearchForm.questionId
+          } else {
+            console.log('error submit!!')
+            return false;
+          }
+        })
       }
     }
   }
