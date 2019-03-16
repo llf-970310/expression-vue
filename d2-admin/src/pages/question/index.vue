@@ -25,6 +25,33 @@
       </div>
 
       <!--所有题目-->
+      <el-table :data="allQuestions" border stripe highlight-current-row @current-change="searchQuestionByClick"
+                style="width: 100%">
+        <el-table-column
+            prop="questionId"
+            label="题号"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            prop="rawText"
+            label="题目原文">
+        </el-table-column>
+        <el-table-column
+            prop="keywords"
+            label="keywords"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="mainwords"
+            label="mainwords"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="detailwords"
+            label="detailwords"
+            width="250">
+        </el-table-column>
+      </el-table>
 
     </div>
   </d2-container>
@@ -70,7 +97,7 @@
     mounted: function () {
       new Promise((resolve, reject) => {
         get_all_questions(1, 50).then(res => {
-          // console.log(res)
+          console.log(res)
           this.allQuestions = res
           resolve()
         }).catch(err => {
@@ -89,6 +116,10 @@
             return false;
           }
         })
+      },
+      searchQuestionByClick(currentRow, oldCurrentRow) {
+        this.questionSearchForm.questionId = currentRow.questionId
+        this.searchedQuestionId = currentRow.questionId
       }
     }
   }
