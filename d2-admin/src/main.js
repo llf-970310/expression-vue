@@ -1,6 +1,10 @@
 // Vue
 import Vue from 'vue'
 import App from './App'
+
+import VCharts from 'v-charts'
+Vue.use(VCharts)
+
 // store
 import store from '@/store/index'
 // 多国语

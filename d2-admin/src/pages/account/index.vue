@@ -9,10 +9,10 @@
 <script>
 export default {
   name: 'account',
-  // data () {
-  //   return {
-  //     filename: __filename
-  //   }
-  // }
+  data () {
+    return {
+      filename: __filename
+    }
+  }
 }
 </script>
