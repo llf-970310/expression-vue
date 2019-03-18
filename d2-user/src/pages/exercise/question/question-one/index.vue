@@ -1,33 +1,24 @@
 <!--【题型一】朗读-->
 <template>
   <div>
-    <read :text="text"></read>
-    <count-down :time-to-count="timeToCount"></count-down>
-
-    <el-row class="finish_read">
-      <el-col class="d2-text-center">
-        <el-button type="danger" @click="finishRead">结束回答</el-button>
-      </el-col>
-    </el-row>
-
+    <answer :is-text-showing="true" :text="text"
+            :time-to-count="timeToCount"
+            :is-preparation="false"
+            @next="finishAnswer">
+    </answer>
   </div>
 </template>
 
 <script>
-  import read from '../components/read'
-  import MyCountDown from '../components/count-down'
+  import answer from '../components/answer'
 
   export default {
     name: "question-one",
     components: {
-      read,
-      'count-down': MyCountDown
+      answer
     },
     props: {
       text: String
-    },
-    mounted() {
-      console.log(this.text)
     },
     data() {
       const readTimeLimitConst = 60 * 1000
@@ -37,7 +28,7 @@
       }
     },
     methods: {
-      finishRead() {
+      finishAnswer() {
         this.$emit('next')
       }
     }
@@ -45,7 +36,5 @@
 </script>
 
 <style scoped>
-  .finish_read {
-    margin-top: 15px;
-  }
+
 </style>

@@ -17,8 +17,8 @@
       <el-row>
         <el-col :offset="3" :span="18">
           <question-one v-if="questionType === 1" :text="questionRawText" @next="nextQuestion"></question-one>
-          <question-two v-if="questionType === 2"></question-two>
-          <question-three v-if="questionType === 3"></question-three>
+          <question-two v-if="questionType === 2" :text="questionRawText" @next="nextQuestion"></question-two>
+          <question-three v-if="questionType === 3" :text="questionRawText" @next="nextQuestion"></question-three>
         </el-col>
       </el-row>
     </div>
@@ -31,7 +31,7 @@
   import QuestionTwo from './question-two/index'
   import QuestionThree from './question-three/index'
 
-  import { getTipOfQuestions } from './components/tip-func'
+  import {getTipOfQuestions} from './components/tip-func'
 
   export default {
     name: "question-frame",
@@ -70,7 +70,7 @@
         return questionTypeTip[type]
       },
       // 点击「显示题目」
-      showQuestion () {
+      showQuestion() {
         this.isTipShowing = false
       },
 
