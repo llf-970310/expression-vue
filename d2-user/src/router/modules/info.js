@@ -10,7 +10,7 @@ export default {
   component: layoutHeaderAside,
   children: (pre => [
     {
-      path: '',
+      path: 'index',
       name: `${pre}info`,
       component: () => import('@/pages/info'),
       meta: {...meta, title: '我的信息'}
