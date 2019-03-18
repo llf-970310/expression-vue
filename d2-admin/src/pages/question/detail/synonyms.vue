@@ -2,8 +2,8 @@
   <div>
     <el-row>-------------------------</el-row>
     <el-row>
-      <el-col :span="4" v-for="pair in synonymsPairs">
-        {{pair}}
+      <el-col :span="4" v-for="synonyms in synonymsPairs" :key="synonyms">
+        {{ synonyms }}
       </el-col>
     </el-row>
     <el-row>-------------------------</el-row>
@@ -23,7 +23,7 @@
       }
     },
     mounted() {
-      // console.log(this.synonymsPairs)
+      console.log(this.synonymsPairs)
     }
   }
 </script>
