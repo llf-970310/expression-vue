@@ -59,7 +59,7 @@
 
 <script>
   import QuestionDetail from './detail/index'
-  import {get_all_questions} from '@api/question'
+  import {getAllQuestions} from '@api/question'
 
   export default {
     name: "question",
@@ -96,7 +96,7 @@
     },
     mounted: function () {
       new Promise((resolve, reject) => {
-        get_all_questions(1, 50).then(res => {
+        getAllQuestions(1, 50).then(res => {
           console.log(res)
           this.allQuestions = res
           resolve()

@@ -2,28 +2,28 @@
   <div>
     <el-row>
       <h1>题目原文</h1>
-      <p>{{ cur_question.rawText }}</p>
+      <p>{{ curQuestion.rawText }}</p>
     </el-row>
 
     <el-row>
       <h1>Keywords</h1>
-      <div v-for="keyword_pair in cur_question.keywords">
-        <synonyms :synonyms-pairs="keyword_pair"></synonyms>
+      <div v-for="keywordPair in curQuestion.keywords">
+        <synonyms :synonyms-pairs="keywordPair"></synonyms>
       </div>
     </el-row>
 
     <el-row>
       <h1>Mainwords</h1>
-      <div v-for="keyword_pair in cur_question.keywords">
-        <synonyms :synonyms-pairs="keyword_pair"></synonyms>
+      <div v-for="keywordPair in curQuestion.keywords">
+        <synonyms :synonyms-pairs="keywordPair"></synonyms>
       </div>
     </el-row>
 
-    <div v-for="(detailwords_per_sentence, index) in cur_question.detailwords">
+    <div v-for="(detailwordsPerSentence, index) in curQuestion.detailwords">
       <el-row>
         <h1>Detailwords {{ index + 1 }}</h1>
-        <div v-for="detailword_pair in detailwords_per_sentence">
-          <synonyms :synonyms-pairs="detailword_pair"></synonyms>
+        <div v-for="detailwordPair in detailwordsPerSentence">
+          <synonyms :synonyms-pairs="detailwordPair"></synonyms>
         </div>
       </el-row>
     </div>
@@ -32,7 +32,7 @@
 
 <script>
   import synonyms from './synonyms'
-  import {get_question} from '@/api/question'
+  import {getQuestion} from '@/api/question'
 
   export default {
     name: "question-detail",
@@ -46,7 +46,7 @@
     data() {
       return {
         filename: __filename,
-        cur_question: {}
+        curQuestion: {}
       }
     },
     mounted() {
@@ -63,9 +63,9 @@
     methods: {
       init(id) {
         new Promise((resolve, reject) => {
-          get_question(id).then(res => {
+          getQuestion(id).then(res => {
             // console.log(res)
-            this.cur_question = res
+            this.curQuestion = res
             resolve()
           }).catch(err => {
             console.log('err: ', err)
