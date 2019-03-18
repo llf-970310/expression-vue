@@ -1,13 +1,20 @@
+<!--所有的题目控制-->
 <template>
   <d2-container :filename="filename">
     <!--<template slot="header">做题r</template>-->
-    欢迎来到做题界面
+
+    <question-frame :question-index="1" :question-type="1"></question-frame>
   </d2-container>
 </template>
 
 <script>
+  import QuestionFrame from './question/index'
+
   export default {
     name: "index",
+    components: {
+      'question-frame': QuestionFrame
+    },
     data() {
       return {
         filename: __filename
