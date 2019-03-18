@@ -5,6 +5,8 @@
       {{ detail }}
     </el-row>
 
+    <br>
+
     <el-row class="d2-text-center">
       {{ tip }}
     </el-row>

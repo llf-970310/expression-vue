@@ -8,8 +8,8 @@
     </el-row>
 
     <!--题目tip-->
-    <div v-if="is_show_tip">
-      <tip :detail="cur_detail_of_question" :tip="cur_tip_of_question" @showQuestion="showQuestion"></tip>
+    <div v-if="isTipShowing">
+      <tip :detail="curDetailOfQuestion" :tip="curTipOfQuestion" @showQuestion="showQuestion"></tip>
     </div>
 
     <!--题目内容 TODO-->
@@ -42,15 +42,15 @@
     data() {
       return {
         // tip 部分
-        cur_detail_of_question: '',
-        cur_tip_of_question: '',
-        is_show_tip: true
+        curDetailOfQuestion: '',
+        curTipOfQuestion: '',
+        isTipShowing: true
       }
     },
     mounted() {
       const tipOfSpecificQuestion = this.getTipOfSpecificQuestion(this.questionType)
-      this.cur_detail_of_question = tipOfSpecificQuestion.detail
-      this.cur_tip_of_question = tipOfSpecificQuestion.tip
+      this.curDetailOfQuestion = tipOfSpecificQuestion.detail
+      this.curTipOfQuestion = tipOfSpecificQuestion.tip
     },
     methods: {
       getTipOfSpecificQuestion(type) {
@@ -59,8 +59,7 @@
       },
       // 点击「显示题目」
       showQuestion: function () {
-        alert("show question!")
-        this.is_show_tip = false
+        this.isTipShowing = false
       }
     }
 
