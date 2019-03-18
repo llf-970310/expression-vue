@@ -10,7 +10,7 @@ export default {
   component: layoutHeaderAside,
   children: (pre => [
     {
-      path: '',
+      path: 'index',
       name: `${pre}account`,
       component: () => import('@/pages/account'),
       meta: {...meta, title: '账户管理'}

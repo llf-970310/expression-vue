@@ -10,7 +10,7 @@ export default {
   component: layoutHeaderAside,
   children: (pre => [
     {
-      path: '',
+      path: 'index',
       name: `${pre}score`,
       component: () => import('@/pages/score'),
       meta: {...meta, title: '成绩管理'}

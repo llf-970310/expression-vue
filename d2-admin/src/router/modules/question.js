@@ -10,7 +10,7 @@ export default {
   component: layoutHeaderAside,
   children: (pre => [
     {
-      path: '',
+      path: 'index',
       name: `${pre}question`,
       component: () => import('@/pages/question'),
       meta: {...meta, title: '问题管理'}
