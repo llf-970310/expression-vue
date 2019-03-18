@@ -13,9 +13,15 @@
     </div>
 
     <!--题目内容 TODO-->
-    <question-one v-if="questionType === 1"></question-one>
-    <question-two v-if="questionType === 2"></question-two>
-    <question-three v-if="questionType === 3"></question-three>
+    <div v-else>
+      <el-row>
+        <el-col :offset="3" :span="18">
+          <question-one v-if="questionType === 1" :text="questionRawText" @next="nextQuestion"></question-one>
+          <question-two v-if="questionType === 2"></question-two>
+          <question-three v-if="questionType === 3"></question-three>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -36,8 +42,14 @@
       'question-three': QuestionThree,
     },
     props: {
+      // 问题序号
       questionIndex: Number,
-      questionType: Number
+
+      // 问题类型
+      questionType: Number,
+
+      // 问题原文
+      questionRawText: String,
     },
     data() {
       return {
@@ -58,8 +70,13 @@
         return questionTypeTip[type]
       },
       // 点击「显示题目」
-      showQuestion: function () {
+      showQuestion () {
         this.isTipShowing = false
+      },
+
+      // 主动获取下一道题目
+      nextQuestion() {
+        this.$emit('next')
       }
     }
 
