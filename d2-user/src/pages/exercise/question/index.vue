@@ -43,6 +43,10 @@
       'question-three': QuestionThree,
     },
     props: {
+      // 问题提示
+      curDetailOfQuestion: String,
+      curTipOfQuestion: String,
+
       // 问题序号
       questionIndex: Number,
 
@@ -54,22 +58,11 @@
     },
     data() {
       return {
-        // tip 部分
-        curDetailOfQuestion: '',
-        curTipOfQuestion: '',
+        // 是否显示 tip
         isTipShowing: true
       }
     },
-    mounted() {
-      const tipOfSpecificQuestion = this.getTipOfSpecificQuestion(this.questionType)
-      this.curDetailOfQuestion = tipOfSpecificQuestion.detail
-      this.curTipOfQuestion = tipOfSpecificQuestion.tip
-    },
     methods: {
-      getTipOfSpecificQuestion(type) {
-        const questionTypeTip = getTipOfQuestions()
-        return questionTypeTip[type]
-      },
       // 点击「显示题目」
       showQuestion() {
         this.isTipShowing = false

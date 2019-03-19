@@ -1,16 +1,18 @@
 <!--所有的题目控制-->
 <template>
   <d2-container :filename="filename">
-    <!--<template slot="header">做题r</template>-->
-
-    <question-frame :question-index="curQuestionIndex" :question-type="curQuestionType"
-                    :question-raw-text="curQuestionRawText" @next="nextQuestion">
+    <question-frame :cur-detail-of-question="curQuestionTip.detail" :cur-tip-of-question="curQuestionTip.tip"
+                    :question-index="curQuestionIndex"
+                    :question-type="curQuestionType"
+                    :question-raw-text="curQuestionRawText"
+                    @next="nextQuestion">
     </question-frame>
   </d2-container>
 </template>
 
 <script>
   import QuestionFrame from './question/index'
+  import {nextQuestion} from '@/api/question'
 
   export default {
     name: "index",
@@ -23,12 +25,35 @@
 
         curQuestionIndex: 1,
         curQuestionType: 1,
-        curQuestionRawText: '高铁是现在是最受欢迎的出行方式。首先，高铁速度快，比如说，以前从贵阳到北京，要用40个小时左右，但现在高铁只需要6个小时，大大减少了路途时间。其次，高铁正点率高，因为高铁受天气条件影响较小，通常都可以准时发车，按时到达。最后，高铁环境舒适，高铁坐席宽敞，运行时速度平稳，没有噪音，餐车环境整洁，配有电源插座和无线网络，乘坐高铁很少会造成不适感，对于不习惯坐飞机出行的人士，高铁是更理想的选择。但高铁的建设，前期投资非常巨大，对设备技术、制作工艺要求都很高，后期的管理运营也需要更专业的人员来完成。',
+        curQuestionRawText: '',
+        curQuestionTip: {
+          detail: '',
+          tip: ''
+        }
       }
+    },
+    mounted() {
+      this.nextQuestion()
     },
     methods: {
       nextQuestion() {
-        alert('next')
+        new Promise((resolve, reject) => {
+          nextQuestion().then(res => {
+            // console.log(res)
+            this.curQuestionIndex = res.questionNumber
+            this.curQuestionType = res.questionType
+            this.curQuestionRawText = res.questionContent
+            this.curQuestionTip.detail = res.questionInfo.detail
+            this.curQuestionTip.tip = res.questionInfo.tip
+            // TODO timeLimit
+
+            // TODO 测试结束的标志
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        }).then().catch()
       }
     }
   }

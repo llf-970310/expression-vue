@@ -6,7 +6,7 @@
       <read :text="text"></read>
     </div>
 
-    <count-down :time-to-count="timeToCount"></count-down>
+    <count-down :time-to-count="timeToCount" @progress="handleCountdownProgress" @ended="handleEnded"></count-down>
 
     <el-row class="answer_btn">
       <el-col class="d2-text-center">
@@ -55,7 +55,24 @@
       // 立刻回答
       directToAnswer() {
         this.$emit('direct')
-      }
+      },
+
+      handleCountdownProgress(data) {
+        console.log(data.days);
+        console.log(data.hours);
+        console.log(data.minutes);
+        console.log(data.seconds);
+        console.log(data.milliseconds);
+        console.log(data.totalDays);
+        console.log(data.totalHours);
+        console.log(data.totalMinutes);
+        console.log(data.totalSeconds);
+        console.log(data.totalMilliseconds);
+      },
+
+      handleEnded() {
+        console.error('end!!!!!!')
+      },
 
     }
   }
