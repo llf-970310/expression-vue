@@ -2,7 +2,7 @@
 <template>
   <div>
 
-    <countdown :time="timeToCount">
+    <countdown :time="timeToCount" @end="handleEnd">
       <template slot-scope="props">
         <p class="d2-text-center">剩余时间：{{ props.totalSeconds }} 秒</p>
         <!--timeToCount为ms单位，props.totalSeconds为秒单位-->
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import VueCountdown from '@chenfengyuan/vue-countdown';
+  import VueCountdown from '@chenfengyuan/vue-countdown'
 
   export default {
     name: "my-count-down",
@@ -26,8 +26,11 @@
     components: {
       'countdown': VueCountdown
     },
-    data: function () {
-      return {};
+    methods: {
+      handleEnd() {
+        console.log('countdown end')
+        this.$emit('end')
+      }
     }
   };
 </script>

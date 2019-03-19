@@ -6,12 +6,12 @@
       <read :text="text"></read>
     </div>
 
-    <count-down :time-to-count="timeToCount" @progress="handleCountdownProgress" @ended="handleEnded"></count-down>
+    <count-down :time-to-count="timeToCount" @end="handleCountDown"></count-down>
 
     <el-row class="answer_btn">
       <el-col class="d2-text-center">
         <div v-if="isPreparation">
-          <el-button type="danger" @click="directToAnswer">立刻回答</el-button>
+          <el-button type="success" @click="directToAnswer">立刻回答</el-button>
         </div>
         <div v-else>
           <el-button type="danger" @click="finishAnswer">结束回答</el-button>
@@ -47,33 +47,23 @@
       console.log(this.text)
     },
     methods: {
-      // 结束回答
+      // 进度条结束
+      handleCountDown() {
+        if (this.isPreparation) {
+          this.directToAnswer()
+        } else {
+          this.finishAnswer()
+        }
+      },
+      // 主动结束回答
       finishAnswer() {
         this.$emit('next')
       },
 
-      // 立刻回答
+      // 主动立刻回答
       directToAnswer() {
         this.$emit('direct')
-      },
-
-      handleCountdownProgress(data) {
-        console.log(data.days);
-        console.log(data.hours);
-        console.log(data.minutes);
-        console.log(data.seconds);
-        console.log(data.milliseconds);
-        console.log(data.totalDays);
-        console.log(data.totalHours);
-        console.log(data.totalMinutes);
-        console.log(data.totalSeconds);
-        console.log(data.totalMilliseconds);
-      },
-
-      handleEnded() {
-        console.error('end!!!!!!')
-      },
-
+      }
     }
   }
 </script>
