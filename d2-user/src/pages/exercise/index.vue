@@ -1,7 +1,8 @@
 <!--所有的题目控制-->
 <template>
   <d2-container :filename="filename">
-    <question-frame :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
+    <question-frame :key="curQuestionIndex"
+                    :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
                     :question-index="curQuestionIndex"
                     :question-type="curQuestionType"
                     :question-raw-text="curQuestionRawText"
