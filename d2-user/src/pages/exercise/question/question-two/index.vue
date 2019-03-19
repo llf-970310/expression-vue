@@ -3,7 +3,8 @@
   <div>
     <!--准备-->
     <div v-if="isPreparation">
-      <answer :is-text-showing="true" :text="text"
+      <answer :key="isPreparation"
+              :is-text-showing="true" :text="text"
               :time-to-count="preparationTimeByMilliSec"
               :is-preparation="true"
               @direct="finishPreparation">
@@ -12,7 +13,8 @@
 
     <!--回答-->
     <div v-else>
-      <answer :is-text-showing="false"
+      <answer :key="isPreparation"
+              :is-text-showing="false"
               :time-to-count="answerTimeByMilliSec"
               :is-preparation="false"
               @next="finishAnswer">
