@@ -98,7 +98,8 @@
       new Promise((resolve, reject) => {
         getAllQuestions(1, 50).then(res => {
           console.log(res)
-          this.allQuestions = res
+          // TODO res.count 页数分页
+          this.allQuestions = res.questions
           resolve()
         }).catch(err => {
           console.log('err: ', err)
