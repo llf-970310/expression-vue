@@ -1,6 +1,8 @@
 import account from './modules/account'
 import question from './modules/question'
 import score from './modules/score'
+import optimize_auto from './modules/optimize-auto'
+import optimize_manual from './modules/optimize-manual'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
@@ -50,7 +52,9 @@ const frameIn = [
   },
   account,
   question,
-  score
+  score,
+  optimize_auto,
+  optimize_manual,
 ]
 
 /**
