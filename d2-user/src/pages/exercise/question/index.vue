@@ -9,16 +9,24 @@
 
     <!--题目tip-->
     <div v-if="isTipShowing">
-      <tip :detail="curDetailOfQuestion" :tip="curTipOfQuestion" @showQuestion="showQuestion"></tip>
+      <tip :detail="questionTipDetail" :tip="questionTip" @showQuestion="showQuestion"></tip>
     </div>
 
     <!--题目内容-->
     <div v-else>
       <el-row>
         <el-col :offset="3" :span="18">
-          <question-one v-if="questionType === 1" :text="questionRawText" @next="nextQuestion"></question-one>
-          <question-two v-if="questionType === 2" :text="questionRawText" @next="nextQuestion"></question-two>
-          <question-three v-if="questionType === 3" :text="questionRawText" @next="nextQuestion"></question-three>
+          <question-one v-if="questionType === 1"
+                        :text="questionRawText"
+                        @next="nextQuestion"></question-one>
+          <question-two v-if="questionType === 2"
+                        :text="questionRawText"
+                        :preparation-time="questionPreparationTime"
+                        :answer-time="questionAnswerTime"
+                        @next="nextQuestion"></question-two>
+          <question-three v-if="questionType === 3"
+                          :text="questionRawText"
+                          @next="nextQuestion"></question-three>
         </el-col>
       </el-row>
     </div>
@@ -31,7 +39,6 @@
   import QuestionTwo from './question-two/index'
   import QuestionThree from './question-three/index'
 
-  import {getTipOfQuestions} from './components/tip-func'
   import {getUploadUrl} from '@/api/question'
 
   export default {
@@ -44,8 +51,8 @@
     },
     props: {
       // 问题提示
-      curDetailOfQuestion: String,
-      curTipOfQuestion: String,
+      questionTipDetail: String,
+      questionTip: String,
 
       // 问题序号
       questionIndex: Number,
@@ -55,6 +62,10 @@
 
       // 问题原文
       questionRawText: String,
+
+      // 问题时间限制，【以秒为单位】
+      questionPreparationTime: Number,
+      questionAnswerTime: Number
     },
     data() {
       return {

@@ -4,7 +4,7 @@
     <!--准备-->
     <div v-if="isPreparation">
       <answer :is-text-showing="true" :text="text"
-              :time-to-count="preparationTimeToCount"
+              :time-to-count="preparationTimeByMilliSec"
               :is-preparation="true"
               @direct="finishPreparation">
       </answer>
@@ -13,7 +13,7 @@
     <!--回答-->
     <div v-else>
       <answer :is-text-showing="false"
-              :time-to-count="answerTimeToCount"
+              :time-to-count="answerTimeByMilliSec"
               :is-preparation="false"
               @next="finishAnswer">
       </answer>
@@ -30,17 +30,25 @@
       answer
     },
     props: {
-      text: String
+      // 显示的文本
+      text: String,
+
+      // 准备/回答的时长限制
+      preparationTime: Number,
+      answerTime: Number
+
+    },
+    computed: {
+      preparationTimeByMilliSec: function () {
+        return this.preparationTime * 1000
+      },
+
+      answerTimeByMilliSec: function () {
+        return this.answerTime * 1000
+      }
     },
     data() {
-      const preparationTimeLimitConst = 60 * 1000
-      const answerTimeLimitConst = 30 * 1000
-
       return {
-        // 准备/回答的时长限制
-        preparationTimeToCount: preparationTimeLimitConst,
-        answerTimeToCount: answerTimeLimitConst,
-
         // 是否正在准备中
         isPreparation: true
       }

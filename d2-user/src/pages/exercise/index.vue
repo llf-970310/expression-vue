@@ -1,10 +1,12 @@
 <!--所有的题目控制-->
 <template>
   <d2-container :filename="filename">
-    <question-frame :cur-detail-of-question="curQuestionTip.detail" :cur-tip-of-question="curQuestionTip.tip"
+    <question-frame :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
                     :question-index="curQuestionIndex"
                     :question-type="curQuestionType"
                     :question-raw-text="curQuestionRawText"
+                    :question-preparation-time="curQuestionPreparationTime"
+                    :question-answer-time="curQuestionAnswerTime"
                     @next="nextQuestion">
     </question-frame>
   </d2-container>
@@ -29,7 +31,9 @@
         curQuestionTip: {
           detail: '',
           tip: ''
-        }
+        },
+        curQuestionPreparationTime: 0,
+        curQuestionAnswerTime: 0
       }
     },
     mounted() {
@@ -45,7 +49,8 @@
             this.curQuestionRawText = res.questionContent
             this.curQuestionTip.detail = res.questionInfo.detail
             this.curQuestionTip.tip = res.questionInfo.tip
-            // TODO timeLimit
+            this.curQuestionPreparationTime = res.readLimitTime
+            this.curQuestionAnswerTime = res.questionLimitTime
 
             // TODO 测试结束的标志
             resolve()
