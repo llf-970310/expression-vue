@@ -12,7 +12,7 @@
       <tip :detail="curDetailOfQuestion" :tip="curTipOfQuestion" @showQuestion="showQuestion"></tip>
     </div>
 
-    <!--题目内容 TODO-->
+    <!--题目内容-->
     <div v-else>
       <el-row>
         <el-col :offset="3" :span="18">
@@ -32,6 +32,7 @@
   import QuestionThree from './question-three/index'
 
   import {getTipOfQuestions} from './components/tip-func'
+  import {getUploadUrl} from '@/api/question'
 
   export default {
     name: "question-frame",
@@ -76,6 +77,17 @@
 
       // 主动获取下一道题目
       nextQuestion() {
+        // TODO 获取录音上传路径，并根据之前返回的上传 url 将音频上传至百度BOS
+        new Promise((resolve, reject) => {
+          getUploadUrl(this.questionIndex).then(res => {
+            console.log(res)
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        }).then().catch()
+
         this.$emit('next')
       }
     }
