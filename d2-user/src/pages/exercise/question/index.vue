@@ -18,6 +18,8 @@
         <el-col :offset="3" :span="18">
           <question-one v-if="questionType === 1"
                         :text="questionRawText"
+                        :preparation-time="questionPreparationTime"
+                        :answer-time="questionAnswerTime"
                         @next="nextQuestion"></question-one>
           <question-two v-if="questionType === 2"
                         :text="questionRawText"
@@ -26,6 +28,8 @@
                         @next="nextQuestion"></question-two>
           <question-three v-if="questionType === 3"
                           :text="questionRawText"
+                          :preparation-time="questionPreparationTime"
+                          :answer-time="questionAnswerTime"
                           @next="nextQuestion"></question-three>
         </el-col>
       </el-row>
