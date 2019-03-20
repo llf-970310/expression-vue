@@ -3,10 +3,10 @@
 // 工具类名统一前缀
 $prefix: d2;
 
-// 禁止用户选中 鼠标变为手形
+// 禁止用户选中 鼠标变为手形 跟我搁这扯犊子呢？
 %unable-select {
   user-select: none;
-  cursor: pointer;
+  cursor: default;
 }
 
 // 填满父元素
@@ -26,6 +26,7 @@ $prefix: d2;
   align-items: center;
   flex-direction: row;
 }
+
 %flex-center-col {
   display: flex;
   justify-content: center;

@@ -6,22 +6,22 @@
             </ul>
         </div>
         <div
-            class="page-login--layer page-login--layer-time"
-            flex="main:center cross:center">
+                class="page-login--layer page-login--layer-time"
+                flex="main:center cross:center">
             {{time}}
         </div>
         <div class="page-login--layer">
             <div
-                class="page-login--content"
-                flex="dir:top main:justify cross:center box:justify">
+                    class="page-login--content"
+                    flex="dir:top main:justify cross:center box:justify">
                 <div class="page-login--content-header">
-                    <p class="page-login--content-header-motto">
-                        时间是一切财富中最宝贵的财富。 <span>—— 德奥弗拉斯多</span>
-                    </p>
+                    <!--<p class="page-login&#45;&#45;content-header-motto">-->
+                        <!--时间是一切财富中最宝贵的财富。 <span>—— 德奥弗拉斯多</span>-->
+                    <!--</p>-->
                 </div>
                 <div
-                    class="page-login--content-main"
-                    flex="dir:top main:center cross:center">
+                        class="page-login--content-main"
+                        flex="dir:top main:center cross:center">
                     <!-- logo -->
                     <img class="page-login--logo" src="./image/logo.png">
                     <!-- 表单 -->
@@ -31,7 +31,7 @@
                                      size="default">
                                 <p align="center">表达力评测管理员登录</p>
                                 <el-form-item prop="username">
-                                    <el-input type="text" v-model="formLogin.username" placeholder="用户名">
+                                    <el-input type="text" v-model="formLogin.username" placeholder="邮箱/手机/用户名">
                                         <i slot="prepend" class="fa fa-user-circle-o"></i>
                                     </el-input>
                                 </el-form-item>
@@ -52,20 +52,20 @@
                                 </el-button>
                             </el-form>
                         </el-card>
-                        <p
-                            class="page-login--options"
-                            flex="main:justify cross:center">
-                            <span><d2-icon name="question-circle"/> 忘记密码</span>
-                            <span>注册用户</span>
-                        </p>
+                        <!--<p-->
+                                <!--class="page-login&#45;&#45;options"-->
+                                <!--flex="main:justify cross:center">-->
+                            <!--<span><d2-icon name="question-circle"/> 忘记密码</span>-->
+                            <!--<span>注册用户</span>-->
+                        <!--</p>-->
                     </div>
                 </div>
                 <div class="page-login--content-footer">
-                    <p class="page-login--content-footer-options">
-                        <a href="#">帮助</a>
-                        <a href="#">隐私</a>
-                        <a href="#">条款</a>
-                    </p>
+                    <!--<p class="page-login&#45;&#45;content-footer-options">-->
+                        <!--<a href="#">帮助</a>-->
+                        <!--<a href="#">隐私</a>-->
+                        <!--<a href="#">条款</a>-->
+                    <!--</p>-->
                     <p class="page-login--content-footer-copyright">
                         Copyright
                         <d2-icon name="copyright"/>
@@ -88,8 +88,8 @@
                 time: dayjs().format('HH:mm:ss'),
                 // 表单
                 formLogin: {
-                    username: 'admin',
-                    password: 'admin',
+                    username: 'admin@site.com',
+                    password: '1234',
                     // code: ''
                 },
                 // 校验
@@ -145,10 +145,10 @@
                             username: this.formLogin.username,
                             password: this.formLogin.password
                         })
-                          .then(() => {
-                              // 重定向对象不存在则返回顶层路径
-                              this.$router.replace(this.$route.query.redirect || '/')
-                          })
+                            .then(() => {
+                                // 重定向对象不存在则返回顶层路径
+                                this.$router.push(this.$route.query.redirect || '/')
+                            })
                     } else {
                         // 登录表单校验失败
                         this.$message.error('表单校验失败')
