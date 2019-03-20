@@ -15,9 +15,9 @@
                 class="page-login--content"
                 flex="dir:top main:justify cross:center box:justify">
                 <div class="page-login--content-header">
-                    <p class="page-login--content-header-motto">
-                        时间是一切财富中最宝贵的财富。 <span>—— 德奥弗拉斯多</span>
-                    </p>
+                    <!--<p class="page-login&#45;&#45;content-header-motto">-->
+                        <!--时间是一切财富中最宝贵的财富。 <span>—— 德奥弗拉斯多</span>-->
+                    <!--</p>-->
                 </div>
                 <div
                     class="page-login--content-main"
@@ -61,11 +61,11 @@
                     </div>
                 </div>
                 <div class="page-login--content-footer">
-                    <p class="page-login--content-footer-options">
-                        <a href="#">帮助</a>
-                        <a href="#">隐私</a>
-                        <a href="#">条款</a>
-                    </p>
+                    <!--<p class="page-login&#45;&#45;content-footer-options">-->
+                        <!--<a href="#">帮助</a>-->
+                        <!--<a href="#">隐私</a>-->
+                        <!--<a href="#">条款</a>-->
+                    <!--</p>-->
                     <p class="page-login--content-footer-copyright">
                         Copyright
                         <d2-icon name="copyright"/>
@@ -88,8 +88,8 @@
                 time: dayjs().format('HH:mm:ss'),
                 // 表单
                 formLogin: {
-                    username: 'user1',
-                    password: 'user1',
+                    username: 'aaa@site.com',
+                    password: '1234'
                     // code: ''
                 },
                 // 校验

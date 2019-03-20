@@ -1,5 +1,5 @@
 import util from '@/libs/util.js'
-import { AccountLogin } from '@api/sys.login'
+import  api from '@/api/sys.auth'
 
 export default {
   namespaced: true,
@@ -19,7 +19,7 @@ export default {
     }) {
       return new Promise((resolve, reject) => {
         // 开始请求登录接口
-        AccountLogin({
+        api.AccountLogin({
           username,
           password
         })
@@ -61,6 +61,7 @@ export default {
         util.cookies.remove('token')
         util.cookies.remove('uuid')
         // 清空 vuex 用户信息
+        await api.AccountLogout()
         await dispatch('d2admin/user/set', {}, { root: true })
         // 跳转路由
         vm.$router.push({
