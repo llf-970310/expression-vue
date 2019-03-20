@@ -9,10 +9,6 @@ export default [
     path: '/api/login',
     method: 'post',
     handle ({ body }) {
-      console.log('hello')
-      console.log(body)
-      console.log(body.username)
-      console.log(body.password)
       const user = userDB.find(e => e.username === body.username && e.password === body.password)
       if (user) {
         return {
