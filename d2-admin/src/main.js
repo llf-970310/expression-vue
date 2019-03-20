@@ -5,6 +5,10 @@ import App from './App'
 import VCharts from 'v-charts'
 Vue.use(VCharts)
 
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
+
 // store
 import store from '@/store/index'
 // 多国语
