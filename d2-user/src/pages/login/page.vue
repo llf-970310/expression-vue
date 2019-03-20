@@ -140,6 +140,8 @@
                         // 登录
                         // 注意 这里的演示没有传验证码
                         // 具体需要传递的数据请自行修改代码
+                        console.log(this.formLogin.username)
+                        console.log(this.formLogin.password)
                         this.login({
                             vm: this,
                             username: this.formLogin.username,
