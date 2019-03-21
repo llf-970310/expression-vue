@@ -35,7 +35,7 @@ const defaultQuestions = [
     'code': 0,
     'msg': 'success',
     'data': {
-      'lastQuestion': true,
+      'lastQuestion': false,
       'questionContent': "玻璃，也就是二氧化硅，是一种非常重要的元素。硅元素在地球上的含量极其丰富，地壳里90%都是由硅元素组成的，因此玻璃的价格很便宜。玻璃的透光性很高，小到显微镜、电脑芯片，大到天文望远镜和连接全球的光纤，都离不开它。玻璃纤维的强度非常大，从制作防弹衣，到组成空客A380飞机的机身，玻璃纤维都是重要的材料。但玻璃也有弹性差、易碎的特点，破碎后容易伤人。",
       'questionInfo': {
         'detail': '根据问题发表自己观点。',
@@ -49,6 +49,24 @@ const defaultQuestions = [
   },
 ]
 
+const lastQuestion =
+  {
+    'code': 0,
+    'msg': 'success',
+    'data': {
+      'lastQuestion': true,
+      'questionContent': "旅游是很好的休闲方式，比起跟团游，现在更多人选择自由行，2016年，有57%的人选择了自由行。自由行的好处很多，首先，它可以按照个人喜好制定行程和游玩地点，不用千篇一律。其次，自由行的质量也更高，比起跟团游上车睡觉，下车拍照的方式，自由行可以深入游览，体验风土人情。自由行也更符合每个人的生活习惯，习惯晚起的人不用一大早就去赶团队行程，饮食选择、住宿选择也更多样化。但自由行对出行者的经验要求较高，要提前做功课，了解游玩地点；遇到突发状况也都要自己处理，需要很强的风险防范意识和应对能力。",
+      'questionInfo': {
+        'detail': '根据问题发表自己观点。',
+        'tip': '准备1分钟，叙述2分钟。'
+      },
+      'questionLimitTime': 120,
+      'questionNumber': 8,
+      'questionType': 3,
+      'readLimitTime': 60
+    }
+  }
+
 const defaultUploadUrl = {
   'code': 0,
   'mag': 'success',
@@ -58,12 +76,20 @@ const defaultUploadUrl = {
   }
 }
 
+let index = 0;
 export default [
   {
     path: '/exam/next-question',
     method: 'post',
     handle() {
-      return defaultQuestions[Math.floor(Math.random() * 3)]
+      console.error(index)
+      if (index < 5) {
+        index++
+        return defaultQuestions[Math.floor(Math.random() * 3)]
+      } else {
+        index = 0
+        return lastQuestion
+      }
     }
   },
   {

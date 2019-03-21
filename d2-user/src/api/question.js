@@ -2,18 +2,23 @@ import request from '@/plugin/axios'
 
 const qs = require('qs')
 
+/**
+ * 获取下一题
+ * TODO GET
+ */
 export function nextQuestion() {
-
   return request({
     url: '/exam/next-question',
     method: 'post'
   })
 }
 
-
-export function getUploadUrl(nowQuestionNum) {
-  console.log(qs.stringify({nowQuestionNum: nowQuestionNum}))
-
+/**
+ * 获取当题回答应该上传的路径
+ * @param nowQuestionNum 当前题号
+ * TODO GET
+ */
+export function getUploadPath(nowQuestionNum) {
   return request({
     url: '/exam/get-upload-url',
     method: 'post',

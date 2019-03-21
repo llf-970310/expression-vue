@@ -25,6 +25,7 @@
 <script>
   import read from './read'
   import MyCountDown from './count-down'
+  import {checkRecorderReady, startRecording} from '@/libs/my-recorder'
 
   export default {
     name: "answer",
@@ -44,7 +45,18 @@
       isPreparation: Boolean
     },
     mounted() {
-      console.log(this.text)
+      // 【回答阶段】
+      if (!this.isPreparation) {
+        let isRecorderReady = checkRecorderReady()
+        console.log('Audio status: ' + isRecorderReady)
+
+        if (isRecorderReady) {
+          startRecording()
+        } else {
+          console.error('Audio is not ready, so we can\'t provide exercise for you.')
+          // TODO 用户提示
+        }
+      }
     },
     methods: {
       // 进度条结束

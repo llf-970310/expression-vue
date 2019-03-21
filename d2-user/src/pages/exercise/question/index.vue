@@ -43,7 +43,8 @@
   import QuestionTwo from './question-two/index'
   import QuestionThree from './question-three/index'
 
-  import {getUploadUrl} from '@/api/question'
+  import {getUploadPath} from '@/api/question'
+  import {uploadSoundToBOS} from '@/api/bos'
 
   export default {
     name: "question-frame",
@@ -74,7 +75,14 @@
     data() {
       return {
         // 是否显示 tip
-        isTipShowing: true
+        isTipShowing: true,
+
+        // 录音上传路径
+        uploadLocation: '',
+        uploadUrl: '',
+
+        audio_context: '',
+        recorder: ''
       }
     },
     methods: {
@@ -83,20 +91,31 @@
         this.isTipShowing = false
       },
 
-      // 主动获取下一道题目
+      // 回答结束，在获取下一道题目前，获取录音上传路径，并根据返回的上传 url 将音频上传
       nextQuestion() {
-        // TODO 获取录音上传路径，并根据之前返回的上传 url 将音频上传至百度BOS
         new Promise((resolve, reject) => {
-          getUploadUrl(this.questionIndex).then(res => {
+          getUploadPath(this.questionIndex).then(res => {
             console.log(res)
+            this.uploadLocation = res.fileLocation
+            this.uploadUrl = res.url
             resolve()
           }).catch(err => {
             console.log('err: ', err)
             reject(err)
           })
-        }).then().catch()
+        }).then(() => {
+            this.uploadSound()
+          }
+        ).catch()
 
         this.$emit('next')
+      },
+
+      // 上传音频
+      uploadSound() {
+        if (this.uploadLocation === 'BOS') {
+          uploadSoundToBOS(this.uploadUrl)
+        }
       }
     }
 
