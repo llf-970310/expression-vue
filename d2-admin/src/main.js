@@ -22,6 +22,10 @@ import menuHeader from '@/menu/header'
 import menuAside from '@/menu/aside'
 import { frameInRoutes } from '@/router/routes'
 
+// 粘贴板
+import VueClipboard from 'vue-clipboard2';
+Vue.use(VueClipboard)
+
 // 核心插件
 Vue.use(d2Admin)
 

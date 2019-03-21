@@ -2,7 +2,7 @@
 <template>
   <d2-container :filename="filename">
     <template slot="header">账户管理</template>
-    账户管理 TODO
+    <!--<el-input v-model="input" placeholder="ya"></el-input>-->
   </d2-container>
 </template>
 

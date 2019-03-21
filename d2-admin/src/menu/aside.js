@@ -6,6 +6,7 @@ export default [
     icon: 'folder-o',
     children: [
       {path: '/account', title: '账户管理'},
+      {path: '/invitation', title: '邀请管理'},
       {path: '/question', title: '题目管理'},
       {path: '/score', title: '成绩管理'},
     ]

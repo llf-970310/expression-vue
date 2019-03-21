@@ -14,48 +14,42 @@
             <div
                     class="page-login--content"
                     flex="dir:top main:justify cross:center box:justify">
-                <div class="page-login--content-header">
-                    <!--<p class="page-login&#45;&#45;content-header-motto">-->
-                    <!--时间是一切财富中最宝贵的财富。 <span>—— 德奥弗拉斯多</span>-->
-                    <!--</p>-->
-                </div>
+                <div class="page-login--content-header"></div>
                 <div
                         class="page-login--content-main"
                         flex="dir:top main:center cross:center">
                     <!-- logo -->
                     <img class="page-login--logo" src="./image/logo.png">
-                    <!-- 表单 -->
+                    <!--表单-->
                     <div class="page-login--form">
                         <el-card shadow="never">
-                            <el-form ref="loginForm" label-position="top" :rules="rules" :model="formLogin"
-                                     size="default">
-                                <p align="center">表达力评测管理员登录</p>
-                                <el-form-item prop="username">
-                                    <el-input type="text" v-model="formLogin.username" placeholder="邮箱">
-                                        <i slot="prepend" class="fa fa-user-circle-o"></i>
-                                    </el-input>
+                            <el-form ref="registerForm" :rules="rules" :model="registerForm"
+                                     size="mini">
+                                <p align="center">注册</p>
+                                <el-form-item prop="email">
+                                    <el-input type="text" v-model="registerForm.email" placeholder="邮箱"></el-input>
+                                </el-form-item>
+                                <el-form-item prop="name">
+                                    <el-input type="text" v-model="registerForm.name" placeholder="用户名"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="password">
-                                    <el-input type="password" v-model="formLogin.password" placeholder="密码">
-                                        <i slot="prepend" class="fa fa-keyboard-o"></i>
-                                    </el-input>
+                                    <el-input type="password" v-model="registerForm.password" placeholder="密码"></el-input>
                                 </el-form-item>
-                                <!--<el-form-item prop="code">-->
-                                <!--<el-input type="text" v-model="formLogin.code" placeholder="- - - -">-->
-                                <!--<template slot="prepend">验证码</template>-->
-                                <!--<template slot="append">-->
-                                <!--<img class="login-code" src="./image/login-code.png">-->
-                                <!--</template>-->
-                                <!--</el-input>-->
-                                <!--</el-form-item>-->
-                                <el-button size="default" @click="submit" type="primary" class="button-login">登录
+                                <el-form-item prop="passwordConfirm">
+                                    <el-input type="password" v-model="registerForm.passwordConfirm"
+                                              placeholder="确认密码"></el-input>
+                                </el-form-item>
+                                <el-form-item prop="code">
+                                    <el-input type="text" v-model="registerForm.code" placeholder="邀请码"></el-input>
+                                </el-form-item>
+                                <el-button size="mini" @click="submit" type="primary" class="button-login">注册
                                 </el-button>
                             </el-form>
                         </el-card>
                         <p class="page-login--options"
                            flex="main:justify cross:center">
-                            <span><d2-icon name="question-circle"/> 忘记密码</span>
-                            <span style="cursor: pointer" @click="toRegisterPage">注册用户</span>
+                            <span><d2-icon name="question-circle"/> 邀请码</span>
+                            <span style="cursor: pointer;" @click="toLoginPage">返回登录</span>
                         </p>
                     </div>
                 </div>
@@ -97,27 +91,68 @@
             return {
                 timeInterval: null,
                 time: dayjs().format('HH:mm:ss'),
-                // 表单
-                formLogin: {
-                    username: 'admin@site.com',
-                    password: '1234',
-                    // code: ''
+                registerForm: {
+                    email: '',
+                    name: '',
+                    password: '',
+                    passwordConfirm: '',
+                    code: ''
                 },
-                // 校验
                 rules: {
-                    username: [
-                        {required: true, message: '请输入用户名', trigger: 'blur'}
-                    ],
-                    password: [
-                        {required: true, message: '请输入密码', trigger: 'blur'}
-                    ],
-                    // code: [
-                    //   { required: true, message: '请输入验证码', trigger: 'blur' }
-                    // ]
-                },
-                // registerRules:{},
-                // registerData: {},
-                // dialogToggle: false
+                    email: [{
+                        validator: (rule, value, callback) => {
+                            if (!value) {
+                                return callback(new Error('邮箱不能为空'))
+                            }
+                            let reg = /^([^@]+@[^@]+\.[^@]+)$/
+                            if (!reg.test(value)) {
+                                return callback(new Error('邮箱格式不正确'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }],
+                    name: [{
+                        validator: (rule, value, callback) => {
+                            if (!value) {
+                                return callback(new Error('用户名不能为空'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }],
+                    password: [{
+                        validator: (rule, value, callback) => {
+                            if (!value) {
+                                return callback(new Error('密码不能为空'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }],
+                    passwordConfirm: [{
+                        validator: (rule, value, callback) => {
+                            if (!value) {
+                                return callback(new Error('确认密码不能为空'))
+                            }
+                            let password = this.registerForm.password
+                            if (password && password !== value) {
+                                return callback(new Error('密码不一致'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }],
+                    code: [{
+                        validator: (rule, value, callback) => {
+                            if (!value) {
+                                return callback(new Error('邀请码不能为空'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }]
+                }
             }
         },
         mounted() {
@@ -130,50 +165,36 @@
         },
         methods: {
             ...mapActions('d2admin/account', [
-                'login'
+                'register'
             ]),
-
-            refreshTime() {
-                this.time = dayjs().format('HH:mm:ss')
-            },
-            /**
-             * @description 接收选择一个用户快速登录的事件
-             * @param {Object} user 用户信息
-             */
-            handleUserBtnClick(user) {
-                this.formLogin.username = user.username
-                this.formLogin.password = user.password
-                this.submit()
-            },
-            /**
-             * @description 提交表单
-             */
-            // 提交登录信息
             submit() {
-                this.$refs.loginForm.validate((valid) => {
+                this.$refs.registerForm.validate((valid) => {
                     if (valid) {
-                        this.login({
+                        this.register({
                             vm: this,
-                            username: this.formLogin.username,
-                            password: this.formLogin.password
+                            formData: {
+                                email: this.registerForm.email,
+                                password: this.registerForm.password,
+                                name: this.registerForm.name,
+                                code: this.registerForm.code
+                            }
                         })
                             .then(() => {
-                                this.$router.push(this.$route.query.redirect || '/')
+                                // 重定向对象不存在则返回顶层路径
+                                this.$router.replace(this.$route.query.redirect || '/')
                             })
                     } else {
+                        // 登录表单校验失败
                         this.$message.error('表单校验失败')
                     }
                 })
             },
-            toRegisterPage() {
-                this.$router.push('register')
+            toLoginPage() {
+                this.$router.push('login')
+            },
+            refreshTime() {
+                this.time = dayjs().format('HH:mm:ss')
             }
-            // /**
-            //  * @description 提交注册申请
-            //  */
-            // doRegister() {
-            //     this.dialogToggle = false
-            // }
         }
     }
 </script>
@@ -442,3 +463,4 @@
         }
     }
 </style>
+
