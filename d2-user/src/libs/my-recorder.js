@@ -1,37 +1,24 @@
 import $ from 'jquery'
-
-let questionType;
-let questionLimitTime;
-let questionNum = 0;
-let readTip = "距离准备结束还剩：";
-let answerTip = "距离回答结束还剩：";
-let waitTip = "秒后开始作答";
-let countDownInUse = [];
-let isLastQuestion;
-
-let nowLockIndex;
+import {uploadSoundToBOS} from '@/api/bos'
 
 let canAudioUse = true;
 let audio_context;
 let recorder;
 
-// 先在前端保证每题只传一次
-let isUpload = {};
-
-let reTryCount = [0, 0, 0, 0], maxRetry = 10;
-
-// 成功使用音频的回调
+/**
+ * 用户同意使用音频的回调
+ */
 function startUserMedia(stream) {
   let input = audio_context.createMediaStreamSource(stream);
   console.log('Media stream created.');
 
-  recorder = new Recorder(input, {
-    onAudioProcess: onAudioProcess
-  });
+  recorder = new Recorder(input);
   console.log('Recorder initialised.');
 }
 
-// 当资源已加载时被触发
+/**
+ * 当资源已加载时被触发
+ */
 export function initAudio() {
   try {
     // webkit shim
@@ -76,182 +63,40 @@ export function checkRecorderReady() {
   return canAudioUse === true && audio_context !== undefined && recorder !== undefined
 }
 
+/**
+ * 开始录音
+ */
 export function startRecording() {
   // 开始录音
-  console.log('---------cur recorder---------')
+  console.log('=========cur recorder=========')
   console.log(recorder)
   audio_context.resume().then(() => {
     recorder && recorder.record();
     console.log("start recording...");
   });
-
-  // 修改页面样式
-  $("#start-record").css("display", "none");
-  $("#end-record").css("display", "").removeClass("layui-btn-disabled").attr('disabled', false);
-  $("#answer-part").css("display", "");
-  $("#wait-part").css("display", "none");
-
-  let mic, fil, sound, answer;
-  if (questionType > 1) {
-    mic = "#microphone-2";
-    fil = "#answer-countdown-2";
-    sound = "#sound-2-";
-    answer = "answer-2";
-  } else {
-    mic = "#microphone";
-    fil = "#answer-countdown";
-    sound = "#sound-";
-    answer = "answer";
-  }
-  $(mic).css("color", "#333333");
-  for (let i = 1; i < 10; i++) {
-    $(sound + i).css("color", "#cdcdcd")
-  }
-  countDownInUse.push(true);
-  nowLockIndex++;
 }
 
-function endRecording() {
-  console.log("=======end recording========");
-  // TODO ？？？
-  if (isUpload[questionNum]) {
-    console.log(isUpload);
-    console.log("end recording: repeat; " + questionNum);
-    return;
-  }
+/**
+ * 结束录音
+ */
+export function endRecording() {
   // 结束录音
   recorder && recorder.stop();
-  console.log("end recording.");
-
-  // 修改样式
-  $("#end-record").addClass("layui-btn-disabled").attr('disabled', true);
-  $("#microphone").css("color", "white");
-  for (let i = 1; i < 10; i++) {
-    $("#sound-" + i).css("color", "white")
-  }
-  $("#microphone-2").css("color", "white");
-  for (let i = 1; i < 10; i++) {
-    $("#sound-2-" + i).css("color", "white")
-  }
-
-  clearTimer();
-  // 先存下这题的题号
-  let nowQuestionNum = questionNum;
-  let lastQuestion = isLastQuestion;
-  console.log("question number: " + nowQuestionNum);
-  if (!lastQuestion) {
-    getNextQuestion();
-  } else {
-    layer.load(1);
-  }
-  // 上传音频
-  if (!isUpload[nowQuestionNum]) {
-    recorder.exportWAV((blob) => uploadVideo(blob, nowQuestionNum, lastQuestion));
-    recorder.clear();
-    isUpload[nowQuestionNum] = true;
-  }
+  console.log("end recording...");
 }
 
-function uploadVideo(blob, nowQuestionNum, lastQuestion) {
-  // 首先向后端拿到上传url
-  console.log("question number inner: " + nowQuestionNum);
-  console.log("blob: " + blob);
-  $.post("/api/get-upload-url", {
-    "nowQuestionNum": nowQuestionNum
-  }).done(function (data) {
-    let url = data["url"];
-    let fd = new FormData();
-    fd.append("video", blob);
-    fd.append("nowQuestionNum", nowQuestionNum);
-    $.ajax({
-      url: url,
-      type: 'post',
-      processData: false,
-      contentType: false,
-      data: fd,
-      success: function () {
-        $.post("/api/upload-success", {"nowQuestionNum": nowQuestionNum}).done(function (data) {
-          console.log(data);
-          if (lastQuestion) {
-            //layer.closeAll('loading');
-            window.onbeforeunload = null;
-            window.location.href = '/user/result'
-          }
-        }).fail(e => {
-          if (reTryCount[1] < maxRetry) {
-            console.log("innerRetry");
-            reTry(([blob, nowQuestionNum, lastQuestion]) => uploadVideo(blob, nowQuestionNum, lastQuestion), [blob, nowQuestionNum, lastQuestion], 1);
-          } else {
-            errorTip(e);
-            console.log("upload success fail callback");
-            if (lastQuestion) {
-              //layer.closeAll('loading');
-              window.onbeforeunload = null;
-              window.location.href = '/user/result'
-            }
-          }
-        });
-      },
-      error: e => {
-        if (reTryCount[2] < maxRetry) {
-          console.log("outRetry");
-          reTry(([blob, nowQuestionNum, lastQuestion]) => uploadVideo(blob, nowQuestionNum, lastQuestion), [blob, nowQuestionNum, lastQuestion], 2);
-        } else {
-          errorTip(e);
-        }
-      }
-    })
-  }).fail(e => {
-    if (reTryCount[3] < maxRetry) {
-      console.log("outRetry");
-      reTry(([blob, nowQuestionNum, lastQuestion]) => uploadVideo(blob, nowQuestionNum, lastQuestion), [blob, nowQuestionNum, lastQuestion], 3);
-    } else {
-      errorTip(e);
+/**
+ * 上传录音文件
+ * @param path 录音上传的路径
+ */
+export function uploadRecording(location, path) {
+  recorder.exportWAV((blob) => {
+    console.log(blob)
+    if (location === 'BOS') {
+      uploadSoundToBOS(path, blob)
     }
+    console.log('download finished')
   });
-}
-
-function onAudioProcess(data) {
-  let avg = 0;
-  let max_data = 0;
-  for (let i = 0; i < data.length; i++) {
-    let temp = Math.abs(data[i]);
-    avg += temp;
-    max_data = Math.max(max_data, temp)
-  }
-  avg /= data.length;
-  let sound = avg * 80;
-  // console.log(sound);
-  let soundId = questionType > 1 ? "#sound-2-" : "#sound-";
-  for (let i = 1; i < 10; i++) {
-    if (i < sound) {
-      $(soundId + i).css("color", "rgb(95, 169, 249)");
-    } else {
-      $(soundId + i).css("color", "#cdcdcd");
-    }
-  }
-}
-
-function errorTip(e) {
-  try {
-    let response = JSON.parse(e.responseText);
-    console.log(typeof response);
-    if (response['needDisplay']) {
-      layer.msg(response['tip']);
-    } else {
-      layer.msg("服务器出错了");
-    }
-  } catch (e) {
-    layer.msg("服务器出错了");
-  }
-}
-
-function reTry(func, arg, index) {
-  reTryCount[index]++;
-  console.log(func);
-  console.log(arg);
-  console.log(reTryCount);
-  setTimeout(() => func(arg), 500);
 }
 
 function browserError() {

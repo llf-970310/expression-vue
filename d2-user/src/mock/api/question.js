@@ -81,16 +81,8 @@ const defaultQuestions = [
   }
 ]
 
-const defaultUploadUrl = {
-  'code': 0,
-  'mag': 'success',
-  'data': {
-    'fileLocation': 'BOS',
-    'url': 'audio/2019h382/2371238912.wav'
-  }
-}
-
 let index = 0;
+let urlIndex = 0;
 export default [
   {
     path: '/exam/next-question',
@@ -115,7 +107,16 @@ export default [
 
       let reg = /^[0-9]+$/
       if (reg.test(nowQuestionNum)) {
-        return defaultUploadUrl
+        let uploadUrl = {
+          'code': 0,
+          'mag': 'success',
+          'data': {
+            'fileLocation': 'BOS',
+            'url': 'audio/2019h382/' + urlIndex + '.wav'
+          }
+        }
+        urlIndex++
+        return uploadUrl
       } else {
         return {
           'code': 400,

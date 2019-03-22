@@ -13,20 +13,30 @@ let client = new BosClient(config);
 /**
  * 将音频上传到百度云 BOS
  * @param path 上传路径
+ * @param blob 音频文件
  */
-export function uploadSoundToBOS(path) {
+export function uploadSoundToBOS(path, blob) {
 
-  client.listObjects('ise-expression-bos')
-    .then((res) => {
-      console.log('success')
-      console.log(res)
-      // let contents = res.body.contents;
-      // for (var i = 0, l = contents.length; i < l; i++) {
-      //   console.log(contents[i].key);
-      // }
-    })
-    .catch(function (error) {
-      // 查询失败
-      console.log(error);
-    });
+  listBOSObject('before')
+  client.putObjectFromBlob(bucketName, path, blob).then(res => {
+    console.log(res)
+    listBOSObject('after')
+  }).catch(err => {
+    console.log(err)
+  });
+}
+
+function listBOSObject(condition) {
+  client.listObjects(bucketName).then((res) => {
+    console.log(condition)
+    console.log(res)
+    let contents = res.body.contents;
+    console.log(contents.length)
+    // for (var i = 0, l = contents.length; i < l; i++) {
+    //   console.log(contents[i].key);
+    // }
+  }).catch(function (error) {
+    // 查询失败
+    console.log(error);
+  });
 }

@@ -44,7 +44,7 @@
   import QuestionThree from './question-three/index'
 
   import {getUploadPath} from '@/api/question'
-  import {uploadSoundToBOS} from '@/api/bos'
+  import {uploadRecording} from '@/libs/my-recorder'
 
   export default {
     name: "question-frame",
@@ -104,18 +104,12 @@
             reject(err)
           })
         }).then(() => {
-            this.uploadSound()
+            // 上传音频
+            uploadRecording(this.uploadLocation, this.uploadUrl)
           }
         ).catch()
 
         this.$emit('next')
-      },
-
-      // 上传音频
-      uploadSound() {
-        if (this.uploadLocation === 'BOS') {
-          uploadSoundToBOS(this.uploadUrl)
-        }
       }
     }
 

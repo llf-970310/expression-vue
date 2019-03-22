@@ -25,7 +25,7 @@
 <script>
   import read from './read'
   import MyCountDown from './count-down'
-  import {checkRecorderReady, startRecording} from '@/libs/my-recorder'
+  import {checkRecorderReady, startRecording, endRecording} from '@/libs/my-recorder'
 
   export default {
     name: "answer",
@@ -69,6 +69,8 @@
       },
       // 主动结束回答
       finishAnswer() {
+        endRecording()
+
         this.$emit('next')
       },
 

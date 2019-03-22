@@ -61,7 +61,7 @@
           // 继续做题
           new Promise((resolve, reject) => {
             nextQuestion().then(res => {
-              console.log(res)
+              // console.log(res)
               this.curQuestionIndex = res.questionNumber
               this.curQuestionType = res.questionType
               this.curQuestionRawText = res.questionContent
