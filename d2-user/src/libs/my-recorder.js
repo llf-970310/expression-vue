@@ -91,11 +91,11 @@ export function endRecording() {
  */
 export function uploadRecording(location, path) {
   recorder.exportWAV((blob) => {
-    console.log(blob)
+    // console.log(blob)
     if (location === 'BOS') {
       uploadSoundToBOS(path, blob)
+      recorder.clear()
     }
-    console.log('download finished')
   });
 }
 
