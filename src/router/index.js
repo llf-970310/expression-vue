@@ -41,11 +41,11 @@ router.beforeEach((to, from, next) => {
       new Promise((resolve, reject) => {
         getInfo(token).then(curUser => {
           const curRole = curUser.role
-          console.log(curUser)
+          // console.log(curUser)
           // 更新路由
           store.dispatch('d2admin/permission/GenerateRoutes', curRole).then(() => { // 根据roles权限生成可访问的路由表
             router.addRoutes(store.getters['d2admin/permission/addRouters']) // 动态添加可访问路由表
-            console.log(router)
+            // console.log(router)
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           })
           // TODO 更新前端信息，比如name等

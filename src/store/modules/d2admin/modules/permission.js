@@ -5,12 +5,12 @@ import { asyncRouterMap, constantRouterMap } from '@/router/routes'
  * 如无配置，则默认用户有权限
  */
 function hasPermission(role, route) {
-  console.log('In function hasPermission: ' + route.path)
+  // console.log('In function hasPermission: ' + route.path)
   if (route.meta && route.meta.role) {
-    console.log(role === route.meta.role)
+    // console.log(role === route.meta.role)
     return role === route.meta.role
   } else {
-    console.log('true')
+    // console.log('true')
     return true
   }
 }
@@ -46,11 +46,10 @@ const permission = {
   },
   actions: {
     GenerateRoutes({ commit, dispatch }, role) {
-      console.log('d2admin/GenerateRoutes')
       return new Promise(resolve => {
         const accessedRouters = filterAsyncRouter(asyncRouterMap, role)
-        console.log('accessedRouters')
-        console.log(accessedRouters)
+        // console.log('accessedRouters')
+        // console.log(accessedRouters)
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })
