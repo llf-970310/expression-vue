@@ -2,7 +2,10 @@ export default {
   namespaced: true,
   state: {
     // 用户信息
-    info: {}
+    info: {},
+
+    // 用户角色
+    role: ''
   },
   actions: {
     /**
@@ -25,6 +28,20 @@ export default {
         resolve()
       })
     },
+
+    /**
+     * @description 设置用户角色
+     * @param {Object} state vuex state
+     * @param {*} role role
+     */
+    setRole ({ state, dispatch }, role) {
+      return new Promise(async resolve => {
+        // store 赋值
+        state.role = role
+        resolve()
+      })
+    },
+
     /**
      * @description 从数据库取用户数据
      * @param {Object} state vuex state

@@ -22,7 +22,8 @@ export default [
     path: '/api/user/info.*',
     method: 'get',
     handle() {
-      let index = Math.floor(Math.random() * 2);
+      // let index = Math.floor(Math.random() * 2);
+      let index = 1
       return defaultUsers[index]
     }
   }

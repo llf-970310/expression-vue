@@ -42,19 +42,14 @@ router.beforeEach((to, from, next) => {
         getInfo(token).then(curUser => {
           const curRole = curUser.role
           console.log(curUser)
-          console.log(curRole)
-          store.dispatch('d2admin/GenerateRoutes', curRole).then(() => { // 根据roles权限生成可访问的路由表
-            router.addRoutes(store.getters['d2admin/addRouters']) // 动态添加可访问路由表
+          // 更新路由
+          store.dispatch('d2admin/permission/GenerateRoutes', curRole).then(() => { // 根据roles权限生成可访问的路由表
+            router.addRoutes(store.getters['d2admin/permission/addRouters']) // 动态添加可访问路由表
             console.log(router)
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           })
-          console.log('FINISH 获取')
           // TODO 更新前端信息，比如name等
-          // store.dispatch('StoreInfo', {
-          //   name: curUser.name,
-          //   role: curRole
-          // }).then(res => {
-          // })
+          store.dispatch('d2admin/user/setRole', curRole).then()
           resolve()
         }).catch(error => {
           // TODO

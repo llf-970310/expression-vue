@@ -4,6 +4,7 @@ export default [
   {
     title: '基本管理',
     icon: 'folder-o',
+    role: 'admin',
     children: [
       {path: '/account', title: '账户管理'},
       {path: '/invitation', title: '邀请管理'},
@@ -14,12 +15,17 @@ export default [
   {
     title: '评分优化',
     icon: 'folder-o',
+    role: 'admin',
     children: [
       {path: '/optimize-manual', title: '手动优化'},
       {path: '/optimize-auto', title: '自动优化'},
     ]
   },
-  
-  {path: '/info', title: '我的信息'},
-  {path: '/exercise', title: '表达力评测'}
+
+  {
+    path: '/info', role: 'user', title: '我的信息'
+  },
+  {
+    path: '/exercise', role: 'user', title: '表达力评测'
+  }
 ]
