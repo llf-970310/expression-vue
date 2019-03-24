@@ -5,7 +5,7 @@ const meta = {auth: true}
 export default {
   path: '/score',
   name: 'score',
-  meta,
+  meta: {role: 'admin'},
   redirect: {name: 'admin-score'},
   component: layoutHeaderAside,
   children: (pre => [

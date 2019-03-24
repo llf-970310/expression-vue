@@ -5,7 +5,7 @@ const meta = {auth: true}
 export default {
   path: '/invitation',
   name: 'invitation',
-  meta,
+  meta: {role: 'admin'},
   redirect: {name: 'admin-invitation'},
   component: layoutHeaderAside,
   children: (pre => [

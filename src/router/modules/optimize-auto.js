@@ -5,7 +5,7 @@ const meta = {auth: true}
 export default {
   path: '/optimize-auto',
   name: 'optimize-auto',
-  meta,
+  meta: {role: 'admin'},
   redirect: {name: 'admin-optimize-auto'},
   component: layoutHeaderAside,
   children: (pre => [

@@ -5,7 +5,7 @@ const meta = {auth: true}
 export default {
   path: '/optimize-manual',
   name: 'optimize-manual',
-  meta,
+  meta: {role: 'admin'},
   redirect: {name: 'admin-optimize-manual'},
   component: layoutHeaderAside,
   children: (pre => [

@@ -5,7 +5,7 @@ const meta = {auth: true}
 export default {
   path: '/question',
   name: 'question',
-  meta,
+  meta: {role: 'admin'},
   redirect: {name: 'admin-question'},
   component: layoutHeaderAside,
   children: (pre => [

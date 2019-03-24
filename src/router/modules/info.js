@@ -5,7 +5,7 @@ const meta = {auth: true}
 export default {
   path: '/info',
   name: 'info',
-  meta,
+  meta: {role: 'user'},
   redirect: {name: 'user-info'},
   component: layoutHeaderAside,
   children: (pre => [
