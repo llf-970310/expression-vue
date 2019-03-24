@@ -33,7 +33,7 @@ const extend = (prop, value) => {
 const wired = ({ url, type, body }) => ({
   method: type,
   params: qs.parse(url.split('?').length > 1 ? url.split('?')[1] : ''),
-  body: JSON.parse(body),
+  body: qs.parse(body),
   url: qs.parse(url.split('?')[0]),
   ...CustomExtends
 })
