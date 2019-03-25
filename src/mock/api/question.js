@@ -209,7 +209,7 @@ export default [
     handle() {
       let res = defaultQuestions[index]
 
-      console.error(index)
+      // console.error(index)
       if (index < 5) {
         index++
       } else {

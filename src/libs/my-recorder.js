@@ -96,7 +96,7 @@ export function uploadRecording(location, path) {
       uploadSoundToBOS(path, blob)
       recorder.clear()
     }
-  });
+  }, 'audio/x-wav');
 }
 
 function browserError() {
