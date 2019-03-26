@@ -11,6 +11,8 @@
       {{ tip }}
     </el-row>
 
+    <br>
+
     <el-row class="d2-text-center">
       <el-button type="primary" round @click="clickTip">显示题目</el-button>
     </el-row>

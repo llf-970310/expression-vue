@@ -3,7 +3,7 @@
   <div>
 
     <!--题目编号-->
-    <el-row class="d2-text-center">
+    <el-row class="d2-text-center index">
       {{ questionIndex }}
     </el-row>
 
@@ -117,5 +117,7 @@
 </script>
 
 <style scoped>
-
+  .index {
+    margin-bottom: 20px;
+  }
 </style>
