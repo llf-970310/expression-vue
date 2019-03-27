@@ -14,17 +14,17 @@ module.exports = {
   publicPath, // 根据你的实际情况更改这里
   lintOnSave: true,
   devServer: {
-    // 以下是开发时
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://localhost:5000/api',
-    //     ws: true,
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       '^/api': ''
-    //     }
-    //   }
-    // },
+    // 这个请求被转发到了百度云服务器上，方便开发，百度云的nginx已经修改过了
+    proxy: {
+      '/api': {
+        target: 'http://106.12.39.88/api',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
     publicPath // 和 publicPath 保持一致
   },
   css: {
@@ -115,11 +115,11 @@ module.exports = {
       .set('__dirname', true)
       .set('__filename', true)
     // 判断环境加入模拟数据
-    const entry = config.entry('app')
-    if (process.env.VUE_APP_BUILD_MODE !== 'nomock') {
-      entry
-        .add('@/mock')
-        .end()
-    }
+    // const entry = config.entry('app')
+    // if (process.env.VUE_APP_BUILD_MODE !== 'nomock') {
+    //   entry
+    //     .add('@/mock')
+    //     .end()
+    // }
   }
 }

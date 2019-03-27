@@ -29,7 +29,7 @@
                         <el-card shadow="never">
                             <el-form ref="loginForm" label-position="top" :rules="rules" :model="formLogin"
                                      size="default">
-                                <p align="center">表达力评测管理员登录</p>
+                                <p align="center">表达力评测登录</p>
                                 <el-form-item prop="username">
                                     <el-input type="text" v-model="formLogin.username" placeholder="邮箱">
                                         <i slot="prepend" class="fa fa-user-circle-o"></i>
@@ -99,7 +99,7 @@
                 time: dayjs().format('HH:mm:ss'),
                 // 表单
                 formLogin: {
-                    username: 'admin@site.com',
+                    username: 'chudongyu@site.com',
                     password: '1234',
                     // code: ''
                 },
