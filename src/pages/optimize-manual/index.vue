@@ -69,13 +69,9 @@
             <template>
               <el-table
                   :data="mainTableData.filter(data => !search || data.word.toLowerCase().includes(search.toLowerCase()))"
-                  style="width: 100%" :default-sort = "{prop: 'hitRate', order: 'descending'}">
-                <el-table-column label="关键词">
-                  <template slot-scope="scope">
-                    <el-input placeholder="请输入内容" v-model="scope.row.word" :disabled="false"></el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column label="击中频率" width="100px" prop="hitRate" sortable></el-table-column>
+                  style="width: 100%" :default-sort="{prop: 'hitRate', order: 'descending'}">
+                <el-table-column prop="word" label="关键词" :show-overflow-tooltip=true></el-table-column>
+                <el-table-column label="击中频率" width="120px" prop="hitRate" sortable></el-table-column>
                 <el-table-column label="权重" sortable prop="weight">
                   <template slot-scope="scope">
                     <el-slider v-model="scope.row.weight" show-input :max=1 :step=0.01></el-slider>
@@ -100,13 +96,9 @@
             <template>
               <el-table
                   :data="detailTableData.filter(data => !search || data.word.toLowerCase().includes(search.toLowerCase()))"
-                  style="width: 100%" :default-sort = "{prop: 'date', order: 'descending'}">
-                <el-table-column label="关键词">
-                  <template slot-scope="scope">
-                    <el-input placeholder="请输入内容" v-model="scope.row.word" :disabled="false"></el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column label="击中频率" width="100px" prop="hitRate" sortable></el-table-column>
+                  style="width: 100%" :default-sort="{prop: 'date', order: 'descending'}">
+                <el-table-column prop="word" label="关键词" :show-overflow-tooltip=true></el-table-column>
+                <el-table-column label="击中频率" width="120px" prop="hitRate" sortable></el-table-column>
                 <el-table-column label="权重" prop="weight" sortable>
                   <template slot-scope="scope">
                     <el-slider v-model="scope.row.weight" show-input :max=1 :step=0.01></el-slider>
@@ -133,158 +125,185 @@
 </template>
 
 <script>
+  import {getAllQuestions} from '@/api/question'
+  import {getScoreData, getWeightData, updateWeight} from '@/api/optimize'
+
   export default {
     name: 'optimize-manual',
     data() {
-      let textStub = "高铁是现在是最受欢迎的出行方式。首先，高铁速度快，比如说，以前从贵阳到北京，要用40个小时左右，但现在高铁只需要6个小时，大大减少了路途时间。其次，高铁正点率高，因为高铁受天气条件影响较小，通常都可以准时发车，按时到达。最后，高铁环境舒适，高铁坐席宽敞，运行时速度平稳，没有噪音，餐车环境整洁，配有电源插座和无线网络，乘坐高铁很少会造成不适感，对于不习惯坐飞机出行的人士，高铁是更理想的选择。但高铁的建设，前期投资非常巨大，对设备技术、制作工艺要求都很高，后期的管理运营也需要更专业的人员来完成。";
-      let mainTableData = [{
-        word: '关键词1',
-        hitRate: 0.6,
-        weight: 0.1,
-      }, {
-        word: '关键词2',
-        hitRate: 0.5,
-        weight: 0.2,
-      }, {
-        word: '关键词3',
-        hitRate: 0.4,
-        weight: 0.3
-      }, {
-        word: '关键词4',
-        hitRate: 0.3,
-        weight: 0.3
-      }, {
-        word: '关键词5',
-        hitRate: 0.2,
-        weight: 0.2
-      }, {
-        word: '关键词6',
-        hitRate: 0.1,
-        weight: 0.1
-      }];
-      let detailTableData = [{
-        word: '关键词11',
-        hitRate: 0.8,
-        weight: 0.2
-      }, {
-        word: '关键词12',
-        hitRate: 0.7,
-        weight: 0.3
-      }, {
-        word: '关键词13',
-        hitRate: 0.6,
-        weight: 0.4
-      }, {
-        word: '关键词14',
-        hitRate: 0.5,
-        weight: 0.3
-      }, {
-        word: '关键词15',
-        hitRate: 0.4,
-        weight: 0.2
-      }, {
-        word: '关键词16',
-        hitRate: 0.2,
-        weight: 0.1
-      }];
-
       return {
         filename: __filename,
         // v-charts
         paramData: {
-          columns: ['关键词权重', '主旨关键词占比', '细节关键词占比'],
-          rows: [
-            {'关键词权重': '0 ~ 0.1', '主旨关键词占比': 0.12, '细节关键词占比': 0.15},
-            {'关键词权重': '0.2 ~ 0.3', '主旨关键词占比': 0.23, '细节关键词占比': 0.17},
-            {'关键词权重': '0.3 ~ 0.4', '主旨关键词占比': 0.33, '细节关键词占比': 0.24},
-            {'关键词权重': '0.4 ~ 0.5', '主旨关键词占比': 0.23, '细节关键词占比': 0.33},
-            {'关键词权重': '0.5 ~ 0.6', '主旨关键词占比': 0.11, '细节关键词占比': 0.10},
-            {'关键词权重': '0.6 ~ 0.7', '主旨关键词占比': 0.07, '细节关键词占比': 0.02}
-          ]
+          columns: ['关键词权重', '主旨关键词数', '细节关键词数'],
+          rows: [],
         },
         scoreData: {
-          columns: ['得分', '主旨人数频率', '细节人数频率', '总分人数频率'],
-          rows: [
-            {'得分': '0 ~ 20', '主旨人数频率': 0.12, '细节人数频率': 0.15, '总分人数频率': 0.13},
-            {'得分': '20 ~ 40', '主旨人数频率': 0.23, '细节人数频率': 0.17, '总分人数频率': 0.16},
-            {'得分': '30 ~ 60', '主旨人数频率': 0.33, '细节人数频率': 0.24, '总分人数频率': 0.30},
-            {'得分': '40 ~ 80', '主旨人数频率': 0.23, '细节人数频率': 0.33, '总分人数频率': 0.31},
-            {'得分': '50 ~ 100', '主旨人数频率': 0.11, '细节人数频率': 0.10, '总分人数频率': 0.105},
-          ]
+          columns: ['得分', '主旨人数', '细节人数', '总分人数'],
+          rows: [],
         },
 
         // tab
         activeName: 'main',
 
         // question table
-        questionTable: [{
-          questionNum: "1",
-          lastOpDate: "2019-03-15",
-          status: "空闲中",
-          inUse: false,
-          text: textStub,
-        }, {
-          questionNum: "2",
-          lastOpDate: "2019-03-15",
-          status: "空闲中",
-          inUse: false,
-          text: textStub,
-        }, {
-          questionNum: "3",
-          lastOpDate: "2019-03-15",
-          status: "优化中",
-          inUse: true,
-          text: textStub,
-        }, {
-          questionNum: "4",
-          lastOpDate: "2019-03-15",
-          status: "空闲中",
-          inUse: false,
-          text: textStub,
-        }, {
-          questionNum: "5",
-          lastOpDate: "2019-03-15",
-          status: "空闲中",
-          inUse: false,
-          text: textStub,
-        }],
+        questionTable: [],
 
         // opt table
-        mainTableData: mainTableData,
-        detailTableData: detailTableData,
+        mainTableData: [],
+        detailTableData: [],
         search: '',
 
         // search
         searchQuestion: {
           questionNum: '',
         },
-        displayQuestionNum: '1',
+        displayQuestionNum: '',
 
         // 优化是否可见
         inOptimize: false,
       }
     },
-
+    mounted() {
+      this.getQuestionTableData();
+    },
     methods: {
+      // 获得question表格的数据
+      getQuestionTableData() {
+        new Promise((resolve, reject) => {
+          getAllQuestions().then(res => {
+            res.questions.forEach(question => {
+              this.questionTable.push({
+                'questionNum': question.questionId,
+                'lastOpDate': question.lastOpDate,
+                'inUse': question.inOptimize,
+                'text': question.rawText,
+              });
+            });
+
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err);
+            reject(err);
+          })
+        }).then().catch();
+      },
+
+      // 获得score chart的数据
+      getScoreChartData(questionNum, histNum) {
+        new Promise((resolve, reject) => {
+          getScoreData(questionNum).then(res => {
+            let mainHist = [];
+            let detailHist = [];
+            let totalHist = [];
+            this.fillHist(mainHist, res.main, histNum, 100);
+            this.fillHist(detailHist, res.detail, histNum, 100);
+            this.fillHist(totalHist, res.total, histNum, 100);
+            this.scoreData.rows = [];
+            for (let i = 0; i < histNum; i++) {
+              this.scoreData.rows.push({
+                '得分': (i * 100 / histNum) + ' ~ ' + ((i + 1) * 100 / histNum),
+                '主旨人数': mainHist[i],
+                '细节人数': detailHist[i],
+                '总分人数': totalHist[i],
+              });
+            }
+
+            resolve();
+          }).catch(err => {
+            console.log('err: ', err);
+            reject(err);
+          })
+        }).then().catch();
+      },
+
+      // 获得weight chart和table的数据
+      getWeightChartData(questionNum, histNum) {
+        new Promise((resolve, reject) => {
+          getWeightData(questionNum).then(res => {
+            // chart部分
+            let mainHist = [];
+            let detailHist = [];
+            this.fillHist(mainHist, res.mainWeight, histNum, 100);
+            this.fillHist(detailHist, res.detailWeight, histNum, 100);
+            this.paramData.rows = [];
+            for (let i = 0; i < histNum; i++) {
+              this.paramData.rows.push({
+                '关键词权重': (i / histNum) + ' ~ ' + ((i + 1) / histNum),
+                '主旨关键词数': mainHist[i],
+                '细节关键词数': detailHist[i],
+              });
+            }
+            // table部分
+            this.mainTableData = [];
+            for (let i = 0; i < res.mainWords.length; i++) {
+              this.mainTableData.push({
+                word: this.array2str(res.mainWords[i]),
+                hitRate: res.mainHitTimes[i] / res.allHitTimes,
+                weight: res.mainWeight[i],
+              });
+            }
+            this.detailTableData = [];
+            for (let i = 0; i < res.detailWords.length; i++) {
+              this.detailTableData.push({
+                word: this.array2str(res.detailWords[i]),
+                hitRate: res.detailHitTimes[i] / res.allHitTimes,
+                weight: res.detailWeight[i],
+              });
+            }
+            resolve();
+          }).catch(err => {
+            console.log('err: ', err);
+            reject(err);
+          });
+        }).then().catch();
+      },
+
+      // 保存优化表格
+      saveWeight(questionNum) {
+        new Promise((resolve, reject) => {
+          let mainWords = this.mainTableData.map(e => e.word);
+          let mainWeight = this.mainTableData.map(e => e.weight);
+          let detailWords = this.mainTableData.map(e => e.word);
+          let detailWeight = this.detailTableData.map(e => e.weight);
+          updateWeight(questionNum, mainWords, mainWeight, detailWords, detailWeight).then(res => {
+            this.$message({
+              message: '权重保存成功',
+              type: 'success'
+            });
+            resolve();
+          }).then(() => this.getWeightChartData(questionNum, 5)).catch(err => {
+            console.log(err);
+            reject();
+          });
+        }).then().catch();
+      },
+
       // 优化表格相关的方法
       handleDelete(index, row) {
         console.log("delete");
         console.log(index, row);
+        this.saveWeight(row.questionNum);
       },
 
       handleSave(index, row) {
         console.log("save");
         console.log(index, row);
+        this.saveWeight(row.questionNum);
       },
 
       handleReset(index, row) {
         console.log("reset");
         console.log(index, row);
+
       },
+
       // 去优化按钮监听
       handleOpt(index, row) {
         console.log("opt");
         console.log(index, row.questionNum);
+        this.getScoreChartData(row.questionNum, 5);
+        this.getWeightChartData(row.questionNum, 5);
         this.displayQuestionNum = row.questionNum;
         this.inOptimize = true;
       },
@@ -302,6 +321,8 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log('submit!');
+            this.getScoreChartData(this.searchQuestion.questionNum, 5);
+            this.getWeightChartData(this.searchQuestion.questionNum, 5);
             this.displayQuestionNum = this.searchQuestion.questionNum;
             this.inOptimize = true;
           } else {
@@ -312,12 +333,40 @@
       },
       // 刷新得分频率图
       refreshScoreChart() {
-        console.log("refresh chart!")
+        console.log("refresh chart!");
+        this.getScoreChartData(this.displayQuestionNum, 5);
       },
-      //
-      changeChartData() {
-        this.paramData = {}
-      }
+
+
+      // 填充频率分布图
+      fillHist(hist, data, histNum, limit) {
+        for (let i = 0; i < histNum; i++) {
+          hist.push(0);
+        }
+        let total = 0;
+        data.forEach(score => {
+          total += score;
+          for (let i = 0; i < histNum; i++) {
+            if (score < (i + 1) * limit / histNum) {
+              hist[i]++;
+              break;
+            }
+          }
+        });
+      },
+
+      // 关键词数组转string
+      array2str(arr) {
+        let str = '[';
+        for (let i = 0; i < arr.length; i++) {
+          str += arr[i];
+          if (i < arr.length - 1) {
+            str += ', '
+          }
+        }
+        str += ']';
+        return str;
+      },
     }
   }
 </script>

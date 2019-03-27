@@ -38,7 +38,7 @@
     name: "question-detail",
     props: {
       // 要查看的题目ID
-      'questionId': String
+      'questionId': Number
     },
     components: {
       synonyms
