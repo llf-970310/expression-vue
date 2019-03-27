@@ -27,7 +27,8 @@
                     <!-- 表单 -->
                     <div class="page-login--form">
                         <el-card shadow="never">
-                            <img class="page-login--logo" :src="headimgurl">
+                            <img class="page-WeChat--headImg" :src="headimgurl">
+                            <p class="page-WeChat--nickname">{{nickname}}</p>
                             <el-form ref="loginForm" label-position="top" :rules="rules" :model="formLogin"
                                      size="default">
                                 <el-form-item prop="username">
@@ -152,11 +153,11 @@
             /**
              * @description 提交表单
              */
-            // 提交登录信息
+            // 提交微信绑定账号信息(登录信息)
             submit() {
                 this.$refs.loginForm.validate((valid) => {
                     if (valid) {
-                        this.login({
+                        this.bindWechat({
                             vm: this,
                             username: this.formLogin.username,
                             password: this.formLogin.password
@@ -232,6 +233,15 @@
         .page-login--logo {
             width: 400px;
             margin-top: -2em;
+        }
+        .page-WeChat--headImg {
+            width: 60%;
+            padding-left: 20%;
+            margin-top: 1.5em;
+        }
+        .page-WeChat--nickname {
+            text-align:center;
+            margin:0.5em;
         }
 
         // 登录表单

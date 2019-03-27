@@ -22,5 +22,12 @@ export default {
             method: 'post',
             data: qs.stringify(data)
         })
-    }
+    },
+    wechatBind: function (data) {
+        return request({
+            url: '/auth/wechat/bind',
+            method: 'post',
+            data: qs.stringify(data)
+        })
+    },
 }

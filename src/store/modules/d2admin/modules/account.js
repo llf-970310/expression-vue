@@ -37,6 +37,37 @@ export default {
             })
         },
         /**
+         *
+         * @param dispatch
+         * @param vm
+         * @param username
+         * @param password
+         */
+        bindWechat({dispatch}, {vm, username, password}) {
+            return new Promise((resolve, reject) => {
+                // 开始请求微信绑定接口
+                api.wechatBind({
+                    username,
+                    password
+                })
+                    .then(async res => {
+                        util.cookies.set('uuid', res.uuid);
+                        // 设置 vuex 用户信息
+                        await dispatch('d2admin/user/set', {
+                            name: res.name
+                        }, {root: true});
+                        // 用户登录后从持久化数据加载一系列的设置
+                        await dispatch('load');
+                        // 结束
+                        resolve()
+                    })
+                    .catch(err => {
+                        console.log('err: ', err);
+                        reject(err)
+                    })
+            })
+        },
+        /**
          * @description 注销用户并返回登录页面
          * @param {Object} param context
          * @param {Object} param vm {Object} vue 实例
