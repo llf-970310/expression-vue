@@ -101,14 +101,14 @@
       },
 
       curAsideInit() {
-        this.curAsideList = []
+        let newAsideList = []
         for (let i = 0; i < this.aside.length; i++) {
           let curAside = this.aside[i]
           if (curAside.role === undefined || curAside.role === this.role) {
-            this.curAsideList.push(curAside)
+            newAsideList.push(curAside)
           }
         }
-        // console.log(this.curAsideList)
+        this.curAsideList = newAsideList
       },
 
       scrollDestroy() {

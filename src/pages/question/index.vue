@@ -138,7 +138,7 @@
       searchQuestion() {
         this.$refs['questionSearchForm'].validate((valid) => {
           if (valid) {
-            this.searchedQuestionId = this.questionSearchForm.questionId
+            this.searchedQuestionId = parseInt(this.questionSearchForm.questionId)
           } else {
             console.log('error submit!!')
             return false;
