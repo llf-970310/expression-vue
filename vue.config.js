@@ -15,9 +15,20 @@ module.exports = {
   lintOnSave: true,
   devServer: {
     // 这个请求被转发到了百度云服务器上，方便开发，百度云的nginx已经修改过了
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://106.12.39.88/api',
+    //     ws: true,
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/api': ''
+    //     }
+    //   }
+    // },
+    // 如果需要自己开发后台，上面你注释掉换成下面这个
     proxy: {
       '/api': {
-        target: 'http://106.12.39.88/api',
+        target: 'http://localhost:5000/api',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

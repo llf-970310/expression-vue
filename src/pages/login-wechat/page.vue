@@ -27,9 +27,9 @@
                     <!-- 表单 -->
                     <div class="page-login--form">
                         <el-card shadow="never">
+                            <img class="page-login--logo" :src="headimgurl">
                             <el-form ref="loginForm" label-position="top" :rules="rules" :model="formLogin"
                                      size="default">
-                                <p align="center">表达力评测登录</p>
                                 <el-form-item prop="username">
                                     <el-input type="text" v-model="formLogin.username" placeholder="邮箱">
                                         <i slot="prepend" class="fa fa-user-circle-o"></i>
@@ -48,15 +48,10 @@
                                 <!--</template>-->
                                 <!--</el-input>-->
                                 <!--</el-form-item>-->
-                                <el-button size="default" @click="submit" type="primary" class="button-login">登录
+                                <el-button size="default" @click="submit" type="primary" class="button-login">登录/绑定
                                 </el-button>
                             </el-form>
                         </el-card>
-                        <p class="page-login--options"
-                           flex="main:justify cross:center">
-                            <span style="cursor: pointer" @click="wechatLogin">微信登录</span>
-                            <span style="cursor: pointer" @click="toRegisterPage">注册用户</span>
-                        </p>
                     </div>
                 </div>
                 <div class="page-login--content-footer">
@@ -99,8 +94,8 @@
                 time: dayjs().format('HH:mm:ss'),
                 // 表单
                 formLogin: {
-                    username: 'chudongyu@site.com',
-                    password: '1234',
+                    username: '',
+                    password: '',
                     // code: ''
                 },
                 // 校验
@@ -121,6 +116,15 @@
             }
         },
         mounted() {
+            const nickname = this.$route.query.nickname
+            const headimgurl = this.$route.query.headimgurl
+            if (nickname && nickname !== "undefined" && headimgurl && headimgurl !== "undefined") {
+                this.nickname = nickname
+                this.headimgurl = headimgurl
+            }
+            // else {
+            //     this.$router.push('login')
+            // }
             this.timeInterval = setInterval(() => {
                 this.refreshTime()
             }, 1000)
@@ -164,13 +168,6 @@
                         this.$message.error('表单校验失败')
                     }
                 })
-            },
-            toRegisterPage() {
-                this.$router.push('register')
-            },
-            wechatLogin() {
-                //todo 这里用了外链
-                location.href = 'https://open.weixin.qq.com/connect/qrconnect?appid=wxd7bad9aab33bb581&redirect_uri=https://expression.iselab.cn/api/auth/wechat/login&response_type=code&scope=snsapi_login&state=zidingyineirong#wechat_redirect';
             }
             // /**
             //  * @description 提交注册申请
