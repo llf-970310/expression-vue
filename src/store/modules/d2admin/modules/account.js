@@ -43,7 +43,7 @@ export default {
          * @param username
          * @param password
          */
-        bindWechat({dispatch}, {vm, username, password}) {
+        bindWeChat({dispatch}, {vm, username, password}) {
             return new Promise((resolve, reject) => {
                 // 开始请求微信绑定接口
                 api.wechatBind({
