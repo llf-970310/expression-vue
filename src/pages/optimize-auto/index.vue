@@ -123,54 +123,22 @@
 </template>
 
 <script>
+  import {getAllQuestions} from '@/api/question'
+  import {getScoreData, getLastCostData, startAutoOpt, stopAutoOpt, refreshAutoOpt} from '@/api/optimize'
+
   export default {
     name: 'optimize-auto',
     data() {
-      let textStub = '高铁是现在是最受欢迎的出行方式。首先，高铁速度快，比如说，以前从贵阳到北京，要用40个小时左右，但现在高铁只需要6个小时，大大减少了路途时间。其次，高铁正点率高，因为高铁受天气条件影响较小，通常都可以准时发车，按时到达。最后，高铁环境舒适，高铁坐席宽敞，运行时速度平稳，没有噪音，餐车环境整洁，配有电源插座和无线网络，乘坐高铁很少会造成不适感，对于不习惯坐飞机出行的人士，高铁是更理想的选择。但高铁的建设';
-      let costData = [];
-      for (let i = 0; i < 50; i++) {
-        costData.push({"迭代次数": i + 1, "损失函数值": Math.pow(2, (50 - i) / 15)})
-      }
-      console.log(costData);
+
       return {
         filename: __filename,
         // question table
-        questionTable: [{
-          questionNum: "1",
-          lastOpDate: "2019-03-15",
-          status: "空闲中",
-          inUse: false,
-          text: textStub,
-        }, {
-          questionNum: "2",
-          lastOpDate: "2019-03-15",
-          status: "空闲中",
-          inUse: false,
-          text: textStub,
-        }, {
-          questionNum: "3",
-          lastOpDate: "2019-03-15",
-          status: "优化中",
-          inUse: true,
-          text: textStub,
-        }, {
-          questionNum: "4",
-          lastOpDate: "2019-03-15",
-          status: "空闲中",
-          inUse: false,
-          text: textStub,
-        }, {
-          questionNum: "5",
-          lastOpDate: "2019-03-15",
-          status: "空闲中",
-          inUse: false,
-          text: textStub,
-        }],
+        questionTable: [],
         // search
         searchQuestion: {
           questionNum: '',
         },
-        displayQuestionNum: '1',
+        displayQuestionNum: '',
 
         // 优化是否可见
         inOptimize: false,
@@ -181,24 +149,11 @@
         // v-charts
         paramData: {
           columns: ['关键词权重', '主旨关键词占比', '细节关键词占比'],
-          rows: [
-            {'关键词权重': '0 ~ 0.1', '主旨关键词占比': 0.12, '细节关键词占比': 0.15},
-            {'关键词权重': '0.2 ~ 0.3', '主旨关键词占比': 0.23, '细节关键词占比': 0.17},
-            {'关键词权重': '0.3 ~ 0.4', '主旨关键词占比': 0.33, '细节关键词占比': 0.24},
-            {'关键词权重': '0.4 ~ 0.5', '主旨关键词占比': 0.23, '细节关键词占比': 0.33},
-            {'关键词权重': '0.5 ~ 0.6', '主旨关键词占比': 0.11, '细节关键词占比': 0.10},
-            {'关键词权重': '0.6 ~ 0.7', '主旨关键词占比': 0.07, '细节关键词占比': 0.02}
-          ]
+          rows: []
         },
         scoreData: {
           columns: ['得分', '主旨人数频率', '细节人数频率', '总分人数频率'],
-          rows: [
-            {'得分': '0 ~ 20', '主旨人数频率': 0.12, '细节人数频率': 0.15, '总分人数频率': 0.13},
-            {'得分': '20 ~ 40', '主旨人数频率': 0.23, '细节人数频率': 0.17, '总分人数频率': 0.16},
-            {'得分': '30 ~ 60', '主旨人数频率': 0.33, '细节人数频率': 0.24, '总分人数频率': 0.30},
-            {'得分': '40 ~ 80', '主旨人数频率': 0.23, '细节人数频率': 0.33, '总分人数频率': 0.31},
-            {'得分': '50 ~ 100', '主旨人数频率': 0.11, '细节人数频率': 0.10, '总分人数频率': 0.105},
-          ]
+          rows: []
         },
 
         // 优化表单
@@ -208,17 +163,86 @@
         // cost function
         costData : {
           columns: ['迭代次数', '损失函数值'],
-          rows: costData,
+          rows: [],
         },
-        optimizeDate: "2019-03-19"
+        optimizeDate: ""
 
       }
     },
+    mounted() {
+      this.getQuestionTableData();
+    },
     methods: {
+      // 获得question表格的数据
+      getQuestionTableData() {
+        new Promise((resolve, reject) => {
+          getAllQuestions().then(res => {
+            res.questions.forEach(question => {
+              this.questionTable.push({
+                'questionNum': question.questionId,
+                'lastOpDate': question.lastOpDate,
+                'inUse': question.inOptimize,
+                'text': question.rawText,
+              });
+            });
+
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err);
+            reject(err);
+          })
+        }).then().catch();
+      },
+
+      // 获得score chart的数据
+      getScoreChartData(questionNum, histNum) {
+        new Promise((resolve, reject) => {
+          getScoreData(questionNum).then(res => {
+            let mainHist = [];
+            let detailHist = [];
+            let totalHist = [];
+            this.fillHist(mainHist, res.main, histNum, 100);
+            this.fillHist(detailHist, res.detail, histNum, 100);
+            this.fillHist(totalHist, res.total, histNum, 100);
+            this.scoreData.rows = [];
+            for (let i = 0; i < histNum; i++) {
+              this.scoreData.rows.push({
+                '得分': (i * 100 / histNum) + ' ~ ' + ((i + 1) * 100 / histNum),
+                '主旨人数': mainHist[i],
+                '细节人数': detailHist[i],
+                '总分人数': totalHist[i],
+              });
+            }
+
+            resolve();
+          }).catch(err => {
+            console.log('err: ', err);
+            reject(err);
+          })
+        }).then().catch();
+      },
+
+      // 获得cost data的数据
+      getCostChartData(questionNum) {
+        new Promise((resolve, reject) => {
+          getLastCostData(questionNum).then(res => {
+            this.optimizeDate = res.date;
+            this.costData.rows = [];
+            res.costData.forEach(data => {
+              this.costData.push({"迭代次数": data.itrTimes, "损失函数值": data.cost});
+            });
+            resolve();
+          }).catch(err => {
+            console.log('err: ', err);
+            reject(err);
+          })
+        }).then().catch();
+      },
 
       handleOpt(index, row) {
         console.log("opt");
         console.log(index, row.questionNum);
+        this.getScoreChartData(row.questionNum, 5);
         this.displayQuestionNum = row.questionNum;
         this.inOptimize = true;
         this.optimizing = false;
@@ -246,6 +270,18 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log('submit!');
+            new Promise((resolve, reject) => {
+              startAutoOpt(this.displayQuestionNum, this.optimizeForm).then(res => {
+                this.$message({
+                  message: '提交自动优化申请成功',
+                  type: 'success'
+                });
+                resolve();
+              }).catch(err => {
+                console.log('err: ', err);
+                reject(err);
+              });
+            }).then().catch();
             this.optimizing = true;
           } else {
             console.log('error submit!!');
@@ -267,6 +303,7 @@
       // 查看优化状态
       watchOpt(index, row) {
         this.displayQuestionNum = row.questionNum;
+        this.getCostChartData(row.questionNum);
         this.inOptimize = true;
         this.optimizing = true;
       }

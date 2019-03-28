@@ -59,13 +59,15 @@ export function getLastCostData(questionNum) {
 /**
  * 开始某道题的自动优化，需要这道题处于未优化状态时才会成功操作
  * @param questionNum 题号
+ * @param settings 优化设置
  */
-export function startAutoOpt(questionNum) {
+export function startAutoOpt(questionNum, settings) {
   return request({
     url: '/admin/start-auto-optimize',
     method: 'post',
     data: qs.stringify({
       questionNum: questionNum,
+      settings: settings,
     }),
   });
 }
