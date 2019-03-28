@@ -70,7 +70,9 @@
         <div style="width: 100%; height: auto; overflow: hidden;">
           <div style="width: 100%; height: 28px; overflow: hidden">
             <div class="page-optimize--subtitle">损失函数-迭代次数关系图</div>
-            <div class="page-optimize--subtitle" style="color: #ABABAB; font-size: 12px; margin-left: 20px; padding-top: 4px">优化日期: {{optimizeDate}}</div>
+            <div class="page-optimize--subtitle"
+                 style="color: #ABABAB; font-size: 12px; margin-left: 20px; padding-top: 4px">优化日期: {{optimizeDate}}
+            </div>
             <div style="float: right;">
               <el-button icon="el-icon-refresh" type="text" size="mini" @click="refreshCostChart">刷新数据</el-button>
             </div>
@@ -123,8 +125,8 @@
 </template>
 
 <script>
-  import {getAllQuestions} from '@/api/question'
-  import {getScoreData, getLastCostData, startAutoOpt, stopAutoOpt, refreshAutoOpt} from '@/api/optimize'
+  import {getAllQuestions, getWeightData, getScoreData, getLastCostData, startAutoOpt, stopAutoOpt, refreshAutoOpt} from
+      '@/api/optimize'
 
   export default {
     name: 'optimize-auto',
@@ -148,11 +150,11 @@
 
         // v-charts
         paramData: {
-          columns: ['关键词权重', '主旨关键词占比', '细节关键词占比'],
+          columns: ['关键词权重', '主旨关键词数', '细节关键词数'],
           rows: []
         },
         scoreData: {
-          columns: ['得分', '主旨人数频率', '细节人数频率', '总分人数频率'],
+          columns: ['得分', '主旨人数', '细节人数', '总分人数'],
           rows: []
         },
 
@@ -161,7 +163,7 @@
         algorithmOptions: [{label: "梯度下降", value: "gradient"}],
 
         // cost function
-        costData : {
+        costData: {
           columns: ['迭代次数', '损失函数值'],
           rows: [],
         },
@@ -222,6 +224,31 @@
         }).then().catch();
       },
 
+      // 获得weight chart的数据
+      getWeightChartData(questionNum, histNum) {
+        new Promise((resolve, reject) => {
+          getWeightData(questionNum).then(res => {
+            // chart部分
+            let mainHist = [];
+            let detailHist = [];
+            this.fillHist(mainHist, res.mainWeight, histNum, 100);
+            this.fillHist(detailHist, res.detailWeight, histNum, 100);
+            this.paramData.rows = [];
+            for (let i = 0; i < histNum; i++) {
+              this.paramData.rows.push({
+                '关键词权重': (i / histNum) + ' ~ ' + ((i + 1) / histNum),
+                '主旨关键词数': mainHist[i],
+                '细节关键词数': detailHist[i],
+              });
+            }
+            resolve();
+          }).catch(err => {
+            console.log('err: ', err);
+            reject(err);
+          });
+        }).then().catch();
+      },
+
       // 获得cost data的数据
       getCostChartData(questionNum) {
         new Promise((resolve, reject) => {
@@ -229,7 +256,7 @@
             this.optimizeDate = res.date;
             this.costData.rows = [];
             res.costData.forEach(data => {
-              this.costData.push({"迭代次数": data.itrTimes, "损失函数值": data.cost});
+              this.costData.rows.push({"迭代次数": data.itrTimes, "损失函数值": data.cost});
             });
             resolve();
           }).catch(err => {
@@ -243,6 +270,7 @@
         console.log("opt");
         console.log(index, row.questionNum);
         this.getScoreChartData(row.questionNum, 5);
+        this.getWeightChartData(row.questionNum, 5);
         this.displayQuestionNum = row.questionNum;
         this.inOptimize = true;
         this.optimizing = false;
@@ -302,11 +330,29 @@
       },
       // 查看优化状态
       watchOpt(index, row) {
+        this.getScoreChartData(row.questionNum, 5);
+        this.getWeightChartData(row.questionNum, 5);
         this.displayQuestionNum = row.questionNum;
         this.getCostChartData(row.questionNum);
         this.inOptimize = true;
         this.optimizing = true;
-      }
+      },
+      // 填充频率分布图
+      fillHist(hist, data, histNum, limit) {
+        for (let i = 0; i < histNum; i++) {
+          hist.push(0);
+        }
+        let total = 0;
+        data.forEach(score => {
+          total += score;
+          for (let i = 0; i < histNum; i++) {
+            if (score < (i + 1) * limit / histNum) {
+              hist[i]++;
+              break;
+            }
+          }
+        });
+      },
     }
   }
 </script>

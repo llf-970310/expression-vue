@@ -125,8 +125,7 @@
 </template>
 
 <script>
-  import {getAllQuestions} from '@/api/question'
-  import {getScoreData, getWeightData, updateWeight} from '@/api/optimize'
+  import {getAllQuestions, getScoreData, getWeightData, updateWeight} from '@/api/optimize'
 
   export default {
     name: 'optimize-manual',
@@ -180,7 +179,7 @@
                 'text': question.rawText,
               });
             });
-
+            console.log(this.questionTable);
             resolve()
           }).catch(err => {
             console.log('err: ', err);

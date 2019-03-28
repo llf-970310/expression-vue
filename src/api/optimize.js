@@ -2,6 +2,12 @@ import request from '@/plugin/axios'
 
 const qs = require('qs');
 
+export function getAllQuestions() {
+  return request({
+    url: '/admin/questions',
+    method: 'get',
+  });
+}
 
 /**
  * 获得某道题的得分原始数据
