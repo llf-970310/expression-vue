@@ -9,7 +9,7 @@ const qs = require('qs');
  */
 export function getScoreData(questionNum) {
   return request({
-    url: '/admin/get-score-data/' + questionNum,
+    url: '/admin/get-score-data?question-num=' + questionNum,
     method: 'get',
   });
 }
@@ -20,7 +20,7 @@ export function getScoreData(questionNum) {
  */
 export function getWeightData(questionNum) {
   return request({
-    url: '/admin/get-weight-data/' + questionNum,
+    url: '/admin/get-weight-data?question-num=' + questionNum,
     method: 'get',
   });
 }
@@ -28,19 +28,14 @@ export function getWeightData(questionNum) {
 /**
  * 更新某道题的权重
  * @param questionNum 题号
- * @param mainWords 主旨词
- * @param mainWeight 主旨词权重
- * @param detailWords 细节词
- * @param detailWeight 细节词权重
+ * @param weight 权重数据
  */
-export function updateWeight(questionNum, mainWords, mainWeight, detailWords, detailWeight) {
+export function updateWeight(questionNum, weight) {
   return request({
     url: '/admin/update-weight',
     method: 'post',
     data: qs.stringify({
-      questionNum: questionNum,
-      mainWeight: mainWeight,
-      detailWeight: detailWeight,
+      weight: weight
     }),
   });
 }
@@ -51,7 +46,7 @@ export function updateWeight(questionNum, mainWords, mainWeight, detailWords, de
  */
 export function getLastCostData(questionNum) {
   return request({
-    url: '/admin/get-last-cost-data/' + questionNum,
+    url: '/admin/get-last-cost-data?question-num=' + questionNum,
     method: 'get',
   });
 }

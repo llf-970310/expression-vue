@@ -80,14 +80,14 @@ const costData = {
 
 export default [
   {
-    path: '/admin/get-score-data/.*',
+    path: '/admin/get-score-data.*',
     method: 'get',
     handle() {
       return {'code': 0, 'msg': 'success', 'data': scoreData};
     }
   },
   {
-    path: '/admin/get-weight-data/.*',
+    path: '/admin/get-weight-data.*',
     method: 'get',
     handle() {
       return {'code': 0, 'msg': 'success', 'data': weightData};
@@ -101,7 +101,7 @@ export default [
     }
   },
   {
-    path: '/admin/get-last-cost-data/.*',
+    path: '/admin/get-last-cost-data.*',
     method: 'get',
     handle() {
       return {'code': 0, 'msg': 'success', 'data': costData};

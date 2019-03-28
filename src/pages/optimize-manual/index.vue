@@ -266,7 +266,12 @@
           let mainWeight = this.mainTableData.map(e => e.weight);
           let detailWords = this.mainTableData.map(e => e.word);
           let detailWeight = this.detailTableData.map(e => e.weight);
-          updateWeight(questionNum, mainWords, mainWeight, detailWords, detailWeight).then(res => {
+          updateWeight(questionNum, {
+            "mainWords": mainWords,
+            "mainWeight": mainWeight,
+            "detailWords": detailWords,
+            "detailWeight": detailWeight,
+          }).then(res => {
             this.$message({
               message: '权重保存成功',
               type: 'success'
