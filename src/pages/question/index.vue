@@ -3,7 +3,6 @@
   <d2-container :filename="filename">
     <template slot="header">题目管理</template>
 
-    <!--查看题目详情-->
     <div>
       <!--通过题号搜索-->
       <el-row>
@@ -68,8 +67,20 @@
               width="250">
           </el-table-column>
         </el-table>
-      </div>
 
+        <el-row class="d2-text-center">
+          <el-pagination
+              @size-change="curSizePerPageChanged"
+              @current-change="curPageChanged"
+              :current-page="curPage"
+              :page-sizes="[10, 25, 50, 100, 200]"
+              :page-size="curSizePerPage"
+              layout="prev, pager, next, total, sizes"
+              :total="totalCount">
+          </el-pagination>
+        </el-row>
+
+      </div>
     </div>
   </d2-container>
 </template>
@@ -77,7 +88,7 @@
 <script>
   import QuestionDetail from './detail/index'
   import NewQuestion from './new/index'
-  import {getAllQuestions} from '@api/question'
+  import {getAllQuestions} from '@api/manager.question'
 
   export default {
     name: "question",
@@ -113,7 +124,13 @@
         isNewQuestion: false,
 
         // 所有题目部分
-        allQuestions: []
+        allQuestions: [],
+        // 总条数
+        totalCount: 1,
+        // 当前页数
+        curPage: 1,
+        // 每页条数
+        curSizePerPage: 50
       }
     },
     computed: {
@@ -122,19 +139,22 @@
       }
     },
     mounted: function () {
-      new Promise((resolve, reject) => {
-        getAllQuestions(1, 50).then(res => {
-          console.log(res)
-          // TODO res.count 页数分页
-          this.allQuestions = res.questions
-          resolve()
-        }).catch(err => {
-          console.log('err: ', err)
-          reject(err)
-        })
-      }).then().catch()
+      this.initQuestions()
     },
     methods: {
+      initQuestions() {
+        new Promise((resolve, reject) => {
+          getAllQuestions(this.curPage, this.curSizePerPage).then(res => {
+            console.log(res)
+            this.allQuestions = res.questions
+            this.totalCount = res.count
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        }).then().catch()
+      },
       searchQuestion() {
         this.$refs['questionSearchForm'].validate((valid) => {
           if (valid) {
@@ -153,6 +173,17 @@
       goBackToAllQuestions() {
         this.isNewQuestion = false
         this.searchedQuestionId = ''
+      },
+
+      curPageChanged(val) {
+        console.log(`当前页: ${val}`);
+        this.initQuestions()
+      },
+      curSizePerPageChanged(val) {
+        // 每页大小变化之后，总是回到第一页 TODO 组件自动变更，无法更改
+        // this.curPage = 1
+        console.log(`每页 ${val} 条`);
+        this.initQuestions()
       }
 
     }

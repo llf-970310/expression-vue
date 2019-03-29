@@ -32,7 +32,7 @@
 
 <script>
   import synonyms from './synonyms'
-  import {getQuestion} from '@/api/question'
+  import {getQuestion} from '@/api/manager.question'
 
   export default {
     name: "question-detail",
