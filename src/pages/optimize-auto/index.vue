@@ -44,7 +44,7 @@
 
       <div style="width: 100%; height: auto; overflow: hidden;">
         <!--权重分布图-->
-        <div style="width: 49%; height: auto; overflow: hidden; float: left">
+        <div style="width: 49%; height: auto; overflow: hidden; float: left; margin-bottom: -20px;">
           <div style="width: 100%; height: 28px; overflow: hidden">
             <div class="page-optimize--subtitle">关键词权重分布图</div>
           </div>
@@ -53,7 +53,7 @@
           </template>
         </div>
         <!--得分频率分布图-->
-        <div style="width: 49%; height: auto; overflow: hidden; float: right">
+        <div style="width: 49%; height: auto; overflow: hidden; float: right margin-bottom: -20px;">
           <div style="width: 100%; height: 28px; overflow: hidden">
             <div class="page-optimize--subtitle">得分频率分布图</div>
             <div style="float: right;">
@@ -64,6 +64,20 @@
             <ve-line :data="scoreData" height="350px"></ve-line>
           </template>
         </div>
+
+        <!--难度系数与区分度-->
+        <div style="width: 100%; overflow: hidden; height: auto; margin-bottom: 25px">
+          <template>
+            <el-table :data="scoreStatistic" style="width: 100%" border>
+              <el-table-column prop="type" label="类型" width="180"></el-table-column>
+              <el-table-column prop="mean" label="平均分" width="180"></el-table-column>
+              <el-table-column prop="sigma" label="标准差"></el-table-column>
+              <el-table-column prop="difficulty" label="难度系数"></el-table-column>
+              <el-table-column prop="discrimination" label="区分度"></el-table-column>
+            </el-table>
+          </template>
+        </div>
+
       </div>
       <!--优化过程图-->
       <div v-if="optimizing">
@@ -88,17 +102,26 @@
         <div class="page-optimize--subtitle" style="width: 100%; margin-bottom: 10px">优化选项设置</div>
         <div style="width: 60%">
           <el-form :model="optimizeForm" ref="optimizeForm" label-width="160px">
-            <el-form-item label="迭代次数" prop="times"
-                          :rules="[{ required: true, message: '迭代次数不能为空'},{ type: 'number', message: '迭代次数必须为数字值'}]">
+            <el-form-item label="迭代次数" prop="times" :rules="rule">
               <el-input v-model.number="optimizeForm.times"></el-input>
             </el-form-item>
-            <el-form-item label="步长 (α)" prop="alpha"
-                          :rules="[{ required: true, message: '步长不能为空'},{ type: 'number', message: '步长必须为数字值'}]">
+            <el-form-item label="步长 (α)" prop="alpha" :rules="rule">
               <el-input v-model.number="optimizeForm.alpha"></el-input>
             </el-form-item>
-            <el-form-item label="正规化参数 (λ)" prop="lambda"
-                          :rules="[{ required: true, message: '步长不能为空'},{ type: 'number', message: '步长必须为数字值'}]">
+            <el-form-item label="正规化参数 (λ)" prop="lambda" :rules="rule">
               <el-input v-model.number="optimizeForm.lambda"></el-input>
+            </el-form-item>
+            <el-form-item label="主旨均值" prop="keyMean" :rules="rule">
+              <el-input v-model.number="optimizeForm.keyMean"></el-input>
+            </el-form-item>
+            <el-form-item label="主旨标准差" prop="keySigma" :rules="rule">
+              <el-input v-model.number="optimizeForm.keySigma"></el-input>
+            </el-form-item>
+            <el-form-item label="细节均值" prop="detailMean" :rules="rule">
+              <el-input v-model.number="optimizeForm.detailMean"></el-input>
+            </el-form-item>
+            <el-form-item label="细节标准差" prop="detailSigma" :rules="rule">
+              <el-input v-model.number="optimizeForm.detailSigma"></el-input>
             </el-form-item>
             <el-form-item label="优化算法" prop="algorithm" :rules="[{ required: true, message: '算法不能为空'}]">
               <el-select v-model="optimizeForm.algorithm" placeholder="请选择算法">
@@ -159,7 +182,8 @@
         },
 
         // 优化表单
-        optimizeForm: {times: 10000, alpha: 0.1, lambda: 1, algorithm: 'gradient', watch: true},
+        optimizeForm: {times: 10000, alpha: 0.1, lambda: 1, keyMean: 50, keySigma: 20, detailMean: 50, detailSigma: 20,
+          algorithm: 'gradient', watch: true},
         algorithmOptions: [{label: "梯度下降", value: "gradient"}],
 
         // cost function
@@ -167,8 +191,11 @@
           columns: ['迭代次数', '损失函数值'],
           rows: [],
         },
-        optimizeDate: ""
+        optimizeDate: "",
 
+        scoreStatistic: [],
+
+        rule: [{ required: true, message: '步长不能为空'},{ type: 'number', message: '必须为数字值'}],
       }
     },
     mounted() {
@@ -185,6 +212,7 @@
                 'lastOpDate': question.lastOpDate,
                 'inUse': question.inOptimize,
                 'text': question.rawText,
+                'status': question.inOptimize ? "优化中" : "空闲",
               });
             });
 
@@ -200,21 +228,44 @@
       getScoreChartData(questionNum, histNum) {
         new Promise((resolve, reject) => {
           getScoreData(questionNum).then(res => {
-            let mainHist = [];
+            let keyHist = [];
             let detailHist = [];
             let totalHist = [];
-            this.fillHist(mainHist, res.main, histNum, 100);
+            this.fillHist(keyHist, res.key, histNum, 100);
             this.fillHist(detailHist, res.detail, histNum, 100);
             this.fillHist(totalHist, res.total, histNum, 100);
             this.scoreData.rows = [];
             for (let i = 0; i < histNum; i++) {
               this.scoreData.rows.push({
                 '得分': (i * 100 / histNum) + ' ~ ' + ((i + 1) * 100 / histNum),
-                '主旨人数': mainHist[i],
+                '主旨人数': keyHist[i],
                 '细节人数': detailHist[i],
                 '总分人数': totalHist[i],
               });
             }
+            this.scoreStatistic.push({
+              "type": "主旨", "mean": res.keyStatistic.mean.toFixed(2),
+              "sigma": res.keyStatistic.sigma.toFixed(2),
+              "difficulty": res.keyStatistic.difficulty.toFixed(2),
+              "discrimination": res.keyStatistic.discrimination.toFixed(2)
+            });
+            this.scoreStatistic.push({
+              "type": "细节", "mean": res.detailStatistic.mean.toFixed(2),
+              "sigma": res.detailStatistic.sigma.toFixed(2),
+              "difficulty": res.detailStatistic.difficulty.toFixed(2),
+              "discrimination": res.detailStatistic.discrimination.toFixed(2)
+            });
+            this.scoreStatistic.push({
+              "type": "总分", "mean": res.totalStatistic.mean.toFixed(2),
+              "sigma": res.totalStatistic.sigma.toFixed(2),
+              "difficulty": res.totalStatistic.difficulty.toFixed(2),
+              "discrimination": res.totalStatistic.discrimination.toFixed(2)
+            });
+
+            this.optimizeForm.keyMean = parseFloat(res.keyStatistic.mean.toFixed(2));
+            this.optimizeForm.keySigma = parseFloat(res.keyStatistic.sigma.toFixed(2));
+            this.optimizeForm.detailMean = parseFloat(res.detailStatistic.mean.toFixed(2));
+            this.optimizeForm.detailSigma = parseFloat(res.detailStatistic.sigma.toFixed(2));
 
             resolve();
           }).catch(err => {
@@ -229,15 +280,15 @@
         new Promise((resolve, reject) => {
           getWeightData(questionNum).then(res => {
             // chart部分
-            let mainHist = [];
+            let keyHist = [];
             let detailHist = [];
-            this.fillHist(mainHist, res.mainWeight, histNum, 100);
+            this.fillHist(keyHist, res.keyWeight, histNum, 100);
             this.fillHist(detailHist, res.detailWeight, histNum, 100);
             this.paramData.rows = [];
             for (let i = 0; i < histNum; i++) {
               this.paramData.rows.push({
                 '关键词权重': (i / histNum) + ' ~ ' + ((i + 1) / histNum),
-                '主旨关键词数': mainHist[i],
+                '主旨关键词数': keyHist[i],
                 '细节关键词数': detailHist[i],
               });
             }
