@@ -125,7 +125,8 @@
 </template>
 
 <script>
-  import {getAllQuestions, getScoreData, getWeightData, updateWeight} from '@/api/optimize'
+  import {getAllQuestions} from '@api/manager.question'
+  import {getScoreData, getWeightData, updateWeight} from '@/api/optimize'
 
   export default {
     name: 'optimize-manual',

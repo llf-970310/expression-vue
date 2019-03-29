@@ -125,8 +125,8 @@
 </template>
 
 <script>
-  import {getAllQuestions, getWeightData, getScoreData, getLastCostData, startAutoOpt, stopAutoOpt, refreshAutoOpt} from
-      '@/api/optimize'
+  import {getAllQuestions} from '@api/manager.question'
+  import {getWeightData, getScoreData, getLastCostData, startAutoOpt, stopAutoOpt, refreshAutoOpt} from '@/api/optimize'
 
   export default {
     name: 'optimize-auto',
