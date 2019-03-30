@@ -41,7 +41,7 @@
 
       <div style="width: 100%; height: auto; overflow: hidden;">
         <!--权重分布图-->
-        <div style="width: 49%; height: auto; overflow: hidden; float: left">
+        <div style="width: 49%; height: auto; overflow: hidden; float: left; margin-bottom: -20px;">
           <div style="width: 100%; height: 28px; overflow: hidden">
             <div class="page-optimize--subtitle">关键词权重分布图</div>
           </div>
@@ -50,7 +50,7 @@
           </template>
         </div>
         <!--得分频率分布图-->
-        <div style="width: 49%; height: auto; overflow: hidden; float: right">
+        <div style="width: 49%; height: auto; overflow: hidden; float: right; margin-bottom: -20px;">
           <div style="width: 100%; height: 28px; overflow: hidden">
             <div class="page-optimize--subtitle">得分频率分布图</div>
             <div style="float: right;">
@@ -61,14 +61,29 @@
             <ve-line :data="scoreData" height="350px"></ve-line>
           </template>
         </div>
+
+        <!--难度系数与区分度-->
+        <div style="width: 100%; overflow: hidden; height: auto; margin-bottom: 25px">
+          <template>
+            <el-table :data="scoreStatistic" style="width: 100%" border>
+              <el-table-column prop="type" label="类型" width="180"></el-table-column>
+              <el-table-column prop="mean" label="平均分" width="180"></el-table-column>
+              <el-table-column prop="sigma" label="标准差"></el-table-column>
+              <el-table-column prop="difficulty" label="难度系数"></el-table-column>
+              <el-table-column prop="discrimination" label="区分度"></el-table-column>
+            </el-table>
+          </template>
+        </div>
+
       </div>
+
       <template>
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-          <el-tab-pane label="主旨权重调整" name="main">
+          <el-tab-pane label="主旨权重调整" name="key">
             <!--主旨权重调整表格-->
             <template>
               <el-table
-                  :data="mainTableData.filter(data => !search || data.word.toLowerCase().includes(search.toLowerCase()))"
+                  :data="keyTableData.filter(data => !search || data.word.toLowerCase().includes(search.toLowerCase()))"
                   style="width: 100%" :default-sort="{prop: 'hitRate', order: 'descending'}">
                 <el-table-column prop="word" label="关键词" :show-overflow-tooltip=true></el-table-column>
                 <el-table-column label="击中频率" width="120px" prop="hitRate" sortable></el-table-column>
@@ -144,13 +159,13 @@
         },
 
         // tab
-        activeName: 'main',
+        activeName: 'key',
 
         // question table
         questionTable: [],
 
         // opt table
-        mainTableData: [],
+        keyTableData: [],
         detailTableData: [],
         search: '',
 
@@ -162,6 +177,8 @@
 
         // 优化是否可见
         inOptimize: false,
+
+        scoreStatistic: []
       }
     },
     mounted() {
@@ -178,6 +195,7 @@
                 'lastOpDate': question.lastOpDate,
                 'inUse': question.inOptimize,
                 'text': question.rawText,
+                'status': question.inOptimize ? "优化中" : "空闲",
               });
             });
             console.log(this.questionTable);
@@ -193,21 +211,39 @@
       getScoreChartData(questionNum, histNum) {
         new Promise((resolve, reject) => {
           getScoreData(questionNum).then(res => {
-            let mainHist = [];
+            let keyHist = [];
             let detailHist = [];
             let totalHist = [];
-            this.fillHist(mainHist, res.main, histNum, 100);
+            this.fillHist(keyHist, res.key, histNum, 100);
             this.fillHist(detailHist, res.detail, histNum, 100);
             this.fillHist(totalHist, res.total, histNum, 100);
             this.scoreData.rows = [];
             for (let i = 0; i < histNum; i++) {
               this.scoreData.rows.push({
                 '得分': (i * 100 / histNum) + ' ~ ' + ((i + 1) * 100 / histNum),
-                '主旨人数': mainHist[i],
+                '主旨人数': keyHist[i],
                 '细节人数': detailHist[i],
                 '总分人数': totalHist[i],
               });
             }
+            this.scoreStatistic.push({
+              "type": "主旨", "mean": res.keyStatistic.mean.toFixed(2),
+              "sigma": res.keyStatistic.sigma.toFixed(2),
+              "difficulty": res.keyStatistic.difficulty.toFixed(2),
+              "discrimination": res.keyStatistic.discrimination.toFixed(2)
+            });
+            this.scoreStatistic.push({
+              "type": "细节", "mean": res.detailStatistic.mean.toFixed(2),
+              "sigma": res.detailStatistic.sigma.toFixed(2),
+              "difficulty": res.detailStatistic.difficulty.toFixed(2),
+              "discrimination": res.detailStatistic.discrimination.toFixed(2)
+            });
+            this.scoreStatistic.push({
+              "type": "总分", "mean": res.totalStatistic.mean.toFixed(2),
+              "sigma": res.totalStatistic.sigma.toFixed(2),
+              "difficulty": res.totalStatistic.difficulty.toFixed(2),
+              "discrimination": res.totalStatistic.discrimination.toFixed(2)
+            });
 
             resolve();
           }).catch(err => {
@@ -222,25 +258,25 @@
         new Promise((resolve, reject) => {
           getWeightData(questionNum).then(res => {
             // chart部分
-            let mainHist = [];
+            let keyHist = [];
             let detailHist = [];
-            this.fillHist(mainHist, res.mainWeight, histNum, 100);
+            this.fillHist(keyHist, res.keyWeight, histNum, 100);
             this.fillHist(detailHist, res.detailWeight, histNum, 100);
             this.paramData.rows = [];
             for (let i = 0; i < histNum; i++) {
               this.paramData.rows.push({
                 '关键词权重': (i / histNum) + ' ~ ' + ((i + 1) / histNum),
-                '主旨关键词数': mainHist[i],
+                '主旨关键词数': keyHist[i],
                 '细节关键词数': detailHist[i],
               });
             }
             // table部分
-            this.mainTableData = [];
-            for (let i = 0; i < res.mainWords.length; i++) {
-              this.mainTableData.push({
-                word: this.array2str(res.mainWords[i]),
-                hitRate: res.mainHitTimes[i] / res.allHitTimes,
-                weight: res.mainWeight[i],
+            this.keyTableData = [];
+            for (let i = 0; i < res.keyWords.length; i++) {
+              this.keyTableData.push({
+                word: this.array2str(res.keyWords[i]),
+                hitRate: res.keyHitTimes[i] / res.allHitTimes,
+                weight: res.keyWeight[i],
               });
             }
             this.detailTableData = [];
@@ -262,14 +298,14 @@
       // 保存优化表格
       saveWeight(questionNum) {
         new Promise((resolve, reject) => {
-          let mainWords = this.mainTableData.map(e => e.word);
-          let mainWeight = this.mainTableData.map(e => e.weight);
-          let detailWords = this.mainTableData.map(e => e.word);
+          let keyWords = this.keyTableData.map(e => e.word);
+          let keyWeight = this.keyTableData.map(e => e.weight);
+          let detailWords = this.detailTableData.map(e => e.word);
           let detailWeight = this.detailTableData.map(e => e.weight);
           updateWeight(questionNum, {
-            "mainWords": mainWords,
-            "mainWeight": mainWeight,
-            "detailWords": detailWords,
+            "keyWords": this.str2doubleArray(keyWords),
+            "keyWeight": keyWeight,
+            "detailWords": this.str2doubleArray(detailWords),
             "detailWeight": detailWeight,
           }).then(res => {
             this.$message({
@@ -286,15 +322,11 @@
 
       // 优化表格相关的方法
       handleDelete(index, row) {
-        console.log("delete");
-        console.log(index, row);
-        this.saveWeight(row.questionNum);
+        this.saveWeight(this.displayQuestionNum);
       },
 
       handleSave(index, row) {
-        console.log("save");
-        console.log(index, row);
-        this.saveWeight(row.questionNum);
+        this.saveWeight(this.displayQuestionNum);
       },
 
       handleReset(index, row) {
@@ -372,6 +404,37 @@
         str += ']';
         return str;
       },
+
+      // string转数组
+      str2array(str) {
+        let arr = [];
+        let word = '';
+        let one = true;
+        for (let i = 0; i < str.length; i++) {
+          if (str[i] === '[') {
+            word = '';
+          } else if (str[i] === ',') {
+            arr.push(word);
+            one = false;
+          } else if (str[i] === ']') {
+            if (one) {
+              arr.push(word);
+            }
+          } else if (str[i] !== ' ') {
+            word += str[i];
+          }
+        }
+        console.log("inner arr: " + JSON.stringify(arr));
+        return arr;
+      },
+
+      str2doubleArray(strArray) {
+        let arr = [];
+        for (let i = 0; i < strArray.length; i++) {
+          arr.push(this.str2array(strArray[i]))
+        }
+        return arr;
+      }
     }
   }
 </script>
@@ -381,5 +444,6 @@
     font-size: 16px;
     float: left;
   }
+
 
 </style>

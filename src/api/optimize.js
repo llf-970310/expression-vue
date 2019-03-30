@@ -8,7 +8,7 @@ const qs = require('qs');
  */
 export function getScoreData(questionNum) {
   return request({
-    url: '/admin/get-score-data?question-num=' + questionNum,
+    url: '/admin/get-score-data?questionNum=' + questionNum,
     method: 'get',
   });
 }
@@ -19,7 +19,7 @@ export function getScoreData(questionNum) {
  */
 export function getWeightData(questionNum) {
   return request({
-    url: '/admin/get-weight-data?question-num=' + questionNum,
+    url: '/admin/get-weight-data?questionNum=' + questionNum,
     method: 'get',
   });
 }
@@ -34,7 +34,8 @@ export function updateWeight(questionNum, weight) {
     url: '/admin/update-weight',
     method: 'post',
     data: qs.stringify({
-      weight: weight
+      "questionNum": questionNum,
+      "weight": JSON.stringify(weight)
     }),
   });
 }
@@ -45,7 +46,7 @@ export function updateWeight(questionNum, weight) {
  */
 export function getLastCostData(questionNum) {
   return request({
-    url: '/admin/get-last-cost-data?question-num=' + questionNum,
+    url: '/admin/get-last-cost-data?questionNum=' + questionNum,
     method: 'get',
   });
 }
@@ -61,7 +62,7 @@ export function startAutoOpt(questionNum, settings) {
     method: 'post',
     data: qs.stringify({
       questionNum: questionNum,
-      settings: settings,
+      settings: JSON.stringify(settings),
     }),
   });
 }
