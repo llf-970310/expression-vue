@@ -45,7 +45,6 @@
     },
     data() {
       return {
-        filename: __filename,
         curQuestion: {}
       }
     },

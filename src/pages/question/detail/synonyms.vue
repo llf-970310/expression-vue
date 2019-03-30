@@ -1,12 +1,10 @@
 <template>
   <div>
-    <el-row>-------------------------</el-row>
-    <el-row>
-      <el-col :span="4" v-for="synonyms in synonymsPairs" :key="synonyms">
-        {{ synonyms }}
-      </el-col>
+    <el-row class="synonyms-pairs">
+      [
+      <el-tag v-for="synonyms in synonymsPairs" :key="synonyms" type="info" class="synonyms">{{synonyms}}</el-tag>
+      ]
     </el-row>
-    <el-row>-------------------------</el-row>
   </div>
 </template>
 
@@ -29,5 +27,13 @@
 </script>
 
 <style scoped>
+  .synonyms-pairs {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
 
+  .synonyms {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 </style>
