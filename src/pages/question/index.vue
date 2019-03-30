@@ -33,7 +33,8 @@
 
       <!--新增题目-->
       <div v-if="isNewQuestion">
-        <new-question :new-from-pool="isNewFromPool" @back="goBackToAllQuestions"></new-question>
+        <!--增加key值区分，以保证新增题目/词库导入切换时不会复用-->
+        <new-question :key="isNewFromPool" :new-from-pool="isNewFromPool" @back="goBackToAllQuestions"></new-question>
       </div>
 
       <!--所有题目-->

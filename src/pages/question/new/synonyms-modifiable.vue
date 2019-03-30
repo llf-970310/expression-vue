@@ -17,6 +17,7 @@
       </el-input>
       <el-button v-else size="small" @click="showInput" class="synonyms-new-btn">+ 添加同义词</el-button>
       ]
+      <el-button size="small" @click="handleDeleteSynonyms" class="synonyms-new-btn">- 删除该组同义词</el-button>
     </el-row>
   </div>
 </template>
@@ -57,6 +58,10 @@
         }
         this.synonymsInputVisible = false
         this.synonymsInputValue = ''
+      },
+
+      handleDeleteSynonyms() {
+        this.$emit('delete')
       }
     }
   }

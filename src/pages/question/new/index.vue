@@ -12,28 +12,34 @@
 
     <el-row>
       <h1>Keywords</h1>
-      <div v-for="keywordPair in curQuestion.keywords">
-        <synonyms-modifiable :synonyms-pairs="keywordPair"></synonyms-modifiable>
+      <div v-for="(keywordPair, pairIndex) in curQuestion.keywords">
+        <synonyms-modifiable :synonyms-pairs="keywordPair"
+                             @delete="handleDeleteKeywordSynonymsPair(pairIndex)">
+        </synonyms-modifiable>
       </div>
-      <el-button size="small" @click="handleNewKeywordSynonymsPair">+ 添加同义词列表</el-button>
+      <el-button size="small" @click="handleNewKeywordSynonymsPair">+ 添加一组同义词</el-button>
     </el-row>
 
     <el-row>
       <h1>Mainwords</h1>
-      <div v-for="mainwordPair in curQuestion.mainwords">
-        <synonyms-modifiable :synonyms-pairs="mainwordPair"></synonyms-modifiable>
+      <div v-for="(mainwordPair, pairIndex) in curQuestion.mainwords">
+        <synonyms-modifiable :synonyms-pairs="mainwordPair"
+                             @delete="handleDeleteMainwordSynonymsPair(pairIndex)">
+        </synonyms-modifiable>
       </div>
-      <el-button size="small" @click="handleNewMainwordSynonymsPair">+ 添加同义词列表</el-button>
+      <el-button size="small" @click="handleNewMainwordSynonymsPair">+ 添加一组同义词</el-button>
     </el-row>
 
     <div v-for="(detailwordsPerSentence, index) in curQuestion.detailwords">
       <el-row>
         <h1>Detailwords {{ index + 1 }}</h1>
-        <div v-for="detailwordPair in detailwordsPerSentence">
-          <synonyms-modifiable :synonyms-pairs="detailwordPair"></synonyms-modifiable>
+        <div v-for="(detailwordPair, pairIndex) in detailwordsPerSentence">
+          <synonyms-modifiable :synonyms-pairs="detailwordPair"
+                               @delete="handleDeleteDetailwordSynonymsPair(index, pairIndex)">
+          </synonyms-modifiable>
         </div>
-        <el-button size="small" @click="handleNewDetailwordSynonymsPair(index)">+ 添加同义词列表</el-button>
-        <el-button size="small" @click="handleDeleteDetailwordSynonymsPair(index)">- 删除该组同义词</el-button>
+        <el-button size="small" @click="handleNewDetailwordSynonymsPair(index)">+ 添加一组同义词</el-button>
+        <el-button size="small" @click="handleDeleteDetailwords(index)">- 删除该组 Detailwords</el-button>
       </el-row>
     </div>
 
@@ -62,7 +68,12 @@
     },
     data() {
       return {
-        curQuestion: {}
+        curQuestion: {
+          rawText: '',
+          keywords: [[]],
+          mainwords: [[]],
+          detailwords: [[[]]]
+        },
       }
     },
     mounted() {
@@ -82,36 +93,77 @@
             })
           }).catch(err => {
           })
+        } else {
+          this.curQuestion = {
+            rawText: '',
+            keywords: [[]],
+            mainwords: [[]],
+            detailwords: [[[]]]
+          }
         }
       },
 
-      // 新增keywords同义词列表
+      // 新增 Keywords 同义词列表
       handleNewKeywordSynonymsPair() {
         this.curQuestion.keywords.push([])
       },
 
-      // 新增mainwords同义词列表
-      handleNewMainwordSynonymsPair() {
-        this.curQuestion.mainwords.push([])
+      // 删除 Keywords 同义词列表
+      handleDeleteKeywordSynonymsPair(index) {
+        this.curQuestion.keywords.splice(index, 1)
 
+        // 已经没有 Keywords 同义词时，默认增加一组
+        if (this.curQuestion.keywords.length === 0) {
+          this.handleNewKeywordSynonymsPair()
+        }
       },
 
-      // 新增detailwords同义词列表
+      // 新增 Mainwords 同义词列表
+      handleNewMainwordSynonymsPair() {
+        this.curQuestion.mainwords.push([])
+      },
+
+      // 删除 Mainwords 同义词列表
+      handleDeleteMainwordSynonymsPair(index) {
+        this.curQuestion.mainwords.splice(index, 1)
+
+        // 已经没有 Mainwords 同义词时，默认增加一组
+        if (this.curQuestion.mainwords.length === 0) {
+          this.handleNewMainwordSynonymsPair()
+        }
+      },
+
+      // 新增 Detailwords 同义词列表
       handleNewDetailwordSynonymsPair(index) {
         this.curQuestion.detailwords[index].push([])
 
       },
 
-      // 删除detailwords同义词列表
-      handleDeleteDetailwordSynonymsPair(index) {
-        this.curQuestion.detailwords.splice(index, 1)
+      // 删除 Detailwords 同义词列表
+      handleDeleteDetailwordSynonymsPair(index, pairIndex) {
+        this.curQuestion.detailwords[index].splice(pairIndex, 1)
+
+        // 已经没有 Detailwords 同义词时，默认增加一组
+        if (this.curQuestion.detailwords[index].length === 0) {
+          this.handleNewDetailwordSynonymsPair(index)
+        }
       },
 
-      // 新增一组Detailwords
+      // 新增一组 Detailwords
       handleNewDetailwords() {
         this.curQuestion.detailwords.push([[]])
       },
 
+      // 删除一组 Detailwords
+      handleDeleteDetailwords(index) {
+        this.curQuestion.detailwords.splice(index, 1)
+
+        // 已经没有 Detailwords 时，默认增加一组
+        if (this.curQuestion.detailwords.length === 0) {
+          this.handleNewDetailwords()
+        }
+
+      },
 
       // 确认修改保存
       confirmModification() {
