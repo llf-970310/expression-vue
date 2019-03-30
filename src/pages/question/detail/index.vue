@@ -14,8 +14,8 @@
 
     <el-row>
       <h1>Mainwords</h1>
-      <div v-for="keywordPair in curQuestion.keywords">
-        <synonyms :synonyms-pairs="keywordPair"></synonyms>
+      <div v-for="mainwordPair in curQuestion.mainwords">
+        <synonyms :synonyms-pairs="mainwordPair"></synonyms>
       </div>
     </el-row>
 
@@ -26,6 +26,10 @@
           <synonyms :synonyms-pairs="detailwordPair"></synonyms>
         </div>
       </el-row>
+    </div>
+
+    <div class="d2-text-center">
+      <el-button type="primary" @click="goBackToAllQuestions">返回</el-button>
     </div>
   </div>
 </template>
@@ -72,6 +76,10 @@
           })
         }).catch(err => {
         })
+      },
+
+      goBackToAllQuestions() {
+        this.$emit('back')
       }
     }
   }

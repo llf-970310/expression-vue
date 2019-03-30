@@ -7,7 +7,12 @@
       <!--通过题号搜索-->
       <el-row>
         <el-col :span="7">
-          <el-button type="success" @click="isNewQuestion = true">新增题目</el-button>
+          <el-button-group>
+            <el-button type="success" @click="handleNewQuestion" icon="el-icon-plus">新增题目</el-button>
+            <el-button type="success" @click="handleNewQuestionFromPool">题库导入
+              <i class="el-icon-refresh"></i>
+            </el-button>
+          </el-button-group>
         </el-col>
         <el-col :span="10">
           <el-form :inline="true" :model="questionSearchForm" :rules="questionSearchRules" ref="questionSearchForm">
@@ -23,20 +28,13 @@
 
       <!--该题目详情-->
       <div v-if="searchedQuestionId !== ''">
-        <question-detail :question-id="searchedQuestionId"></question-detail>
+        <question-detail :question-id="searchedQuestionId" @back="goBackToAllQuestions"></question-detail>
       </div>
 
       <!--新增题目-->
       <div v-if="isNewQuestion">
-        <new-question></new-question>
+        <new-question :new-from-pool="isNewFromPool" @back="goBackToAllQuestions"></new-question>
       </div>
-
-      <!--返回按钮-->
-      <el-row v-show="!showAllQuestions">
-        <el-col :span="8" :offset="8" class="d2-text-center">
-          <el-button type="primary" @click="goBackToAllQuestions">返回</el-button>
-        </el-col>
-      </el-row>
 
       <!--所有题目-->
       <div v-show="showAllQuestions">
@@ -68,7 +66,7 @@
           </el-table-column>
         </el-table>
 
-        <el-row class="d2-text-center">
+        <el-row class="d2-text-center pagination">
           <el-pagination
               @size-change="curSizePerPageChanged"
               @current-change="curPageChanged"
@@ -122,6 +120,7 @@
 
         // 新建题目部分
         isNewQuestion: false,
+        isNewFromPool: false,
 
         // 所有题目部分
         allQuestions: [],
@@ -155,10 +154,25 @@
           })
         }).then().catch()
       },
+
+      // 新建题目
+      handleNewQuestion() {
+        this.searchedQuestionId = ''
+        this.isNewQuestion = true
+        this.isNewFromPool = false
+      },
+      // 词库导入
+      handleNewQuestionFromPool() {
+        this.searchedQuestionId = ''
+        this.isNewQuestion = true
+        this.isNewFromPool = true
+      },
+
       searchQuestion() {
         this.$refs['questionSearchForm'].validate((valid) => {
           if (valid) {
             this.searchedQuestionId = parseInt(this.questionSearchForm.questionId)
+            this.isNewQuestion = false
           } else {
             console.log('error submit!!')
             return false;
@@ -168,6 +182,7 @@
       searchQuestionByClick(currentRow, oldCurrentRow) {
         this.questionSearchForm.questionId = currentRow.questionId
         this.searchedQuestionId = currentRow.questionId
+        this.isNewQuestion = false
       },
       // 返回显示所有题目的主界面
       goBackToAllQuestions() {
@@ -191,5 +206,7 @@
 </script>
 
 <style scoped>
-
+  .pagination {
+    margin-top: 15px;
+  }
 </style>
