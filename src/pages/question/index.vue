@@ -101,6 +101,8 @@
 <script>
   import QuestionDetail from './detail/index'
   import NewQuestion from './new/index'
+
+  import {validateQuestionId} from '@/libs/validator'
   import {getAllQuestions} from '@api/manager.question'
 
   export default {
@@ -110,19 +112,6 @@
       'new-question': NewQuestion
     },
     data() {
-      const validateQuestionId = (rule, value, callback) => {
-        // console.log('value: ' + value)
-        if (value === '') {
-          return callback(new Error('题目编号不可为空'))
-        }
-
-        let reg = /^[0-9]+$/
-        if (!reg.test(value)) {
-          return callback(new Error('题目编号只包含数字'))
-        } else {
-          callback()
-        }
-      }
       return {
         filename: __filename,
 
