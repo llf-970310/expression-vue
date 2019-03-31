@@ -55,7 +55,7 @@
 
 <script>
   import SynonymsModifiable from './synonyms-modifiable'
-  import {getQuestion} from '@/api/manager.question'
+  import {getQuestionFromPool, newQuestion} from '@/api/manager.question'
 
   export default {
     name: "new-question",
@@ -74,6 +74,9 @@
           mainwords: [[]],
           detailwords: [[[]]]
         },
+
+        // 若 newFromPool = true，则会初始化此参数
+        idFromPool: '',
       }
     },
     mounted() {
@@ -83,9 +86,10 @@
       init() {
         if (this.newFromPool) {
           new Promise((resolve, reject) => {
-            getQuestion(2).then(res => {
+            getQuestionFromPool().then(res => {
               // console.log(res)
-              this.curQuestion = res
+              this.curQuestion = res.question
+              this.idFromPool = res.id
               resolve()
             }).catch(err => {
               console.log('err: ', err)
@@ -167,7 +171,23 @@
 
       // 确认修改保存
       confirmModification() {
+        new Promise((resolve, reject) => {
+          newQuestion(this.curQuestion, this.newFromPool, this.idFromPool).then(res => {
+            this.$message({
+              message: '已成功保存！',
+              type: 'success',
+              center: true,
+              showClose: true,
+              duration: 5000
+            });
 
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        }).catch(err => {
+        })
       },
 
       // 重置
