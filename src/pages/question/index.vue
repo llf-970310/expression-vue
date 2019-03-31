@@ -17,7 +17,7 @@
         <el-col :span="10">
           <el-form :inline="true" :model="questionSearchForm" :rules="questionSearchRules" ref="questionSearchForm">
             <el-form-item label="题目编号" prop="questionId">
-              <el-input v-model="questionSearchForm.questionId" placeholder="请输入题号"></el-input>
+              <el-input v-model.trim="questionSearchForm.questionId" placeholder="请输入题目编号"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="searchQuestion">查询题目</el-button>
@@ -112,9 +112,13 @@
     data() {
       const validateQuestionId = (rule, value, callback) => {
         // console.log('value: ' + value)
+        if (value === '') {
+          return callback(new Error('题目编号不可为空'))
+        }
+
         let reg = /^[0-9]+$/
         if (!reg.test(value)) {
-          return callback(new Error('题号只包含数字'))
+          return callback(new Error('题目编号只包含数字'))
         } else {
           callback()
         }
