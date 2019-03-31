@@ -29,6 +29,7 @@
     </div>
 
     <div class="d2-text-center">
+      <el-button type="danger" @click="modifyQuestion">修改</el-button>
       <el-button type="primary" @click="goBackToAllQuestions">返回</el-button>
     </div>
   </div>
@@ -53,7 +54,7 @@
       }
     },
     mounted() {
-      console.log('Mounted question detail.')
+      // console.log('Mounted question detail.')
       this.init(this.questionId)
     },
     watch: {
@@ -76,6 +77,10 @@
           })
         }).catch(err => {
         })
+      },
+
+      modifyQuestion() {
+        this.$emit('modify', this.questionId)
       },
 
       goBackToAllQuestions() {

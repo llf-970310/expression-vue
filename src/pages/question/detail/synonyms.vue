@@ -16,12 +16,10 @@
       synonymsPairs: Array
     },
     data() {
-      return {
-        filename: __filename
-      }
+      return {}
     },
     mounted() {
-      console.log(this.synonymsPairs)
+      // console.log(this.synonymsPairs)
     }
   }
 </script>

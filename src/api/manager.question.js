@@ -39,7 +39,7 @@ export function getQuestionFromPool() {
  * 新建一道题目
  * @param questionData 新题目数据
  * @param isNewFromPool 此新题是否来源于题库
- * @param idInPool 若题目来源于题库，则在题库中的id
+ * @param idInPool 若题目来源于题库，则在题库中的ID
  */
 export function newQuestion(questionData, isNewFromPool, idInPool) {
   // console.log(Array.isArray(questionData.keywords))
@@ -62,40 +62,23 @@ export function newQuestion(questionData, isNewFromPool, idInPool) {
   })
 }
 
-// /**
-//  * 新建一道题目
-//  * @param isNewFromPool 此新题是否来源于题库
-//  * @param idInPool 若题目来源于题库，则在题库中的id
-//  * @param questionRawText 题目原文
-//  * @param questionKeywords 题目关键词
-//  * @param questionMainwords 题目主旨词
-//  * @param questionDetailwords 题目细节词
-//  */
-// export function newQuestion(isNewFromPool, idInPool, questionRawText, questionKeywords, questionMainwords, questionDetailwords) {
-//   console.log('aaaa')
-//   return request({
-//     url: '/admin/question',
-//     method: 'post',
-//     data: qs.stringify({
-//       isFromPool: isNewFromPool,
-//       idInPool: idInPool,
-//       data: {
-//         rawText: questionRawText,
-//         keywords: questionKeywords,
-//         mainwords: questionMainwords,
-//         detailwords: questionDetailwords
-//       }
-//     })
-//   })
-// }
-
 /**
  * 修改一道题目
- * @param data 题目
+ * @param questionData 修改后的题目数据
+ * @param id 题目ID
  */
-export function modifyQuestion(data) {
+export function modifyQuestion(questionData, id) {
   return request({
     url: '/admin/question',
-    method: 'put'
+    method: 'put',
+    data: qs.stringify({
+      data: {
+        rawText: questionData.rawText,
+        keywords: JSON.stringify(questionData.keywords),
+        mainwords: JSON.stringify(questionData.mainwords),
+        detailwords: JSON.stringify(questionData.detailwords)
+      },
+      id
+    })
   })
 }

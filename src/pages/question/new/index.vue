@@ -55,7 +55,7 @@
 
 <script>
   import SynonymsModifiable from './synonyms-modifiable'
-  import {getQuestionFromPool, newQuestion} from '@/api/manager.question'
+  import {getQuestion, getQuestionFromPool, newQuestion, modifyQuestion} from '@/api/manager.question'
 
   export default {
     name: "new-question",
@@ -64,7 +64,10 @@
     },
     props: {
       // 是否从题库中新建
-      'newFromPool': Boolean
+      'newFromPool': Boolean,
+
+      // 是否为修改题目，是则此参数为被修改的id
+      'modifiedQuestionId': Number,
     },
     data() {
       return {
@@ -84,12 +87,11 @@
     },
     methods: {
       init() {
-        if (this.newFromPool) {
+        if (this.modifiedQuestionId) {
           new Promise((resolve, reject) => {
-            getQuestionFromPool().then(res => {
+            getQuestion(this.modifiedQuestionId).then(res => {
               // console.log(res)
-              this.curQuestion = res.question
-              this.idFromPool = res.id
+              this.curQuestion = res
               resolve()
             }).catch(err => {
               console.log('err: ', err)
@@ -98,11 +100,29 @@
           }).catch(err => {
           })
         } else {
-          this.curQuestion = {
-            rawText: '',
-            keywords: [[]],
-            mainwords: [[]],
-            detailwords: [[[]]]
+          // 修改题目
+          if (this.newFromPool) {
+            // 词库导入
+            new Promise((resolve, reject) => {
+              getQuestionFromPool().then(res => {
+                // console.log(res)
+                this.curQuestion = res.question
+                this.idFromPool = res.id
+                resolve()
+              }).catch(err => {
+                console.log('err: ', err)
+                reject(err)
+              })
+            }).catch(err => {
+            })
+          } else {
+            // 新建题目
+            this.curQuestion = {
+              rawText: '',
+              keywords: [[]],
+              mainwords: [[]],
+              detailwords: [[[]]]
+            }
           }
         }
       },
@@ -171,23 +191,56 @@
 
       // 确认修改保存
       confirmModification() {
-        new Promise((resolve, reject) => {
-          newQuestion(this.curQuestion, this.newFromPool, this.idFromPool).then(res => {
-            this.$message({
-              message: '已成功保存！',
-              type: 'success',
-              center: true,
-              showClose: true,
-              duration: 5000
-            });
-
-            resolve()
+        if (this.modifiedQuestionId) {
+          // 修改题目
+          new Promise((resolve, reject) => {
+            modifyQuestion(this.curQuestion, this.modifiedQuestionId).then(() => {
+              this.successSave()
+              resolve()
+            }).catch(err => {
+              console.log('err: ', err)
+              reject(err)
+            })
           }).catch(err => {
-            console.log('err: ', err)
-            reject(err)
           })
-        }).catch(err => {
-        })
+        } else {
+          if (this.newFromPool) {
+            // 词库导入
+            new Promise((resolve, reject) => {
+              newQuestion(this.curQuestion, this.newFromPool, this.idFromPool).then(() => {
+                this.successSave()
+                resolve()
+              }).catch(err => {
+                console.log('err: ', err)
+                reject(err)
+              })
+            }).catch(err => {
+            })
+          } else {
+            // 新建题目
+            new Promise((resolve, reject) => {
+              newQuestion(this.curQuestion, this.newFromPool).then(() => {
+                this.successSave()
+                resolve()
+              }).catch(err => {
+                console.log('err: ', err)
+                reject(err)
+              })
+            }).catch(err => {
+            })
+          }
+        }
+      },
+
+      // 成功保存的提示
+      successSave() {
+        this.$message({
+          message: '已成功保存！',
+          type: 'success',
+          center: true,
+          showClose: true,
+          duration: 5000
+        });
       },
 
       // 重置

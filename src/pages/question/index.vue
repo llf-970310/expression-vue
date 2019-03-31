@@ -28,13 +28,27 @@
 
       <!--该题目详情-->
       <div v-if="searchedQuestionId !== ''">
-        <question-detail :question-id="searchedQuestionId" @back="goBackToAllQuestions"></question-detail>
+        <question-detail :question-id="searchedQuestionId"
+                         @modify="goToModifyQuestion"
+                         @back="goBackToAllQuestions">
+        </question-detail>
       </div>
 
-      <!--新增题目-->
-      <div v-if="isNewQuestion">
-        <!--增加key值区分，以保证新增题目/词库导入切换时不会复用-->
-        <new-question :key="isNewFromPool" :new-from-pool="isNewFromPool" @back="goBackToAllQuestions"></new-question>
+      <!--新增/修改题目-->
+      <div v-if="isEditableQuestion">
+        <div v-if="modifiedQuestionId">
+          <new-question :key="modifiedQuestionId"
+                        :modified-question-id="modifiedQuestionId"
+                        @back="goBackToAllQuestions">
+          </new-question>
+        </div>
+        <div v-else>
+          <!--增加key值区分，以保证新增题目/词库导入切换时不会复用-->
+          <new-question :key="isNewFromPool"
+                        :new-from-pool="isNewFromPool"
+                        @back="goBackToAllQuestions">
+          </new-question>
+        </div>
       </div>
 
       <!--所有题目-->
@@ -119,9 +133,10 @@
         // 要查看的题目详情部分
         searchedQuestionId: '',
 
-        // 新建题目部分
-        isNewQuestion: false,
+        // 新建/修改题目部分
+        isEditableQuestion: false,
         isNewFromPool: false,
+        modifiedQuestionId: '',
 
         // 所有题目部分
         allQuestions: [],
@@ -135,7 +150,7 @@
     },
     computed: {
       showAllQuestions: function () {
-        return this.searchedQuestionId === '' && !this.isNewQuestion
+        return this.searchedQuestionId === '' && !this.isEditableQuestion
       }
     },
     mounted: function () {
@@ -159,21 +174,23 @@
       // 新建题目
       handleNewQuestion() {
         this.searchedQuestionId = ''
-        this.isNewQuestion = true
+        this.isEditableQuestion = true
         this.isNewFromPool = false
+        this.modifiedQuestionId = ''
       },
       // 词库导入
       handleNewQuestionFromPool() {
         this.searchedQuestionId = ''
-        this.isNewQuestion = true
+        this.isEditableQuestion = true
         this.isNewFromPool = true
+        this.modifiedQuestionId = ''
       },
 
       searchQuestion() {
         this.$refs['questionSearchForm'].validate((valid) => {
           if (valid) {
             this.searchedQuestionId = parseInt(this.questionSearchForm.questionId)
-            this.isNewQuestion = false
+            this.isEditableQuestion = false
           } else {
             console.log('error submit!!')
             return false;
@@ -183,22 +200,31 @@
       searchQuestionByClick(currentRow, oldCurrentRow) {
         this.questionSearchForm.questionId = currentRow.questionId
         this.searchedQuestionId = currentRow.questionId
-        this.isNewQuestion = false
+        this.isEditableQuestion = false
       },
+
+      // 去修改题目的界面
+      goToModifyQuestion(questionId) {
+        this.searchedQuestionId = ''
+        this.isEditableQuestion = true
+        this.modifiedQuestionId = questionId
+      },
+
       // 返回显示所有题目的主界面
       goBackToAllQuestions() {
-        this.isNewQuestion = false
         this.searchedQuestionId = ''
+        this.isEditableQuestion = false
+        this.modifiedQuestionId = ''
       },
 
       curPageChanged(val) {
-        console.log(`当前页: ${val}`);
+        // console.log(`当前页: ${val}`);
         this.initQuestions()
       },
       curSizePerPageChanged(val) {
         // 每页大小变化之后，总是回到第一页 TODO 组件自动变更，无法更改
         // this.curPage = 1
-        console.log(`每页 ${val} 条`);
+        // console.log(`每页 ${val} 条`);
         this.initQuestions()
       }
 
