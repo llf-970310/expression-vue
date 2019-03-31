@@ -17,7 +17,9 @@
                              @delete="handleDeleteKeywordSynonymsPair(pairIndex)">
         </synonyms-modifiable>
       </div>
-      <el-button size="small" @click="handleNewKeywordSynonymsPair">+ 添加一组同义词</el-button>
+      <div class="new-synonyms">
+        <el-button size="small" @click="handleNewKeywordSynonymsPair">+ 添加一组同义词</el-button>
+      </div>
     </el-row>
 
     <el-row>
@@ -27,7 +29,9 @@
                              @delete="handleDeleteMainwordSynonymsPair(pairIndex)">
         </synonyms-modifiable>
       </div>
-      <el-button size="small" @click="handleNewMainwordSynonymsPair">+ 添加一组同义词</el-button>
+      <div class="new-synonyms">
+        <el-button size="small" @click="handleNewMainwordSynonymsPair">+ 添加一组同义词</el-button>
+      </div>
     </el-row>
 
     <div v-for="(detailwordsPerSentence, index) in curQuestion.detailwords">
@@ -38,12 +42,16 @@
                                @delete="handleDeleteDetailwordSynonymsPair(index, pairIndex)">
           </synonyms-modifiable>
         </div>
-        <el-button size="small" @click="handleNewDetailwordSynonymsPair(index)">+ 添加一组同义词</el-button>
-        <el-button size="small" @click="handleDeleteDetailwords(index)">- 删除该组 Detailwords</el-button>
+        <div class="new-synonyms">
+          <el-button size="small" @click="handleNewDetailwordSynonymsPair(index)">+ 添加一组同义词</el-button>
+          <el-button size="small" @click="handleDeleteDetailwords(index)">- 删除该组 Detailwords</el-button>
+        </div>
       </el-row>
     </div>
 
-    <el-button @click="handleNewDetailwords" class="new-detail-btn">添加一组 Detailwords</el-button>
+    <div class="new-detail">
+      <el-button @click="handleNewDetailwords">添加一组 Detailwords</el-button>
+    </div>
 
     <div class="d2-text-center">
       <el-button type="success" @click="confirmModification">确认修改</el-button>
@@ -268,7 +276,11 @@
 </script>
 
 <style scoped>
-  .new-detail-btn {
+  .new-synonyms {
+    margin-top: 5px;
+  }
+
+  .new-detail {
     margin-top: 30px;
   }
 </style>
