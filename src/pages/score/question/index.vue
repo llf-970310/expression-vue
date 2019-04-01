@@ -14,15 +14,21 @@
       </el-col>
     </el-row>
 
+    <score-representation></score-representation>
 
   </div>
 </template>
 
 <script>
+  import ScoreRepresentation from '../components/score-representation'
+
   import {validateQuestionId} from '@/libs/validator'
 
   export default {
     name: "score-question",
+    components: {
+      'score-representation': ScoreRepresentation
+    },
     data() {
       return {
         questionSearchForm: {
