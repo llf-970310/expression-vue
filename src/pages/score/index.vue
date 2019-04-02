@@ -4,10 +4,10 @@
     <!--<template slot="header">成绩管理</template>-->
 
     <el-tabs v-model="activatedTabName">
-      <el-tab-pane label="按题目" name="question">
+      <el-tab-pane label="按题目" name="question" :lazy=true>
         <score-question></score-question>
       </el-tab-pane>
-      <el-tab-pane label="按用户" name="user">
+      <el-tab-pane label="按用户" name="user" :lazy=true>
         <score-user></score-user>
       </el-tab-pane>
     </el-tabs>
