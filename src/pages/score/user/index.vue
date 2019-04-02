@@ -19,11 +19,9 @@
       <score-representation :title-distribution="titleDistribution"
                             :title-change="titleChange"
                             :variables="dates"
+                            :variable='variable'
                             :variable-name="variableNameDate"
-                            :questions="questions"
-                            :main-score="mainScore"
-                            :detail-score="detailScore"
-                            :total-score="totalScore">
+                            :score-data="scoreData">
       </score-representation>
 
       <div class="d2-text-center">
@@ -34,12 +32,10 @@
       <!--概况-->
       <score-representation :title-distribution="overviewTitleDistribution"
                             :title-change="overviewTitleChange"
-                            :variables="questions"
+                            :variables="users"
+                            :variable='variable'
                             :variable-name="variableNameUserEmail"
-                            :questions="questions"
-                            :main-score="mainScore"
-                            :detail-score="detailScore"
-                            :total-score="totalScore">
+                            :score-data="scoreData">
       </score-representation>
     </div>
 
@@ -48,6 +44,9 @@
 
 <script>
   import ScoreRepresentation from '../components/score-representation'
+
+  import {extractVariableAsList} from '@/libs/my-util'
+  import {getScoreOfUsers, getScoreOfSpecoficUser} from '@/api/manager.score'
 
   export default {
     name: "score-user",
@@ -75,15 +74,14 @@
         overviewTitleChange: '各用户平均分的成绩变化情况',
 
         // 成绩变化图x轴自变量
+        variable: '',
         variableNameUserEmail: '用户邮箱',
         variableNameDate: '日期',
 
         // 具体数据
-        questions: [],
+        scoreData: [],
+        users: [],
         dates: [],
-        mainScore: [],
-        detailScore: [],
-        totalScore: [],
       }
     },
     computed: {
@@ -126,37 +124,46 @@
       // 未指定具体的用户邮箱，查看总体情况
       initOverview() {
         console.log('user initOverview')
-        this.questions = []
-        this.mainScore = []
-        this.detailScore = []
-        this.totalScore = []
+        new Promise((resolve, reject) => {
+          getScoreOfUsers().then(res => {
+            const result = res.result
+            console.log(result)
 
-        for (let i = 0; i < 200; i++) {
-          this.questions.push(i)
-          this.mainScore.push(Math.floor(Math.random() * 100))
-          this.detailScore.push(Math.floor(Math.random() * 100))
-          this.totalScore.push(this.mainScore[i] * 0.7 + this.detailScore[i] * 0.3)
-        }
+            this.scoreData = result
+
+            this.variable = 'userEmail'
+            this.users = extractVariableAsList(result, this.variable)
+            console.log(this.users)
+
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        }).then().catch()
       },
 
       // 通过用户邮箱具体查询
       initByUserEmail() {
         console.log('initByUserEmail')
         console.log(this.searchedUserEmail)
-        this.dates = []
-        this.mainScore = []
-        this.detailScore = []
-        this.totalScore = []
+        new Promise((resolve, reject) => {
+          getScoreOfSpecoficUser(this.searchedUserEmail).then(res => {
+            const result = res.result
+            console.log(result)
 
-        let base = +new Date(2017, 9, 3);
-        const oneDay = 24 * 3600 * 1000;
-        for (let i = 0; i < 200; i++) {
-          let now = new Date(base += oneDay);
-          this.dates.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
-          this.mainScore.push(Math.floor(Math.random() * 100))
-          this.detailScore.push(Math.floor(Math.random() * 100))
-          this.totalScore.push(this.mainScore[i] * 0.7 + this.detailScore[i] * 0.3)
-        }
+            this.scoreData = result
+
+            this.variable = 'date'
+            this.dates = extractVariableAsList(result, this.variable)
+            console.log(this.dates)
+
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        }).then().catch()
       },
     }
   }
