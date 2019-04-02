@@ -23,19 +23,11 @@
         required: true,
         type: String
       },
-      questions: {
+      scorePartition: {
         required: true,
         type: Array
       },
-      mainScore: {
-        required: true,
-        type: Array
-      },
-      detailScore: {
-        required: true,
-        type: Array
-      },
-      totalScore: {
+      numByPartition: {
         required: true,
         type: Array
       }
@@ -46,7 +38,7 @@
       }
     },
     watch: {
-      questions: function() {
+      scorePartition: function() {
         this.initCharts()
       }
     },
@@ -56,114 +48,44 @@
 
         const _this = this
         this.chart.setOption({
-          tooltip: {
-            trigger: 'axis',
-            position: function (pt) {
-              return [pt[0], '10%'];
-            }
-          },
           title: {
             text: _this.title,
             x: 'center',
             y: 'top'
           },
           toolbox: {
-            right: '15px',
+            show: true,
             feature: {
-              dataZoom: {
-                yAxisIndex: false
-              },
+              mark: {show: true},
+              dataView: {show: true, readOnly: false},
               magicType: {
-                type: ['line', 'bar'],
-                // type: ['line', 'bar', 'stack', 'tiled']
+                show: true,
+                type: ['pie', 'funnel']
               },
-              restore: {},
-              saveAsImage: {}
+              restore: {show: true},
+              saveAsImage: {show: true}
             }
           },
-          // legend: {},
-          xAxis: {
-            name: '题目编号',
-            type: 'category',
-            boundaryGap: false,
-            data: _this.questions
-          },
-          yAxis: {
-            name: '分数',
-            type: 'value',
-            // boundaryGap: [0, '5%'],
-            min: 0,
-            max: 100
+          tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
           },
           legend: {
-            data: ['主旨分', '细节分', '总分'],
-            selected: {
-              '主旨分': false,
-              '细节分': false,
-              '总分': true
-            },
+            data: _this.scorePartition,
             x: 'center',
             y: '30px'
           },
-          dataZoom: [
-            // 内置于坐标系中，可以在坐标系上通过鼠标拖拽、鼠标滚轮、手指滑动（触屏上）来缩放或漫游坐标系
-            {
-              type: 'inside',
-              start: 0,
-              end: 25
-            },
-
-            // 有单独的滑动条，用户在滑动条上进行缩放或漫游
-            {
-              type: 'slider',
-              start: 0,
-              end: 25,
-              filterMode: 'empty',
-              handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-              handleSize: '75%',
-              handleStyle: {
-                // 图形的颜色
-                color: '#fff',
-                // 图形阴影的模糊大小。该属性配合 shadowColor,shadowOffsetX, shadowOffsetY 一起设置图形的阴影效果。
-                shadowBlur: 3,
-                shadowColor: 'rgba(0, 0, 0, 0.6)',
-                shadowOffsetX: 2,
-                shadowOffsetY: 2
-              }
-            }],
+          calculable: true,
           series: [
             {
-              name: '主旨分',
-              type: 'line',
-              // smooth: true,
-              symbol: 'none',
-              sampling: 'average',
+              name: _this.title,
+              type: 'pie',
+              radius: [15, 95],
+              center: ['50%', '60%'],
+              roseType: 'area',
               animationEasing: 'bounceInOut',
               animationDuration: 2300,
-              data: _this.mainScore
-            },
-            {
-              name: '细节分',
-              type: 'line',
-              // smooth: true,
-              symbol: 'none',
-              sampling: 'average',
-              animationEasing: 'bounceInOut',
-              animationDuration: 2300,
-              data: _this.detailScore
-            },
-            {
-              name: '总分',
-              type: 'line',
-              // smooth: true,
-              itemStyle: {
-                color: 'red'
-              },
-              symbol: 'none',
-              sampling: 'average',
-              animationEasing: 'bounceInOut',
-              animationDuration: 2300,
-              data: _this.totalScore
+              data: _this.numByPartition
             }
           ]
         })
