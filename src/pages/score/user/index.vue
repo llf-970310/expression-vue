@@ -25,6 +25,10 @@
                             :detail-score="detailScore"
                             :total-score="totalScore">
       </score-representation>
+
+      <div class="d2-text-center">
+        <el-button type="primary" @click="backToOverview">返回查看概况</el-button>
+      </div>
     </div>
     <div v-else>
       <!--概况-->
@@ -95,15 +99,19 @@
       this.initOverview()
     },
     watch: {
-      searchedUserEmail: function () {
-        this.initByUserEmail()
+      searchedUserEmail: function (val, oldVal) {
+        if (val === '') {
+          this.initOverview()
+        } else {
+          this.initByUserEmail()
+        }
       }
     },
     methods: {
       searchUser() {
         this.$refs['userSearchForm'].validate((valid) => {
           if (valid) {
-            this.searchedUserEmail = parseInt(this.userSearchForm.userEmail)
+            this.searchedUserEmail = this.userSearchForm.userEmail
           } else {
             console.log('error submit!!');
             return false;
@@ -111,9 +119,13 @@
         })
       },
 
+      backToOverview() {
+        this.searchedUserEmail = ''
+      },
+
       // 未指定具体的用户邮箱，查看总体情况
       initOverview() {
-        console.log('initOverview')
+        console.log('user initOverview')
         this.questions = []
         this.mainScore = []
         this.detailScore = []

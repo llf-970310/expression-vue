@@ -14,6 +14,33 @@
                   :total-score="totalScore">
     </score-change>
 
+    <el-row type="flex" justify="center">
+      <el-col :span="18">
+        <el-table :data="scoreTableData" border stripe highlight-current-row @current-change=""
+                  style="width: 100%">
+          <el-table-column
+              prop="name"
+              :label="variableName">
+          </el-table-column>
+          <el-table-column
+              prop="main"
+              label="主旨分"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="detail"
+              label="细节分"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="total"
+              label="总分"
+              width="100">
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
   </div>
 </template>
 
@@ -65,13 +92,20 @@
       return {
         dataLoading: true,
 
+        // 成绩分布图
         scorePartition: [],
         scoreNumByPartition: [],
+
+        // 成绩表格
+        scoreTableData: [],
       }
     },
     watch: {
       totalScore: function () {
         this.initScoreDistribution()
+        this.initScoreTable()
+
+        this.dataLoading = false
       }
     },
     methods: {
@@ -100,8 +134,20 @@
           }
         }
 
-        console.log(this.scoreNumByPartition)
-        this.dataLoading = false
+        // console.log(this.scoreNumByPartition)
+      },
+
+      // 根据各成绩初始化表格
+      initScoreTable() {
+        this.scoreTableData = []
+        for (let i = 0; i < this.totalScore.length; i++) {
+          this.scoreTableData.push({
+            name: this.variables[i],
+            main: this.mainScore[i],
+            detail: this.detailScore[i],
+            total: this.totalScore[i]
+          })
+        }
       }
     }
 

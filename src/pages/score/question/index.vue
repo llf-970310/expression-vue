@@ -25,6 +25,10 @@
                             :detail-score="detailScore"
                             :total-score="totalScore">
       </score-representation>
+
+      <div class="d2-text-center">
+        <el-button type="primary" @click="backToOverview">返回查看概况</el-button>
+      </div>
     </div>
     <div v-else>
       <!--概况-->
@@ -94,8 +98,12 @@
       this.initOverview()
     },
     watch: {
-      searchedQuestionId: function () {
-        this.initByQuestionId()
+      searchedQuestionId: function (val, oldVal) {
+        if (val === '') {
+          this.initOverview()
+        } else {
+          this.initByQuestionId()
+        }
       }
     },
     methods: {
@@ -110,9 +118,13 @@
         })
       },
 
+      backToOverview() {
+        this.searchedQuestionId = ''
+      },
+
       // 未指定具体的题目编号，查看总体情况
       initOverview() {
-        console.log('initOverview')
+        console.log('question initOverview')
         this.questions = []
         this.mainScore = []
         this.detailScore = []
