@@ -14,45 +14,26 @@
                   :total-score="totalScore">
     </score-change>
 
-    <el-row type="flex" justify="center">
-      <el-col :span="18">
-        <el-table :data="scoreTableData" border stripe highlight-current-row @current-change=""
-                  style="width: 100%">
-          <el-table-column
-              prop="name"
-              :label="variableName">
-          </el-table-column>
-          <el-table-column
-              prop="main"
-              label="主旨分"
-              width="100">
-          </el-table-column>
-          <el-table-column
-              prop="detail"
-              label="细节分"
-              width="100">
-          </el-table-column>
-          <el-table-column
-              prop="total"
-              label="总分"
-              width="100">
-          </el-table-column>
-        </el-table>
-      </el-col>
-    </el-row>
-
+    <score-table :variable="variable"
+                 :variable-name="variableName"
+                 :score-data="scoreData">
+    </score-table>
   </div>
 </template>
 
 <script>
   import ScoreChange from './score-change'
   import ScoreDistribution from './score-distribution'
+  import ScoreTable from './score-table'
+
+  import {extractVariableAsList} from '@/libs/my-util'
 
   export default {
     name: "score-representation",
     components: {
       'score-distribution': ScoreDistribution,
       'score-change': ScoreChange,
+      'score-table': ScoreTable,
     },
     props: {
       // 标题
@@ -70,23 +51,19 @@
         required: true,
         type: Array
       },
+      variable: {
+        required: true,
+        type: String
+      },
       variableName: {
         required: true,
         type: String
       },
-      mainScore: {
+      // 成绩数据，包含 mainScore、detailScore、totalScore 的
+      scoreData: {
         required: true,
         type: Array
       },
-      detailScore: {
-        required: true,
-        type: Array
-      },
-      totalScore: {
-        required: true,
-        type: Array
-      },
-
     },
     data() {
       return {
@@ -96,14 +73,16 @@
         scorePartition: [],
         scoreNumByPartition: [],
 
-        // 成绩表格
-        scoreTableData: [],
+        // 成绩变化图
+        mainScore: [],
+        detailScore: [],
+        totalScore: [],
       }
     },
     watch: {
-      totalScore: function () {
+      scoreData: function () {
         this.initScoreDistribution()
-        this.initScoreTable()
+        this.initScoreChange()
 
         this.dataLoading = false
       }
@@ -119,8 +98,8 @@
           {value: 0, name: '80-90'},
           {value: 0, name: '90-100'},
         ]
-        for (let i = 0; i < this.totalScore.length; i++) {
-          let curScore = this.totalScore[i]
+        for (let i = 0; i < this.scoreData.length; i++) {
+          let curScore = this.scoreData[i].totalScore
           if (curScore < 60) {
             this.scoreNumByPartition[0].value++
           } else if (curScore >= 60 && curScore < 70) {
@@ -137,17 +116,16 @@
         // console.log(this.scoreNumByPartition)
       },
 
-      // 根据各成绩初始化表格
-      initScoreTable() {
-        this.scoreTableData = []
-        for (let i = 0; i < this.totalScore.length; i++) {
-          this.scoreTableData.push({
-            name: this.variables[i],
-            main: this.mainScore[i],
-            detail: this.detailScore[i],
-            total: this.totalScore[i]
-          })
-        }
+      // 根据总分成绩初始化分布图
+      initScoreChange() {
+        this.mainScore = extractVariableAsList(this.scoreData, 'mainScore')
+        this.detailScore = extractVariableAsList(this.scoreData, 'detailScore')
+        this.totalScore = extractVariableAsList(this.scoreData, 'totalScore')
+
+        // console.log('mainScore detailScore totalScore')
+        // console.log(this.mainScore)
+        // console.log(this.detailScore)
+        // console.log(this.totalScore)
       }
     }
 

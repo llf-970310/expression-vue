@@ -1,0 +1,112 @@
+<template>
+  <div>
+    <el-row type="flex" justify="center">
+      <el-col :span="18">
+        <el-table :data="visibleScoreData"
+                  border stripe highlight-current-row style="width: 100%">
+          <el-table-column
+              :prop="variable"
+              :label="variableName">
+          </el-table-column>
+          <el-table-column
+              prop="mainScore"
+              label="主旨分"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="detailScore"
+              label="细节分"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="totalScore"
+              label="总分"
+              width="100">
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
+    <el-row class="d2-text-center pagination">
+      <el-pagination
+          @size-change="curSizePerPageChanged"
+          @current-change="curPageChanged"
+          :current-page.sync="curPage"
+          :page-sizes="[10, 25, 50, 100, 200]"
+          :page-size.sync="curSizePerPage"
+          layout="prev, pager, next, total, sizes"
+          :total="totalCount">
+      </el-pagination>
+    </el-row>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: "score-table",
+    props: {
+      // 表格中第一项的 prop，如 questionId/userEmail
+      variable: {
+        required: true,
+        type: String
+      },
+      // 表格第一项展现的名称，如 问题编号/用户邮箱
+      variableName: {
+        required: true,
+        type: String
+      },
+
+      scoreData: {
+        required: true,
+        type: Array
+      }
+    },
+    data() {
+      return {
+        // 成绩表格
+        visibleScoreData: [],
+
+        // 总条数
+        totalCount: 1,
+        // 当前页数
+        curPage: 1,
+        // 每页条数
+        curSizePerPage: 25
+      }
+    },
+    watch: {
+      scoreData: function () {
+        this.totalCount = this.scoreData.length
+        this.initVisibleTableData()
+      }
+    },
+    methods: {
+      // 初始化可以被看见的数据
+      initVisibleTableData() {
+        const start = (this.curPage - 1) * this.curSizePerPage
+        const end = (this.curPage * this.curSizePerPage) > this.totalCount ? this.totalCount : (this.curPage * this.curSizePerPage)
+        this.visibleScoreData = this.scoreData.slice(start, end)
+
+        // console.log('curPage: ' + this.curPage + '    curSizePerPage: ' + this.curSizePerPage)
+        // console.log(start)
+        // console.log(end)
+        // console.log(this.visibleScoreData)
+      },
+
+      curPageChanged(val) {
+        // console.log(`当前页: ${val}`);
+        this.initVisibleTableData()
+      },
+      curSizePerPageChanged(val) {
+        // console.log(`每页 ${val} 条`);
+        this.initVisibleTableData()
+      }
+    }
+  }
+</script>
+
+<style scoped>
+  .pagination {
+    margin-top: 15px;
+  }
+</style>
