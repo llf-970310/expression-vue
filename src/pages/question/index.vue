@@ -53,8 +53,8 @@
 
       <!--所有题目-->
       <div v-show="showAllQuestions">
-        <el-table :data="allQuestions" border stripe highlight-current-row @current-change="searchQuestionByClick"
-                  style="width: 100%">
+        <el-table :data="allQuestions" ref="questionTable" @current-change="searchQuestionByClick"
+                  border stripe highlight-current-row style="width: 100%">
           <el-table-column
               prop="questionId"
               label="题号"
@@ -191,9 +191,14 @@
         })
       },
       searchQuestionByClick(currentRow, oldCurrentRow) {
-        this.questionSearchForm.questionId = currentRow.questionId
-        this.searchedQuestionId = currentRow.questionId
-        this.isEditableQuestion = false
+        if (currentRow) {
+          this.questionSearchForm.questionId = currentRow.questionId
+          this.searchedQuestionId = currentRow.questionId
+          this.isEditableQuestion = false
+
+          // 重置已选中行，避免不能再点击
+          this.$refs.questionTable.setCurrentRow()
+        }
       },
 
       // 去修改题目的界面
