@@ -85,9 +85,9 @@
           <el-pagination
               @size-change="curSizePerPageChanged"
               @current-change="curPageChanged"
-              :current-page="curPage"
+              :current-page.sync="curPage"
               :page-sizes="[10, 25, 50, 100, 200]"
-              :page-size="curSizePerPage"
+              :page-size.sync="curSizePerPage"
               layout="prev, pager, next, total, sizes"
               :total="totalCount">
           </el-pagination>
@@ -151,6 +151,7 @@
     },
     methods: {
       initQuestions() {
+        console.log(this.curPage + '    ' + this.curSizePerPage)
         new Promise((resolve, reject) => {
           getAllQuestions(this.curPage, this.curSizePerPage).then(res => {
             console.log(res)
@@ -220,9 +221,9 @@
         this.initQuestions()
       },
       curSizePerPageChanged(val) {
-        // 每页大小变化之后，总是回到第一页 TODO 组件自动变更，无法更改
-        // this.curPage = 1
         // console.log(`每页 ${val} 条`);
+        // 每页大小变化之后，总是回到第一页
+        this.curPage = 1
         this.initQuestions()
       }
 

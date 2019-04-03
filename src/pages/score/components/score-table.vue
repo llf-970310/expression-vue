@@ -99,6 +99,8 @@
       },
       curSizePerPageChanged(val) {
         // console.log(`每页 ${val} 条`);
+        // 每页大小变化之后，总是回到第一页
+        this.curPage = 1
         this.initVisibleTableData()
       }
     }
