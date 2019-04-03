@@ -83,6 +83,7 @@
     methods: {
       // 初始化可以被看见的数据
       initVisibleTableData() {
+        this.$emit('prepare')
         const start = (this.curPage - 1) * this.curSizePerPage
         const end = (this.curPage * this.curSizePerPage) > this.totalCount ? this.totalCount : (this.curPage * this.curSizePerPage)
         this.visibleScoreData = this.scoreData.slice(start, end)
@@ -91,6 +92,7 @@
         // console.log(start)
         // console.log(end)
         // console.log(this.visibleScoreData)
+        this.$emit('ready')
       },
 
       curPageChanged(val) {

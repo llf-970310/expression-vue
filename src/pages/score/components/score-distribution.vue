@@ -38,12 +38,13 @@
       }
     },
     watch: {
-      scorePartition: function() {
+      scorePartition: function () {
         this.initCharts()
       }
     },
     methods: {
       initCharts() {
+        this.$emit('prepare')
         this.chart = echarts.init(this.$el, 'macarons');
 
         const _this = this
@@ -90,6 +91,7 @@
           ]
         })
 
+        this.$emit('ready')
       }
     }
 

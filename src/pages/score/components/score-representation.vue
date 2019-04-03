@@ -1,22 +1,31 @@
 <template>
-  <div v-loading="dataLoading">
+  <div>
 
-    <score-distribution :title="titleDistribution"
+    <score-distribution v-loading="distributionLoading"
+                        :title="titleDistribution"
                         :score-partition="scorePartition"
-                        :num-by-partition="scoreNumByPartition">
+                        :num-by-partition="scoreNumByPartition"
+                        @ready="distributionReady"
+                        @prepare="distributionPrepare">
     </score-distribution>
 
-    <score-change :title="titleChange"
+    <score-change v-loading="changeLoading"
+                  :title="titleChange"
                   :variables="variables"
                   :variable-name="variableName"
                   :main-score="mainScore"
                   :detail-score="detailScore"
-                  :total-score="totalScore">
+                  :total-score="totalScore"
+                  @ready="changeReady"
+                  @prepare="changePrepare">
     </score-change>
 
-    <score-table :variable="variable"
+    <score-table v-loading="tableLoading"
+                 :variable="variable"
                  :variable-name="variableName"
-                 :score-data="scoreData">
+                 :score-data="scoreData"
+                 @ready="tableReady"
+                 @prepare="tablePrepare">
     </score-table>
   </div>
 </template>
@@ -67,7 +76,9 @@
     },
     data() {
       return {
-        dataLoading: true,
+        distributionLoading: true,
+        changeLoading: true,
+        tableLoading: true,
 
         // 成绩分布图
         scorePartition: [],
@@ -83,8 +94,6 @@
       scoreData: function () {
         this.initScoreDistribution()
         this.initScoreChange()
-
-        this.dataLoading = false
       }
     },
     methods: {
@@ -126,6 +135,42 @@
         // console.log(this.mainScore)
         // console.log(this.detailScore)
         // console.log(this.totalScore)
+      },
+
+      // 成绩分布图已准备好
+      distributionReady() {
+        this.distributionLoading = false
+        // console.log('distributionReady')
+      },
+
+      // 成绩分布图正在准备中
+      distributionPrepare() {
+        this.distributionLoading = true
+        // console.log('distributionPrepare')
+      },
+
+      // 成绩变化图已准备好
+      changeReady() {
+        this.changeLoading = false
+        // console.log('changeReady')
+      },
+
+      // 成绩变化图正在准备中
+      changePrepare() {
+        this.changeLoading = true
+        // console.log('changePrepare')
+      },
+
+      // 成绩变化表格已准备好
+      tableReady() {
+        this.tableLoading = false
+        // console.log('tableReady')
+      },
+
+      // 成绩变化表格正在准备中
+      tablePrepare() {
+        this.tableLoading = true
+        // console.log('tablePrepare')
       }
     }
 
