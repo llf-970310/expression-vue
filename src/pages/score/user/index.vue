@@ -25,7 +25,7 @@
       </score-representation>
 
       <div class="d2-text-center">
-        <el-button type="primary" @click="backToOverview">返回查看概况</el-button>
+        <el-button type="primary" @click="backToOverview" class="back">返回查看概况</el-button>
       </div>
     </div>
     <div v-else>
@@ -170,5 +170,7 @@
 </script>
 
 <style scoped>
-
+  .back {
+    margin-top: 15px;
+  }
 </style>

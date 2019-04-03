@@ -76,7 +76,11 @@
     },
     watch: {
       scoreData: function () {
+        // 重置表格参数
         this.totalCount = this.scoreData.length
+        this.curPage = 1
+        this.curSizePerPage = 25
+
         this.initVisibleTableData()
       }
     },
@@ -85,7 +89,8 @@
       initVisibleTableData() {
         this.$emit('prepare')
         const start = (this.curPage - 1) * this.curSizePerPage
-        const end = (this.curPage * this.curSizePerPage) > this.totalCount ? this.totalCount : (this.curPage * this.curSizePerPage)
+        const max = this.curPage * this.curSizePerPage
+        const end = max > this.totalCount ? this.totalCount : max
         this.visibleScoreData = this.scoreData.slice(start, end)
 
         // console.log('curPage: ' + this.curPage + '    curSizePerPage: ' + this.curSizePerPage)
