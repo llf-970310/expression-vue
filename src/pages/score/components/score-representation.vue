@@ -76,6 +76,7 @@
     },
     data() {
       return {
+        // 组件加载动画
         distributionLoading: true,
         changeLoading: true,
         tableLoading: true,

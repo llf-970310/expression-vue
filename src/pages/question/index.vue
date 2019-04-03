@@ -53,7 +53,10 @@
 
       <!--所有题目-->
       <div v-show="showAllQuestions">
-        <el-table :data="allQuestions" ref="questionTable" @current-change="searchQuestionByClick"
+        <el-table v-loading="allQuestionsLoading"
+                  :data="allQuestions"
+                  ref="questionTable"
+                  @current-change="searchQuestionByClick"
                   border stripe highlight-current-row style="width: 100%">
           <el-table-column
               prop="questionId"
@@ -131,6 +134,8 @@
         isNewFromPool: false,
         modifiedQuestionId: '',
 
+        // 题目加载动画
+        allQuestionsLoading: true,
         // 所有题目部分
         allQuestions: [],
         // 总条数
@@ -151,6 +156,8 @@
     },
     methods: {
       initQuestions() {
+        this.allQuestionsLoading = true
+
         console.log(this.curPage + '    ' + this.curSizePerPage)
         new Promise((resolve, reject) => {
           getAllQuestions(this.curPage, this.curSizePerPage).then(res => {
@@ -162,7 +169,9 @@
             console.log('err: ', err)
             reject(err)
           })
-        }).then().catch()
+        }).then(() => {
+          this.allQuestionsLoading = false
+        }).catch()
       },
 
       // 新建题目

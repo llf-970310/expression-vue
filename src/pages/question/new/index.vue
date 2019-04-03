@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="questionLoading">
     <el-row>
       <h1>题目原文</h1>
       <el-input
@@ -79,6 +79,7 @@
     },
     data() {
       return {
+        questionLoading: true,
         curQuestion: {
           rawText: '',
           keywords: [[]],
@@ -95,6 +96,8 @@
     },
     methods: {
       init() {
+        this.questionLoading = true
+
         if (this.modifiedQuestionId) {
           new Promise((resolve, reject) => {
             getQuestion(this.modifiedQuestionId).then(res => {
@@ -105,6 +108,8 @@
               console.log('err: ', err)
               reject(err)
             })
+          }).then(() => {
+            this.questionLoading = false
           }).catch(err => {
           })
         } else {
@@ -121,6 +126,8 @@
                 console.log('err: ', err)
                 reject(err)
               })
+            }).then(() => {
+              this.questionLoading = false
             }).catch(err => {
             })
           } else {
@@ -131,6 +138,7 @@
               mainwords: [[]],
               detailwords: [[[]]]
             }
+            this.questionLoading = false
           }
         }
       },

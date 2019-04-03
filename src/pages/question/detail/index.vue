@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="questionLoading">
     <el-row>
       <h1>题目原文</h1>
       <p>{{ curQuestion.rawText }}</p>
@@ -50,6 +50,7 @@
     },
     data() {
       return {
+        questionLoading: true,
         curQuestion: {}
       }
     },
@@ -66,6 +67,7 @@
     },
     methods: {
       init(id) {
+        this.questionLoading = true
         new Promise((resolve, reject) => {
           getQuestion(id).then(res => {
             // console.log(res)
@@ -75,6 +77,8 @@
             console.log('err: ', err)
             reject(err)
           })
+        }).then(() => {
+          this.questionLoading = false
         }).catch(err => {
         })
       },
