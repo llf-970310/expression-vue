@@ -7,19 +7,19 @@
         <el-input v-model.number="searchQuestion.questionNum" placeholder="请输入题号"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit('searchQuestion')">查询</el-button>
+        <el-button type="primary" @click="onSubmit('searchQuestion')">去优化</el-button>
       </el-form-item>
     </el-form>
 
     <!--表格展示部分-->
     <div v-if="!inOptimize">
       <template>
-        <el-table :data="questionTable" style="width: 100%">
-          <el-table-column prop="questionNum" label="题号" width="80px"></el-table-column>
+        <el-table :data="questionTable" style="width: 100%" :default-sort="{prop: 'questionNum', order: 'ascending'}">
+          <el-table-column prop="questionNum" label="题号" width="80px" sortable></el-table-column>
           <el-table-column prop="text" label="题目原文" width="600px" :show-overflow-tooltip=true></el-table-column>
           <el-table-column prop="lastOpDate" label="上次优化时间"></el-table-column>
           <el-table-column prop="status" label="状态" width="100px"></el-table-column>
-          <el-table-column align="right">
+          <el-table-column align="right" width="100px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleOpt(scope.$index, scope.row)" :disabled=scope.row.inUse>手动优化
               </el-button>
@@ -44,6 +44,11 @@
         <div style="width: 49%; height: auto; overflow: hidden; float: left; margin-bottom: -20px;">
           <div style="width: 100%; height: 28px; overflow: hidden">
             <div class="page-optimize--subtitle">关键词权重分布图</div>
+            <div style="float: right; margin-right: 0; color: #666666; font-size: 14px">
+              选择栏数
+              <el-input-number v-model="weightHistNum" @change="handleWeightHistChange" :min="3" :max="50" size="mini"
+                               label="选择栏数" controls-position="right"></el-input-number>
+            </div>
           </div>
           <template>
             <ve-line :data="paramData" height="350px"></ve-line>
@@ -55,6 +60,11 @@
             <div class="page-optimize--subtitle">得分频率分布图</div>
             <div style="float: right;">
               <el-button icon="el-icon-refresh" type="text" size="mini" @click="refreshScoreChart">刷新数据</el-button>
+            </div>
+            <div style="float: right; margin-right: 20px; color: #666666; font-size: 14px">
+              选择栏数
+              <el-input-number v-model="scoreHistNum" @change="handleScoreHistChange" :min="3" :max="50" size="mini"
+                               label="选择栏数" controls-position="right"></el-input-number>
             </div>
           </div>
           <template>
@@ -89,7 +99,7 @@
                 <el-table-column label="击中频率" width="120px" prop="hitRate" sortable></el-table-column>
                 <el-table-column label="权重" sortable prop="weight">
                   <template slot-scope="scope">
-                    <el-slider v-model="scope.row.weight" show-input :max=1 :step=0.01></el-slider>
+                    <el-slider v-model="scope.row.weight" show-input :max=50 :step=0.01></el-slider>
                   </template>
                 </el-table-column>
                 <el-table-column align="right" width="300px">
@@ -99,7 +109,6 @@
                   <template slot-scope="scope">
                     <el-button size="mini" @click="handleReset(scope.$index, scope.row)">重置</el-button>
                     <el-button size="mini" type="primary" @click="handleSave(scope.$index, scope.row)">保存权重</el-button>
-                    <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除词语</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -116,7 +125,7 @@
                 <el-table-column label="击中频率" width="120px" prop="hitRate" sortable></el-table-column>
                 <el-table-column label="权重" prop="weight" sortable>
                   <template slot-scope="scope">
-                    <el-slider v-model="scope.row.weight" show-input :max=1 :step=0.01></el-slider>
+                    <el-slider v-model="scope.row.weight" show-input :max=50 :step=0.01></el-slider>
                   </template>
                 </el-table-column>
                 <el-table-column align="right" width="300px">
@@ -126,7 +135,6 @@
                   <template slot-scope="scope">
                     <el-button size="mini" @click="handleReset(scope.$index, scope.row)">重置</el-button>
                     <el-button size="mini" type="primary" @click="handleSave(scope.$index, scope.row)">保存权重</el-button>
-                    <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除词语</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -140,13 +148,16 @@
 </template>
 
 <script>
-  import {getAllQuestions} from '@api/manager.question'
-  import {getScoreData, getWeightData, updateWeight} from '@/api/optimize'
+  import {getAllType2, getScoreData, getWeightData, updateWeight} from '@/api/optimize'
 
   export default {
     name: 'optimize-manual',
     data() {
       return {
+        weightHistNum: 10,
+
+        scoreHistNum: 5,
+
         filename: __filename,
         // v-charts
         paramData: {
@@ -169,6 +180,9 @@
         detailTableData: [],
         search: '',
 
+        // backup
+
+
         // search
         searchQuestion: {
           questionNum: '',
@@ -188,11 +202,12 @@
       // 获得question表格的数据
       getQuestionTableData() {
         new Promise((resolve, reject) => {
-          getAllQuestions().then(res => {
+          getAllType2().then(res => {
+            this.questionTable = [];
             res.questions.forEach(question => {
               this.questionTable.push({
                 'questionNum': question.questionId,
-                'lastOpDate': question.lastOpDate,
+                'lastOpDate': question.lastOpDate ? question.lastOpDate : "—— ——",
                 'inUse': question.inOptimize,
                 'text': question.rawText,
                 'status': question.inOptimize ? "优化中" : "空闲",
@@ -208,9 +223,9 @@
       },
 
       // 获得score chart的数据
-      getScoreChartData(questionNum, histNum) {
+      getScoreChartData(questionNum, histNum, force = false) {
         new Promise((resolve, reject) => {
-          getScoreData(questionNum).then(res => {
+          getScoreData(questionNum, force).then(res => {
             let keyHist = [];
             let detailHist = [];
             let totalHist = [];
@@ -220,12 +235,13 @@
             this.scoreData.rows = [];
             for (let i = 0; i < histNum; i++) {
               this.scoreData.rows.push({
-                '得分': (i * 100 / histNum) + ' ~ ' + ((i + 1) * 100 / histNum),
+                '得分': (i * 100 / histNum).toFixed(0) + ' ~ ' + ((i + 1) * 100 / histNum).toFixed(0),
                 '主旨人数': keyHist[i],
                 '细节人数': detailHist[i],
                 '总分人数': totalHist[i],
               });
             }
+            this.scoreStatistic = [];
             this.scoreStatistic.push({
               "type": "主旨", "mean": res.keyStatistic.mean.toFixed(2),
               "sigma": res.keyStatistic.sigma.toFixed(2),
@@ -258,14 +274,25 @@
         new Promise((resolve, reject) => {
           getWeightData(questionNum).then(res => {
             // chart部分
+            let max = 0;
+            res.keyWeight.forEach(w => {
+              if (w > max) {
+                max = w;
+              }
+            });
+            res.detailWeight.forEach(w => {
+              if (w > max) {
+                max = w;
+              }
+            });
             let keyHist = [];
             let detailHist = [];
-            this.fillHist(keyHist, res.keyWeight, histNum, 100);
-            this.fillHist(detailHist, res.detailWeight, histNum, 100);
+            this.fillHist(keyHist, res.keyWeight, histNum, max);
+            this.fillHist(detailHist, res.detailWeight, histNum, max);
             this.paramData.rows = [];
             for (let i = 0; i < histNum; i++) {
               this.paramData.rows.push({
-                '关键词权重': (i / histNum) + ' ~ ' + ((i + 1) / histNum),
+                '关键词权重': (i * max / histNum).toFixed(1) + ' ~ ' + ((i + 1) * max / histNum).toFixed(1),
                 '主旨关键词数': keyHist[i],
                 '细节关键词数': detailHist[i],
               });
@@ -275,18 +302,30 @@
             for (let i = 0; i < res.keyWords.length; i++) {
               this.keyTableData.push({
                 word: this.array2str(res.keyWords[i]),
-                hitRate: res.keyHitTimes[i] / res.allHitTimes,
-                weight: res.keyWeight[i],
+                hitRate: res.keyAllHitTimes === 0 ? 0 : (res.keyHitTimes[i] / res.keyAllHitTimes * 100).toFixed(2) +
+                  "%",
+                weight: res.keyWeight[i + 1],
               });
             }
             this.detailTableData = [];
             for (let i = 0; i < res.detailWords.length; i++) {
               this.detailTableData.push({
                 word: this.array2str(res.detailWords[i]),
-                hitRate: res.detailHitTimes[i] / res.allHitTimes,
-                weight: res.detailWeight[i],
+                hitRate: res.detailAllHitTimes === 0 ? 0 :
+                  (res.detailHitTimes[i] / res.detailAllHitTimes * 100).toFixed(2) +  "%",
+                weight: res.detailWeight[i + 1],
               });
             }
+            this.keyTableData.push({
+              word: "常数项",
+              hitRate: 1,
+              weight: res.keyWeight[0],
+            });
+            this.detailTableData.push({
+              word: "常数项",
+              hitRate: 1,
+              weight: res.detailWeight[0],
+            });
             resolve();
           }).catch(err => {
             console.log('err: ', err);
@@ -303,9 +342,7 @@
           let detailWords = this.detailTableData.map(e => e.word);
           let detailWeight = this.detailTableData.map(e => e.weight);
           updateWeight(questionNum, {
-            "keyWords": this.str2doubleArray(keyWords),
             "keyWeight": keyWeight,
-            "detailWords": this.str2doubleArray(detailWords),
             "detailWeight": detailWeight,
           }).then(res => {
             this.$message({
@@ -313,7 +350,7 @@
               type: 'success'
             });
             resolve();
-          }).then(() => this.getWeightChartData(questionNum, 5)).catch(err => {
+          }).then(() => this.getWeightChartData(questionNum, this.weightHistNum)).catch(err => {
             console.log(err);
             reject();
           });
@@ -321,9 +358,6 @@
       },
 
       // 优化表格相关的方法
-      handleDelete(index, row) {
-        this.saveWeight(this.displayQuestionNum);
-      },
 
       handleSave(index, row) {
         this.saveWeight(this.displayQuestionNum);
@@ -332,20 +366,21 @@
       handleReset(index, row) {
         console.log("reset");
         console.log(index, row);
-
+        this.getWeightChartData(this.displayQuestionNum, this.weightHistNum);
       },
 
       // 去优化按钮监听
       handleOpt(index, row) {
         console.log("opt");
         console.log(index, row.questionNum);
-        this.getScoreChartData(row.questionNum, 5);
-        this.getWeightChartData(row.questionNum, 5);
+        this.getScoreChartData(row.questionNum, this.scoreHistNum);
+        this.getWeightChartData(row.questionNum, this.weightHistNum);
         this.displayQuestionNum = row.questionNum;
         this.inOptimize = true;
       },
       // 返回按钮监听
       quitOpt() {
+        this.getQuestionTableData();
         this.displayQuestionNum = '';
         this.inOptimize = false;
       },
@@ -358,8 +393,8 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log('submit!');
-            this.getScoreChartData(this.searchQuestion.questionNum, 5);
-            this.getWeightChartData(this.searchQuestion.questionNum, 5);
+            this.getScoreChartData(this.searchQuestion.questionNum, this.scoreHistNum);
+            this.getWeightChartData(this.searchQuestion.questionNum, this.weightHistNum);
             this.displayQuestionNum = this.searchQuestion.questionNum;
             this.inOptimize = true;
           } else {
@@ -371,20 +406,23 @@
       // 刷新得分频率图
       refreshScoreChart() {
         console.log("refresh chart!");
-        this.getScoreChartData(this.displayQuestionNum, 5);
+        this.getScoreChartData(this.displayQuestionNum, this.scoreHistNum, true);
       },
-
+      handleScoreHistChange() {
+        this.getScoreChartData(this.displayQuestionNum, this.scoreHistNum);
+      },
+      handleWeightHistChange() {
+        this.getWeightChartData(this.displayQuestionNum, this.weightHistNum);
+      },
 
       // 填充频率分布图
       fillHist(hist, data, histNum, limit) {
         for (let i = 0; i < histNum; i++) {
           hist.push(0);
         }
-        let total = 0;
         data.forEach(score => {
-          total += score;
           for (let i = 0; i < histNum; i++) {
-            if (score < (i + 1) * limit / histNum) {
+            if (score <= (i + 1) * limit / histNum) {
               hist[i]++;
               break;
             }
@@ -405,36 +443,6 @@
         return str;
       },
 
-      // string转数组
-      str2array(str) {
-        let arr = [];
-        let word = '';
-        let one = true;
-        for (let i = 0; i < str.length; i++) {
-          if (str[i] === '[') {
-            word = '';
-          } else if (str[i] === ',') {
-            arr.push(word);
-            one = false;
-          } else if (str[i] === ']') {
-            if (one) {
-              arr.push(word);
-            }
-          } else if (str[i] !== ' ') {
-            word += str[i];
-          }
-        }
-        console.log("inner arr: " + JSON.stringify(arr));
-        return arr;
-      },
-
-      str2doubleArray(strArray) {
-        let arr = [];
-        for (let i = 0; i < strArray.length; i++) {
-          arr.push(this.str2array(strArray[i]))
-        }
-        return arr;
-      }
     }
   }
 </script>

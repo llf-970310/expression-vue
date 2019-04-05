@@ -2,13 +2,25 @@ import request from '@/plugin/axios'
 
 const qs = require('qs');
 
+
+/**
+ * 获得所有的类型二的题目
+ */
+export function getAllType2() {
+  return request({
+    url: '/admin/question-type-two',
+    method: 'get'
+  });
+}
+
 /**
  * 获得某道题的得分原始数据
  * @param questionNum 题号
+ * @param force 是否强制刷新
  */
-export function getScoreData(questionNum) {
+export function getScoreData(questionNum, force) {
   return request({
-    url: '/admin/get-score-data?questionNum=' + questionNum,
+    url: '/admin/get-score-data?questionNum=' + questionNum + "&force=" + force,
     method: 'get',
   });
 }
