@@ -8,7 +8,7 @@
           <el-input id="name" v-model="form.name" :disabled="isModifyName"><el-button slot="append" @click="changeName">{{ nameText }}</el-button></el-input>
         </el-form-item>
         <el-form-item label="学号" prop="student_id">
-          <el-input v-model="form.student_id" :disabled="isModifyId"><el-button slot="append" @click="changeId">{{ idText }}</el-button></el-input>
+          <el-input v-model.number="form.student_id" :disabled="isModifyId"><el-button slot="append" @click="changeId">{{ idText }}</el-button></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="form.email" :disabled="isModifyEmail"><el-button slot="append" @click="changeEmail">{{ emailText }}</el-button></el-input>
@@ -20,7 +20,7 @@
           <el-input type="password" v-model="form.pass" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPass" v-if="isModifyPass">
-          <el-input type="password" v-model="form.checkPass" auto-complete="off"></el-input>
+          <el-input type="password" v-model="form.checkpass" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="注册时间">
           <el-input v-model="form.register_time" disabled=""></el-input>
@@ -53,7 +53,36 @@
         name: "userInfo",
         data() {
 
-            let validatePass = (rule, value, callback) => {
+            const checkId = (rule, value, callback) => {
+                const numberReg = /^1[3|4|5|7|8][0-9]{9}$/;
+                if (!value) {
+                    return callback(new Error('学号不能为空'))
+                }
+                setTimeout(() => {
+
+                    if (!Number.isInteger(+value)) {
+                        callback(new Error('请输入数字值'))
+                    } else {
+                        callback()
+                    }
+                }, 100)
+            };
+
+            const checkEmail = (rule, value, callback) => {
+                const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+                if (!value) {
+                    return callback(new Error('邮箱不能为空'))
+                }
+                setTimeout(() => {
+                    if (mailReg.test(value)) {
+                        callback()
+                    } else {
+                        callback(new Error('请输入正确的邮箱格式'))
+                    }
+                }, 100)
+            };
+
+            const validatePass = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入密码'));
                 } else {
@@ -63,7 +92,7 @@
                     callback();
                 }
             };
-            let validatePass2 = (rule, value, callback) => {
+            const validatePass2 = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请再次输入密码'))
                 } else if (value !== this.form.pass) {
@@ -82,7 +111,7 @@
                 idText:'修改',
                 emailText:'修改',
                 passText: '修改',
-                bindText:'接触绑定',
+                bindText:'解除绑定',
                 form:{
                     name:'陈远志',
                     student_id:'151250021',
@@ -100,11 +129,12 @@
                     ],
                     student_id: [
                         { required: true, message: '请输入学号', trigger: 'blur' },
-//                        { type: 'number', message: '学号必须为数字值',trigger:'blur,change'}
+                        { validator: checkId, trigger: 'blur'}
                     ],
                     email: [
+                        {validator: checkEmail, trigger: 'blur'},
                         { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-                        { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
+//                        { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
                     ],
                     pass: [
                         { validator: validatePass, trigger: 'blur' }
@@ -148,8 +178,8 @@
             changePass:function () {
                 if(this.isModifyPass) {
                     this.passText = '修改';
-                    this.pass='';
-                    this.checkpass=''
+                    this.form.pass='';
+                    this.form.checkpass='';
                 } else {
                     this.passText = '取消修改'
                 }
