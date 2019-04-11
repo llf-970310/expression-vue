@@ -42,6 +42,8 @@
 
 <script>
     export default {
+        components: {
+           },
         name: "userInfo",
         data() {
 
