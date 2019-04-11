@@ -15,6 +15,18 @@ export function getAllQuestions(page, size) {
 }
 
 /**
+ * 查看所有第二种类型的题目
+ * @param page 页数，从 1 开始
+ * @param size 每页大小
+ */
+export function getAllQuestionsOfTypeTwo(page, size) {
+  return request({
+    url: '/admin/question-type-two?page=' + page + '&size=' + size,
+    method: 'get'
+  })
+}
+
+/**
  * 查看某题目的详情
  * @param id 题目ID
  */

@@ -41,15 +41,7 @@
 </template>
 
 <script>
-    import ElInput from "../../../../node_modules/element-ui/packages/input/src/input.vue";
-    import ElCol from "element-ui/packages/col/src/col";
-    import ElButton from "../../../../node_modules/element-ui/packages/button/src/button.vue";
-
     export default {
-        components: {
-            ElButton,
-            ElCol,
-            ElInput},
         name: "userInfo",
         data() {
 
