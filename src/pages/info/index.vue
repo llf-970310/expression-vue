@@ -51,6 +51,46 @@
         </el-form-item>
       </el-form>
     </div>
+
+    <div>
+      <el-table
+              v-loading = "historyScoreLoading"
+              :data="historyScoreList"
+              height="250"
+              border
+              style="width: 100%">
+        <el-table-column
+                prop="test_start_time"
+                label="开始时间"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="paper_type"
+                label="类型"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="current_q_num"
+                label="当前题号"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="total_score"
+                label="总得分"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="questions"
+                label="题目"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="all_analysed"
+                label="是否分析"
+                width="180">
+        </el-table-column>
+      </el-table>
+    </div>
   </d2-container>
 </template>
 
@@ -58,10 +98,10 @@
   import {getInfo} from '@api/user';
   import {modifyInfo} from '@api/user';
   import {untying} from '@api/user';
-
+  import {showScore} from '@api/user';
     export default {
         components: {
-           },
+        },
         name: "userInfo",
         data() {
             let checkEmail = (rule, value, callback) => {
@@ -129,28 +169,41 @@
                     checkPass: [
                         { validator: validatePass2, trigger: 'blur' }
                     ],
-                }
+                },
+
+                name:'',
+                pass:'',
+
+
+                //历史答题加载等待
+                historyScoreLoading:true,
+                //所有历史答题成绩记录
+                historyScoreList: [ ]
             }
         },
         mounted() {
             this.initInfo();
+            this.initHistoryScore();
+
         },
         methods: {
+
+            //初始化个人信息数据
             initInfo() {
                 new Promise((resolve, reject) => {
                     getInfo().then(
                         res => {
                             console.log(res);
                             this.info = res;
-                            this.form.name = this.info.name || '',
-                                this.form.email = this.info.email || '',
-                                this.form.password = this.info.password ||'',
-                                this.form.last_login_time = this.info.last_login_time || '',
-                                this.form.register_time = this.info.register_time || '',
-                                this.form.remaining_exam_num = this.info.remaining_exam_num || '',
-                                this.form.wx_id = this.info.wx_id,
-                                this.form.vip_start_time = this.info.vip_start_time||'',
-                                this.form.vip_end_time = this.info.vip_end_time||''
+                            this.form.name = res.name;
+                            this.form.email = res.email;
+                            this.form.password = res.password;
+                            this.form.register_time = res.register_time;
+                            this.form.remaining_exam_num = res.remaining_exam_num;
+                            this.form.last_login_time = res.last_login_time;
+                            this.form.wx_id = res.wx_id;
+                            this.form.vip_start_time = res.vip_start_time;
+                            this.form.vip_end_time = res.vip_end_time;
                             resolve();
                         }
                     ).catch(err => {
@@ -161,6 +214,28 @@
 
                 ).catch();
             },
+
+            //初始化历史成绩表格数据
+            initHistoryScore() {
+              new Promise((resolve, reject) => {
+                  showScore().then(res => {
+                      console.log(res);
+                      if(res.data) {
+                          this.historyScoreList = res;
+                      } else {
+
+                      }
+                      resolve();
+                  }).catch(err => {
+                      console.log('err: ', err);
+                      reject(err)
+                  })
+              }).then(() => {
+                  this.historyScoreLoading = false
+              }).catch();
+            },
+
+            //修改姓名
             changeName() {
                 if(this.isModifyName) {
                     this.nameText = '修改';
@@ -182,6 +257,8 @@
                 }
                 this.isModifyPass = !this.isModifyPass
             },
+
+            //解除微信绑定
             releaseBind() {
                 if(this.form.wx_id == '') {
                     this.$message({
@@ -208,14 +285,16 @@
                 }
 
             },
+
+            //保存修改
             save() {
                 this.$confirm('您确定保存当前修改的信息吗？','提示',{
                     confirmButtonText: '确定',
                     cancelButtonText:'取消',
                     type: 'warning'
                 }).then(() => {
-                    let username = this.form.name;
-                    let userpass = '';
+
+                    //如果当前的姓名与原来姓名一致且新密码为空，则表示没有修改动作
                     if(this.form.name == this.info.name && this.form.pass == '') {
                         this.$message({
                             showClose: true,
@@ -224,22 +303,22 @@
                         });
                     } else {
                         if(this.form.name != this.info.name) {
-                            if(this.form.pass) {
-                                userpass = this.form.pass;
-                            } else {
-                                userpass = this.form.password;
-                            }
-                        } else {
-                            userpass = this.form.pass;
-                        }
+                            if(this.form.pass == '') {
 
+                            } else {this.pass = this.form.pass;}
+                        } else {
+                            this.pass = this.form.pass;
+                        }
                         new Promise((resolve, reject) => {
-                            modifyInfo({password:userpass, name: username}).then( res => {
+                            modifyInfo({
+                                password: this.pass,
+                                name: this.form.name
+                            }).then( res => {
                                 window.location.reload();
                             }).catch();
                         }).then().catch()
                     }
-                })
+                }).catch(() => {});
             },
 
         }
