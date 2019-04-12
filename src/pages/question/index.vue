@@ -106,7 +106,7 @@
   import NewQuestion from './new/index'
 
   import {validateQuestionId} from '@/libs/validator'
-  import {getAllQuestions} from '@api/manager.question'
+  import {getAllQuestionsOfTypeTwo} from '@api/manager.question'
 
   export default {
     name: "question",
@@ -160,7 +160,7 @@
 
         console.log(this.curPage + '    ' + this.curSizePerPage)
         new Promise((resolve, reject) => {
-          getAllQuestions(this.curPage, this.curSizePerPage).then(res => {
+          getAllQuestionsOfTypeTwo(this.curPage, this.curSizePerPage).then(res => {
             console.log(res)
             this.allQuestions = res.questions
             this.totalCount = res.count
@@ -219,10 +219,15 @@
       },
 
       // 返回显示所有题目的主界面
-      goBackToAllQuestions() {
+      goBackToAllQuestions(changeSucceeded) {
         this.searchedQuestionId = ''
         this.isEditableQuestion = false
         this.modifiedQuestionId = ''
+
+        // 成功改变之后，需要重新加载题目表格
+        if (changeSucceeded) {
+          this.initQuestions()
+        }
       },
 
       curPageChanged(val) {

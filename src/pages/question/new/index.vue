@@ -53,11 +53,14 @@
       <el-button @click="handleNewDetailwords">添加一组 Detailwords</el-button>
     </div>
 
-    <div class="d2-text-center">
-      <el-button type="success" @click="confirmModification">确认修改</el-button>
+    <el-row type="flex" justify="center">
+      <el-button type="success" @click="confirmModification">
+        <div v-if="modifiedQuestionId">确认修改</div>
+        <div v-else>确认保存</div>
+      </el-button>
       <el-button type="danger" @click="resetComponent">重置</el-button>
       <el-button type="primary" @click="goBackToAllQuestions">返回</el-button>
-    </div>
+    </el-row>
   </div>
 </template>
 
@@ -89,6 +92,9 @@
 
         // 若 newFromPool = true，则会初始化此参数
         idFromPool: '',
+
+        // 修改/保存成功
+        changeSucceeded: false,
       }
     },
     mounted() {
@@ -99,6 +105,7 @@
         this.questionLoading = true
 
         if (this.modifiedQuestionId) {
+          // 修改题目
           new Promise((resolve, reject) => {
             getQuestion(this.modifiedQuestionId).then(res => {
               // console.log(res)
@@ -113,7 +120,6 @@
           }).catch(err => {
           })
         } else {
-          // 修改题目
           if (this.newFromPool) {
             // 词库导入
             new Promise((resolve, reject) => {
@@ -248,8 +254,10 @@
         }
       },
 
-      // 成功保存的提示
+      // 成功保存
       successSave() {
+        // 传给父组件的状态变更
+        this.changeSucceeded = true
         this.$message({
           message: '已成功保存！',
           type: 'success',
@@ -277,7 +285,7 @@
 
       // 返回全部问题界面
       goBackToAllQuestions() {
-        this.$emit('back')
+        this.$emit('back', this.changeSucceeded)
       }
     }
   }
