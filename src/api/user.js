@@ -11,3 +11,24 @@ export function getInfo () {
         method: 'get'
     })
 }
+
+/**
+ *  修改用户信息
+ */
+export function modifyInfo (data) {
+    return request({
+        url: '/auth/update',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
+
+/**
+ * 微信解绑
+ */
+export function untying () {
+    return request({
+        url: '/auth/untying',
+        method: 'post'
+    })
+}
