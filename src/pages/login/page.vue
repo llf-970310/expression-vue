@@ -170,7 +170,7 @@
             },
             wechatLogin() {
                 //todo 这里用了外链
-                location.href = 'https://open.weixin.qq.com/connect/qrconnect?appid=wxd7bad9aab33bb581&redirect_uri=https://expression.iselab.cn/api/auth/wechat/login&response_type=code&scope=snsapi_login&state=zidingyineirong#wechat_redirect';
+                location.href = 'https://open.weixin.qq.com/connect/qrconnect?appid=wxd7bad9aab33bb581&redirect_uri=https://expression.iselab.cn/#/login-wechat&response_type=code&scope=snsapi_login&state=zidingyineirong#wechat_redirect';
             }
             // /**
             //  * @description 提交注册申请
