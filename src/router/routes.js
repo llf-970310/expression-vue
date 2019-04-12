@@ -20,9 +20,6 @@ export const constantRouterMap = [
             {
                 path: 'index',
                 name: 'index',
-                meta: {
-                    auth: true
-                },
                 component: () => import('@/pages/index')
             },
             // 刷新页面 必须保留
