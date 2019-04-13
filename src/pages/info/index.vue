@@ -5,13 +5,13 @@
     <div style="width: 50%">
       <el-form :model="form" ref="form" :rules="rules" label-width="80px" label-position="left">
         <el-form-item label="姓名" prop="name">
-          <el-input id="name" v-model="form.name" :disabled="!isModifyName"><el-button slot="append" @click="changeName">{{ nameText }}</el-button></el-input>
+          <el-input id="name" v-model="form.name" :readonly="!isModifyName" ref="username"><el-button slot="append" @click="changeName">{{ nameText }}</el-button></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email" required>
-          <el-input v-model="form.email" disabled=""></el-input>
+        <el-form-item label="邮箱" required>
+          <el-input v-model="form.email" readonly></el-input>
         </el-form-item>
         <el-form-item label="密码" required>
-          <el-input type="password" v-model="form.password" disabled=""><el-button slot="append" @click="changePass">{{ passText }}</el-button></el-input>
+          <el-input type="password" v-model="form.password" readonly><el-button slot="append" @click="changePass">{{ passText }}</el-button></el-input>
         </el-form-item>
         <el-form-item label="新密码" prop="pass" v-if="isModifyPass">
           <el-input type="password" v-model="form.pass" auto-complete="off"></el-input>
@@ -20,30 +20,30 @@
           <el-input type="password" v-model="form.checkPass" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="注册时间">
-          <el-input v-model="form.register_time" disabled=""></el-input>
+          <el-input v-model="form.register_time" readonly></el-input>
         </el-form-item>
         <el-form-item label="上次登录">
-          <el-input v-model="form.last_login_time" disabled=""></el-input>
+          <el-input v-model="form.last_login_time" readonly></el-input>
         </el-form-item>
         <el-form-item label="剩余题数">
-          <el-input v-model="form.remaining_exam_num" disabled=""></el-input>
+          <el-input v-model="form.remaining_exam_num" readonly></el-input>
         </el-form-item>
         <el-form-item label="会员时间">
           <el-col :span="11">
             <el-form-item>
-              <el-input v-model="form.vip_start_time" disabled="" style="width: 100%"></el-input>
+              <el-input v-model="form.vip_start_time" readonly style="width: 100%"></el-input>
             </el-form-item>
           </el-col>
           <el-col class="line" :span="2">&nbsp;&nbsp;&nbsp;——</el-col>
           <el-col :span="11">
             <el-form-item>
-              <el-input v-model="form.vip_end_time" disabled="" style="width: 100%"></el-input>
+              <el-input v-model="form.vip_end_time" readonly style="width: 100%"></el-input>
             </el-form-item>
           </el-col>
 
         </el-form-item>
         <el-form-item label="微信id">
-          <el-input v-model="form.wx_id" disabled=""><el-button slot="append" @click="releaseBind">{{ bindText }}</el-button></el-input>
+          <el-input v-model="form.wx_id" readonly><el-button slot="append" @click="releaseBind">{{ bindText }}</el-button></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="save">保存</el-button>
@@ -104,19 +104,19 @@
         },
         name: "userInfo",
         data() {
-            let checkEmail = (rule, value, callback) => {
-                const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
-                if (!value) {
-                    return callback(new Error('邮箱不能为空'))
-                }
-                setTimeout(() => {
-                    if (mailReg.test(value)) {
-                        callback()
-                    } else {
-                        callback(new Error('请输入正确的邮箱格式'))
-                    }
-                }, 100)
-            };
+//            let checkEmail = (rule, value, callback) => {
+//                const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+//                if (!value) {
+//                    return callback(new Error('邮箱不能为空'))
+//                }
+//                setTimeout(() => {
+//                    if (mailReg.test(value)) {
+//                        callback()
+//                    } else {
+//                        callback(new Error('请输入正确的邮箱格式'))
+//                    }
+//                }, 100)
+//            };
 
             let validatePass = (rule, value, callback) => {
                 if (value === '') {
@@ -244,7 +244,8 @@
                     this.nameText = '取消修改'
                 }
                 this.isModifyName = !this.isModifyName;
-                document.getElementById("name").focus();
+//                document.getElementById("name").focus();
+                this.$refs.username.focus();
             },
             //修改密码
             changePass() {
