@@ -16,6 +16,7 @@ export function getInfo () {
  *  修改用户信息
  */
 export function modifyInfo (data) {
+    console.log(data)
     return request({
         url: '/auth/update',
         method: 'post',
@@ -29,6 +30,13 @@ export function modifyInfo (data) {
 export function untying () {
     return request({
         url: '/auth/untying',
+        method: 'post'
+    })
+}
+
+export function showScore () {
+    return request({
+        url: '/auth/showscore',
         method: 'post'
     })
 }
