@@ -169,7 +169,7 @@
                 this.$router.push('register')
             },
             wechatLogin() {
-                //todo 这里用u了外链
+                //todo 这里用了外链
                 // let redirectUrl = '/#/login-wechat'
                 let redirectUrl = '/api/auth/wechat/login'
                 location.href = 'https://open.weixin.qq.com/connect/qrconnect?' +

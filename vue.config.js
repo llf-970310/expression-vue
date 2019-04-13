@@ -25,7 +25,7 @@ module.exports = {
     //     }
     //   }
     // },
-    // 如果需要自己开发后台，上面你注释掉换成下面这个
+    // 如果需要自己开发后台，上面注释掉换成下面这个
     proxy: {
       '/api': {
         target: 'http://localhost:5000/api',
