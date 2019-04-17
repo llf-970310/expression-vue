@@ -6,10 +6,13 @@ const qs = require('qs')
  * 获取下一题
  * TODO GET
  */
-export function nextQuestion() {
+export function nextQuestion(nowQuestionNum) {
   return request({
     url: '/exam/next-question',
-    method: 'post'
+    method: 'post',
+    data: qs.stringify({
+      nowQuestionNum: nowQuestionNum
+    })
   })
 }
 
