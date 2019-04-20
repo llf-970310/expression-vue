@@ -78,7 +78,6 @@ export function newQuestion(questionData, isNewFromPool, idInPool) {
       data: {
         rawText: questionData.rawText,
         keywords: JSON.stringify(questionData.keywords),
-        mainwords: JSON.stringify(questionData.mainwords),
         detailwords: JSON.stringify(questionData.detailwords)
       },
       isFromPool: isNewFromPool,
@@ -100,7 +99,6 @@ export function modifyQuestion(questionData, id) {
       data: {
         rawText: questionData.rawText,
         keywords: JSON.stringify(questionData.keywords),
-        mainwords: JSON.stringify(questionData.mainwords),
         detailwords: JSON.stringify(questionData.detailwords)
       },
       id

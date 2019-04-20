@@ -12,13 +12,6 @@
       </div>
     </el-row>
 
-    <el-row>
-      <h1>Mainwords</h1>
-      <div v-for="mainwordPair in curQuestion.mainwords">
-        <synonyms :synonyms-pairs="mainwordPair"></synonyms>
-      </div>
-    </el-row>
-
     <div v-for="(detailwordsPerSentence, index) in curQuestion.detailwords">
       <el-row>
         <h1>Detailwords {{ index + 1 }}</h1>

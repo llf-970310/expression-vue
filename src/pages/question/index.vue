@@ -70,17 +70,12 @@
           <el-table-column
               prop="keywords"
               label="keywords"
-              width="180">
-          </el-table-column>
-          <el-table-column
-              prop="mainwords"
-              label="mainwords"
-              width="180">
+              width="300">
           </el-table-column>
           <el-table-column
               prop="detailwords"
               label="detailwords"
-              width="250">
+              width="300">
           </el-table-column>
         </el-table>
 

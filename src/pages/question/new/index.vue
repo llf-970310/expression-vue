@@ -22,18 +22,6 @@
       </div>
     </el-row>
 
-    <el-row>
-      <h1>Mainwords</h1>
-      <div v-for="(mainwordPair, pairIndex) in curQuestion.mainwords">
-        <synonyms-modifiable :synonyms-pairs="mainwordPair"
-                             @delete="handleDeleteMainwordSynonymsPair(pairIndex)">
-        </synonyms-modifiable>
-      </div>
-      <div class="new-synonyms">
-        <el-button size="small" @click="handleNewMainwordSynonymsPair">+ 添加一组同义词</el-button>
-      </div>
-    </el-row>
-
     <div v-for="(detailwordsPerSentence, index) in curQuestion.detailwords">
       <el-row>
         <h1>Detailwords {{ index + 1 }}</h1>
@@ -97,7 +85,6 @@
         curQuestion: {
           rawText: '',
           keywords: [[]],
-          mainwords: [[]],
           detailwords: [[[]]]
         },
 
@@ -152,7 +139,6 @@
             this.curQuestion = {
               rawText: '',
               keywords: [[]],
-              mainwords: [[]],
               detailwords: [[[]]]
             }
             this.questionLoading = false
@@ -172,21 +158,6 @@
         // 已经没有 Keywords 同义词时，默认增加一组
         if (this.curQuestion.keywords.length === 0) {
           this.handleNewKeywordSynonymsPair()
-        }
-      },
-
-      // 新增 Mainwords 同义词列表
-      handleNewMainwordSynonymsPair() {
-        this.curQuestion.mainwords.push([])
-      },
-
-      // 删除 Mainwords 同义词列表
-      handleDeleteMainwordSynonymsPair(index) {
-        this.curQuestion.mainwords.splice(index, 1)
-
-        // 已经没有 Mainwords 同义词时，默认增加一组
-        if (this.curQuestion.mainwords.length === 0) {
-          this.handleNewMainwordSynonymsPair()
         }
       },
 
