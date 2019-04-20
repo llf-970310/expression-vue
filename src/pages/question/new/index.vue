@@ -1,7 +1,22 @@
 <template>
   <div v-loading="questionLoading">
+    <!--题目标题-->
     <el-row>
-      <h1>题目原文</h1>
+      <div v-if="newFromPool">
+        <el-popover placement="bottom-start"
+                    title="题目来源"
+                    trigger="hover">
+          <h1 slot="reference">题目原文</h1>
+          <el-button type="text" @click="openQuestionOriginUrl">
+            <div v-if="curQuestion.origin === 'baidubaike'">百度百科</div>
+            <div v-else>未知来源</div>
+          </el-button>
+        </el-popover>
+      </div>
+      <div v-else>
+        <h1>题目原文</h1>
+      </div>
+
       <el-input
           type="textarea"
           :rows="4"
@@ -85,7 +100,9 @@
         curQuestion: {
           rawText: '',
           keywords: [[]],
-          detailwords: [[[]]]
+          detailwords: [[[]]],
+          origin: '',
+          url: '',
         },
 
         // 若 newFromPool = true，则会初始化此参数
@@ -307,7 +324,12 @@
       // 返回全部问题界面
       goBackToQuestionDetail() {
         this.$emit('back', this.modifiedQuestionId)
-      }
+      },
+
+      // 打开问题的来源链接
+      openQuestionOriginUrl() {
+        window.open(this.curQuestion.url)
+      },
     }
   }
 </script>
