@@ -58,15 +58,26 @@
         <div v-if="modifiedQuestionId">确认修改</div>
         <div v-else>确认保存</div>
       </el-button>
-      <el-button type="danger" @click="resetComponent">重置</el-button>
-      <el-button type="primary" @click="goBackToAllQuestions">返回</el-button>
+      <el-button type="warning" @click="resetComponent">重置</el-button>
+
+      <!--题目导入时-->
+      <el-button v-if="newFromPool" type="danger" @click="discard">丢弃</el-button>
+
+      <el-button v-if="modifiedQuestionId" type="primary" @click="goBackToQuestionDetail">返回</el-button>
+      <el-button v-else type="primary" @click="goBackToAllQuestions">返回</el-button>
     </el-row>
   </div>
 </template>
 
 <script>
   import SynonymsModifiable from './synonyms-modifiable'
-  import {getQuestion, getQuestionFromPool, newQuestion, modifyQuestion} from '@/api/manager.question'
+  import {
+    getQuestion,
+    getQuestionFromPool,
+    deleteQuestionFromPool,
+    newQuestion,
+    modifyQuestion
+  } from '@/api/manager.question'
 
   export default {
     name: "new-question",
@@ -265,6 +276,14 @@
           showClose: true,
           duration: 5000
         });
+
+        if (this.modifiedQuestionId) {
+          // 修改题目不需要重新初始化，返回详情界面
+          this.$emit('back', this.modifiedQuestionId)
+        } else {
+          // 成功保存后，重新初始化组件，连续化工作流程
+          this.init()
+        }
       },
 
       // 重置
@@ -283,9 +302,40 @@
 
       },
 
+      // 丢弃此题目
+      discard() {
+        this.$confirm('确认丢弃题目吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(() => {
+          new Promise((resolve, reject) => {
+            console.log(this.idFromPool)
+            deleteQuestionFromPool(this.idFromPool).then(res => {
+              resolve()
+            }).catch(err => {
+              console.log('err: ', err)
+              reject(err)
+            })
+          }).then(() => {
+            this.init()
+            this.$message({
+              type: 'success',
+              message: '已为您导入题库中新题目!'
+            })
+          }).catch(err => {
+          })
+        }).catch()
+      },
+
       // 返回全部问题界面
       goBackToAllQuestions() {
         this.$emit('back', this.changeSucceeded)
+      },
+
+      // 返回全部问题界面
+      goBackToQuestionDetail() {
+        this.$emit('back', this.modifiedQuestionId)
       }
     }
   }

@@ -48,6 +48,19 @@ export function getQuestionFromPool() {
 }
 
 /**
+ * 删除题库中题目
+ */
+export function deleteQuestionFromPool(idInPool) {
+  return request({
+    url: '/admin/question-from-pool',
+    method: 'delete',
+    data: qs.stringify({
+      idInPool
+    })
+  })
+}
+
+/**
  * 新建一道题目
  * @param questionData 新题目数据
  * @param isNewFromPool 此新题是否来源于题库

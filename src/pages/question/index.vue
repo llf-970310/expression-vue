@@ -39,7 +39,7 @@
         <div v-if="modifiedQuestionId">
           <new-question :key="modifiedQuestionId"
                         :modified-question-id="modifiedQuestionId"
-                        @back="goBackToAllQuestions">
+                        @back="goBackToQuestionDetail">
           </new-question>
         </div>
         <div v-else>
@@ -228,6 +228,13 @@
         if (changeSucceeded) {
           this.initQuestions()
         }
+      },
+
+      // 返回显示当前修改题目的详情界面，通过questionId的变化自动重新加载组件
+      goBackToQuestionDetail(questionId) {
+        this.searchedQuestionId = questionId
+        this.isEditableQuestion = false
+        this.modifiedQuestionId = ''
       },
 
       curPageChanged(val) {
