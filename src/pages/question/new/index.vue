@@ -1,7 +1,22 @@
 <template>
   <div v-loading="questionLoading">
+    <!--题目标题-->
     <el-row>
-      <h1>题目原文</h1>
+      <div v-if="newFromPool">
+        <el-popover placement="bottom-start"
+                    title="题目来源"
+                    trigger="hover">
+          <h1 slot="reference">题目原文</h1>
+          <el-button type="text" @click="openQuestionOriginUrl">
+            <div v-if="curQuestion.origin === 'baidubaike'">百度百科</div>
+            <div v-else>未知来源</div>
+          </el-button>
+        </el-popover>
+      </div>
+      <div v-else>
+        <h1>题目原文</h1>
+      </div>
+
       <el-input
           type="textarea"
           :rows="4"
@@ -19,18 +34,6 @@
       </div>
       <div class="new-synonyms">
         <el-button size="small" @click="handleNewKeywordSynonymsPair">+ 添加一组同义词</el-button>
-      </div>
-    </el-row>
-
-    <el-row>
-      <h1>Mainwords</h1>
-      <div v-for="(mainwordPair, pairIndex) in curQuestion.mainwords">
-        <synonyms-modifiable :synonyms-pairs="mainwordPair"
-                             @delete="handleDeleteMainwordSynonymsPair(pairIndex)">
-        </synonyms-modifiable>
-      </div>
-      <div class="new-synonyms">
-        <el-button size="small" @click="handleNewMainwordSynonymsPair">+ 添加一组同义词</el-button>
       </div>
     </el-row>
 
@@ -53,17 +56,31 @@
       <el-button @click="handleNewDetailwords">添加一组 Detailwords</el-button>
     </div>
 
-    <div class="d2-text-center">
-      <el-button type="success" @click="confirmModification">确认修改</el-button>
-      <el-button type="danger" @click="resetComponent">重置</el-button>
-      <el-button type="primary" @click="goBackToAllQuestions">返回</el-button>
-    </div>
+    <el-row type="flex" justify="center">
+      <el-button type="success" @click="confirmModification">
+        <div v-if="modifiedQuestionId">确认修改</div>
+        <div v-else>确认保存</div>
+      </el-button>
+      <el-button type="warning" @click="resetComponent">重置</el-button>
+
+      <!--题目导入时-->
+      <el-button v-if="newFromPool" type="danger" @click="discard">丢弃</el-button>
+
+      <el-button v-if="modifiedQuestionId" type="primary" @click="goBackToQuestionDetail">返回</el-button>
+      <el-button v-else type="primary" @click="goBackToAllQuestions">返回</el-button>
+    </el-row>
   </div>
 </template>
 
 <script>
   import SynonymsModifiable from './synonyms-modifiable'
-  import {getQuestion, getQuestionFromPool, newQuestion, modifyQuestion} from '@/api/manager.question'
+  import {
+    getQuestion,
+    getQuestionFromPool,
+    deleteQuestionFromPool,
+    newQuestion,
+    modifyQuestion
+  } from '@/api/manager.question'
 
   export default {
     name: "new-question",
@@ -83,12 +100,16 @@
         curQuestion: {
           rawText: '',
           keywords: [[]],
-          mainwords: [[]],
-          detailwords: [[[]]]
+          detailwords: [[[]]],
+          origin: '',
+          url: '',
         },
 
         // 若 newFromPool = true，则会初始化此参数
         idFromPool: '',
+
+        // 修改/保存成功
+        changeSucceeded: false,
       }
     },
     mounted() {
@@ -99,6 +120,7 @@
         this.questionLoading = true
 
         if (this.modifiedQuestionId) {
+          // 修改题目
           new Promise((resolve, reject) => {
             getQuestion(this.modifiedQuestionId).then(res => {
               // console.log(res)
@@ -113,7 +135,6 @@
           }).catch(err => {
           })
         } else {
-          // 修改题目
           if (this.newFromPool) {
             // 词库导入
             new Promise((resolve, reject) => {
@@ -135,7 +156,6 @@
             this.curQuestion = {
               rawText: '',
               keywords: [[]],
-              mainwords: [[]],
               detailwords: [[[]]]
             }
             this.questionLoading = false
@@ -155,21 +175,6 @@
         // 已经没有 Keywords 同义词时，默认增加一组
         if (this.curQuestion.keywords.length === 0) {
           this.handleNewKeywordSynonymsPair()
-        }
-      },
-
-      // 新增 Mainwords 同义词列表
-      handleNewMainwordSynonymsPair() {
-        this.curQuestion.mainwords.push([])
-      },
-
-      // 删除 Mainwords 同义词列表
-      handleDeleteMainwordSynonymsPair(index) {
-        this.curQuestion.mainwords.splice(index, 1)
-
-        // 已经没有 Mainwords 同义词时，默认增加一组
-        if (this.curQuestion.mainwords.length === 0) {
-          this.handleNewMainwordSynonymsPair()
         }
       },
 
@@ -248,8 +253,10 @@
         }
       },
 
-      // 成功保存的提示
+      // 成功保存
       successSave() {
+        // 传给父组件的状态变更
+        this.changeSucceeded = true
         this.$message({
           message: '已成功保存！',
           type: 'success',
@@ -257,6 +264,14 @@
           showClose: true,
           duration: 5000
         });
+
+        if (this.modifiedQuestionId) {
+          // 修改题目不需要重新初始化，返回详情界面
+          this.$emit('back', this.modifiedQuestionId)
+        } else {
+          // 成功保存后，重新初始化组件，连续化工作流程
+          this.init()
+        }
       },
 
       // 重置
@@ -275,10 +290,46 @@
 
       },
 
+      // 丢弃此题目
+      discard() {
+        this.$confirm('确认丢弃题目吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(() => {
+          new Promise((resolve, reject) => {
+            console.log(this.idFromPool)
+            deleteQuestionFromPool(this.idFromPool).then(res => {
+              resolve()
+            }).catch(err => {
+              console.log('err: ', err)
+              reject(err)
+            })
+          }).then(() => {
+            this.init()
+            this.$message({
+              type: 'success',
+              message: '已为您导入题库中新题目!'
+            })
+          }).catch(err => {
+          })
+        }).catch()
+      },
+
       // 返回全部问题界面
       goBackToAllQuestions() {
-        this.$emit('back')
-      }
+        this.$emit('back', this.changeSucceeded)
+      },
+
+      // 返回全部问题界面
+      goBackToQuestionDetail() {
+        this.$emit('back', this.modifiedQuestionId)
+      },
+
+      // 打开问题的来源链接
+      openQuestionOriginUrl() {
+        window.open(this.curQuestion.url)
+      },
     }
   }
 </script>

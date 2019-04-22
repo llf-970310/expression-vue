@@ -95,8 +95,8 @@
                 time: dayjs().format('HH:mm:ss'),
                 // 表单
                 formLogin: {
-                    username: '',
-                    password: '',
+                    username: 'ccc@site.com',
+                    password: '1234',
                     // code: ''
                 },
                 // 校验
@@ -124,7 +124,7 @@
                 this.headimgurl = headimgurl
             }
             // else {
-            //     this.$router.push('login')
+            //     console.log("yes")
             // }
             this.timeInterval = setInterval(() => {
                 this.refreshTime()
@@ -135,7 +135,7 @@
         },
         methods: {
             ...mapActions('d2admin/account', [
-                'login'
+                'bindWeChat'
             ]),
 
             refreshTime() {

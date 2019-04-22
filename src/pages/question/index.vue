@@ -39,7 +39,7 @@
         <div v-if="modifiedQuestionId">
           <new-question :key="modifiedQuestionId"
                         :modified-question-id="modifiedQuestionId"
-                        @back="goBackToAllQuestions">
+                        @back="goBackToQuestionDetail">
           </new-question>
         </div>
         <div v-else>
@@ -70,17 +70,12 @@
           <el-table-column
               prop="keywords"
               label="keywords"
-              width="180">
-          </el-table-column>
-          <el-table-column
-              prop="mainwords"
-              label="mainwords"
-              width="180">
+              width="300">
           </el-table-column>
           <el-table-column
               prop="detailwords"
               label="detailwords"
-              width="250">
+              width="300">
           </el-table-column>
         </el-table>
 
@@ -106,7 +101,7 @@
   import NewQuestion from './new/index'
 
   import {validateQuestionId} from '@/libs/validator'
-  import {getAllQuestions} from '@api/manager.question'
+  import {getAllQuestionsOfTypeTwo} from '@api/manager.question'
 
   export default {
     name: "question",
@@ -160,7 +155,7 @@
 
         console.log(this.curPage + '    ' + this.curSizePerPage)
         new Promise((resolve, reject) => {
-          getAllQuestions(this.curPage, this.curSizePerPage).then(res => {
+          getAllQuestionsOfTypeTwo(this.curPage, this.curSizePerPage).then(res => {
             console.log(res)
             this.allQuestions = res.questions
             this.totalCount = res.count
@@ -219,8 +214,20 @@
       },
 
       // 返回显示所有题目的主界面
-      goBackToAllQuestions() {
+      goBackToAllQuestions(changeSucceeded) {
         this.searchedQuestionId = ''
+        this.isEditableQuestion = false
+        this.modifiedQuestionId = ''
+
+        // 成功改变之后，需要重新加载题目表格
+        if (changeSucceeded) {
+          this.initQuestions()
+        }
+      },
+
+      // 返回显示当前修改题目的详情界面，通过questionId的变化自动重新加载组件
+      goBackToQuestionDetail(questionId) {
+        this.searchedQuestionId = questionId
         this.isEditableQuestion = false
         this.modifiedQuestionId = ''
       },

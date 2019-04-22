@@ -42,8 +42,14 @@ export function uploadSoundToBOS(path, blob) {
   };
 
   blobToDataURL(blob, function (dataUrl) {
-    console.log('dataUrl');
-    console.log(dataUrl);
+    // console.log('original dataUrl');
+    // console.log(dataUrl);
+    // downloadCurrentWav(dataUrl)
+
+    // 去除 data:content/type;base64 部分
+    dataUrl = dataUrl.slice(22)
+    // console.log('only base64');
+    // console.log(dataUrl);
 
     // console.log(blobDataUrl)
     client.putObjectFromDataUrl(bucketName, path, dataUrl, options).then(res => {
@@ -52,13 +58,6 @@ export function uploadSoundToBOS(path, blob) {
     }).catch(err => {
       console.log(err)
     });
-
-    var link = document.createElement('a');
-    link.style.display = 'none';
-    link.href = dataUrl;
-    link.setAttribute('download', path);
-    document.body.appendChild(link);
-    link.click();
   });
 }
 
@@ -66,11 +65,24 @@ export function uploadSoundToBOS(path, blob) {
  * blob to dataURL
  */
 function blobToDataURL(blob, callback) {
-  var a = new FileReader();
+  let a = new FileReader();
   a.onload = function (e) {
     callback(e.target.result);
   }
   a.readAsDataURL(blob);
+}
+
+/**
+ * 下载当前的音频文件
+ * @param wavDataUrl 要下载的 wav 文件对应的 dataUrl
+ */
+function downloadCurrentWav(wavDataUrl) {
+  let link = document.createElement('a');
+  link.style.display = 'none';
+  link.href = wavDataUrl;
+  link.setAttribute('download', path);
+  document.body.appendChild(link);
+  link.click();
 }
 
 /**

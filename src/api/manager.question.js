@@ -15,6 +15,18 @@ export function getAllQuestions(page, size) {
 }
 
 /**
+ * 查看所有第二种类型的题目
+ * @param page 页数，从 1 开始
+ * @param size 每页大小
+ */
+export function getAllQuestionsOfTypeTwo(page, size) {
+  return request({
+    url: '/admin/question-type-two?page=' + page + '&size=' + size,
+    method: 'get'
+  })
+}
+
+/**
  * 查看某题目的详情
  * @param id 题目ID
  */
@@ -36,6 +48,19 @@ export function getQuestionFromPool() {
 }
 
 /**
+ * 删除题库中题目
+ */
+export function deleteQuestionFromPool(idInPool) {
+  return request({
+    url: '/admin/question-from-pool',
+    method: 'delete',
+    data: qs.stringify({
+      idInPool
+    })
+  })
+}
+
+/**
  * 新建一道题目
  * @param questionData 新题目数据
  * @param isNewFromPool 此新题是否来源于题库
@@ -53,7 +78,6 @@ export function newQuestion(questionData, isNewFromPool, idInPool) {
       data: {
         rawText: questionData.rawText,
         keywords: JSON.stringify(questionData.keywords),
-        mainwords: JSON.stringify(questionData.mainwords),
         detailwords: JSON.stringify(questionData.detailwords)
       },
       isFromPool: isNewFromPool,
@@ -75,7 +99,6 @@ export function modifyQuestion(questionData, id) {
       data: {
         rawText: questionData.rawText,
         keywords: JSON.stringify(questionData.keywords),
-        mainwords: JSON.stringify(questionData.mainwords),
         detailwords: JSON.stringify(questionData.detailwords)
       },
       id

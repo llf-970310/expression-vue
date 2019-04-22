@@ -35,7 +35,7 @@
         // 最后一道题的标志
         isLastQuestion: false,
 
-        curQuestionIndex: 1,
+        curQuestionIndex: 0,
         curQuestionType: 1,
         curQuestionRawText: '',
         curQuestionTip: {
@@ -60,7 +60,7 @@
         } else {
           // 继续做题
           new Promise((resolve, reject) => {
-            nextQuestion().then(res => {
+            nextQuestion(this.curQuestionIndex).then(res => {
               // console.log(res)
               this.curQuestionIndex = res.questionNumber
               this.curQuestionType = res.questionType
