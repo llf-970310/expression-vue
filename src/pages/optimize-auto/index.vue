@@ -204,7 +204,7 @@
             20,
           algorithm: 'gradient', reuse: true
         },
-        algorithmOptions: [{label: "梯度下降", value: "gradient"}],
+        algorithmOptions: [{label: "梯度下降", value: "gradient"}, {label: "最小二乘法", value: "normal"}],
 
         // cost function
         costData: {
