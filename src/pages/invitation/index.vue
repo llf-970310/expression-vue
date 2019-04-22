@@ -90,8 +90,8 @@
 </template>
 
 <script>
-  import {mapActions} from 'vuex'
-  import {getAllInvitations} from '@/api/manage.invitation'
+    // import {mapActions} from 'vuex'
+    import {getAllInvitations, createInvitation} from '@/api/manage.invitation'
 
   export default {
     name: 'invitation',
@@ -170,7 +170,7 @@
 
         // 右侧的邀请数据
         allInvitationsLoading: true,
-        allInvitations: []
+        allInvitations: {}
       }
     },
     mounted() {
@@ -187,24 +187,31 @@
       }).catch()
     },
     methods: {
-      ...mapActions('d2admin/manage', [
-        'generateInvitation'
-      ]),
       onSubmit() {
         this.$refs.invitationForm.validate((valid) => {
           if (valid) {
             let start = this.formData.vipStartTime.getTime() / 1000
             let end = this.formData.vipEndTime.getTime() / 1000
-            this.generateInvitation({
-              vm: this,
-              formData: {
-                vipStartTime: start,
-                vipEndTime: end,
-                remainingExamNum: this.formData.remainingExamNum,
-                availableTimes: this.formData.availableTimes
-              }
-            }).then(() => {
+
+            createInvitation({
+              vipStartTime: start,
+              vipEndTime: end,
+              remainingExamNum: this.formData.remainingExamNum,
+              availableTimes: this.formData.availableTimes
+            }).then((response) => {
               // 成功之后做的事情
+              this.$alert('邀请码：' + response['invitationCode'], '创建成功', {
+                confirmButtonText: '点击复制到粘贴板',
+                callback: action => {
+                  if (action === 'confirm') {
+                    this.$copyText(response['invitationCode'])
+                    this.$message({
+                      type: 'success',
+                      message: '已复制至粘贴板'
+                    })
+                  }
+                }
+              })
               this.resetForm()
               // this.$message({
               //     message: '恭喜你，这是一条成功消息',

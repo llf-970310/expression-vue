@@ -9,19 +9,18 @@ import request from '@/plugin/axios'
 const qs = require('qs')
 
 export function getAllInvitations() {
-  return request({
-    url: '/admin/accounts/invite',
-    method: 'get'
-  })
+    return request({
+        url: '/admin/accounts/invite',
+        method: 'get'
+    })
 }
 
-export default {
-  createInvitation: function (data) {
+export function createInvitation(data) {
     return request({
-      url: '/admin/accounts/invite',
-      method: 'post',
-      data: qs.stringify(data)
+        url: '/admin/accounts/invite',
+        method: 'post',
+        data: qs.stringify(data)
     })
-  }
+
 }
 
