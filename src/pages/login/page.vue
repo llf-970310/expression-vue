@@ -171,7 +171,7 @@
             wechatLogin() {
                 //todo 这里用了外链
                 // let redirectUrl = '/#/login-wechat'
-                let redirectUrl = '/api/auth/wechat/login'
+                let redirectUrl = '/#/login-wechat'
                 location.href = 'https://open.weixin.qq.com/connect/qrconnect?' +
                     'appid=wxd7bad9aab33bb581&' +
                     'redirect_uri=https://expression.iselab.cn' + redirectUrl + '&' +
