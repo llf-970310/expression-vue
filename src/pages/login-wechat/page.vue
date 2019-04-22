@@ -117,6 +117,7 @@
             }
         },
         mounted() {
+            //
             const nickname = this.$route.query.nickname
             const headimgurl = this.$route.query.headimgurl
             if (nickname && nickname !== "undefined" && headimgurl && headimgurl !== "undefined") {
