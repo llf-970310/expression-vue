@@ -174,7 +174,7 @@
                 let redirectUrl = '/api/auth/wechat/login'
                 location.href = 'https://open.weixin.qq.com/connect/qrconnect?' +
                     'appid=wxd7bad9aab33bb581&' +
-                    'redirect_uri=https://expression.iselab.cn/' + redirectUrl + '&' +
+                    'redirect_uri=https://expression.iselab.cn' + redirectUrl + '&' +
                     'response_type=code&' +
                     'scope=snsapi_login&' +
                     'state=zidingyineirong#wechat_redirect';

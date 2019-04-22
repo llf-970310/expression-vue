@@ -157,7 +157,7 @@
             submit() {
                 this.$refs.loginForm.validate((valid) => {
                     if (valid) {
-                        this.bindWeChat({  // ?
+                        this.bindWeChat({
                             vm: this,
                             username: this.formLogin.username,
                             password: this.formLogin.password
