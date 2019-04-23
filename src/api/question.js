@@ -21,7 +21,7 @@ export function nextQuestion(nowQuestionNum) {
  * @param nowQuestionNum 当前题号
  * TODO GET
  */
-export function getUploadPath(nowQuestionNum) {
+export function getUploadPath (nowQuestionNum) {
   return request({
     url: '/exam/get-upload-url',
     method: 'post',
