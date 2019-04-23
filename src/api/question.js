@@ -30,3 +30,13 @@ export function getUploadPath(nowQuestionNum) {
     })
   })
 }
+
+/**
+ * 获取测评结果数据
+ */
+export function getResult () {
+    return request({
+        url: '/exam/get-result',
+        method: 'post'
+    })
+}

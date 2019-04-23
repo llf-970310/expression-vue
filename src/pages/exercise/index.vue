@@ -12,25 +12,30 @@
                       @next="nextQuestion">
       </question-frame>
     </div>
+    <div v-else>
+      <show-result></show-result>
+    </div>
   </d2-container>
 </template>
 
 <script>
   import QuestionFrame from './question/index'
+  import ShowResult from './result/showResult'
   import {nextQuestion} from '@/api/question'
   import {initAudio} from '@/libs/my-recorder'
 
   export default {
     name: "index",
     components: {
-      'question-frame': QuestionFrame
+        'question-frame': QuestionFrame,
+        'show-result': ShowResult
     },
     data() {
       return {
         filename: __filename,
 
         // 测试结束的标志
-        hasFinishExercise: false,
+        hasFinishExercise: true,
 
         // 最后一道题的标志
         isLastQuestion: false,
