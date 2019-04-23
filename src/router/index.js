@@ -26,7 +26,7 @@ import {getInfo} from '@/api/user'
  * 路由拦截
  * 权限验证
  */
-const whiteList = ['/login', '/register', '/login-wechat']
+const whiteList = ['/login', '/register', '/bind-wechat','/wechat']
 router.beforeEach((to, from, next) => {
   // 进度条
   NProgress.start()

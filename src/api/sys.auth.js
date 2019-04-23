@@ -23,6 +23,13 @@ export default {
             data: qs.stringify(data)
         })
     },
+    wechatLogin: function (data) {
+        return request({
+            url:'/auth/wechat/login',
+            method: 'post',
+            data: qs.stringify(data)
+        })
+    },
     wechatBind: function (data) {
         return request({
             url: '/auth/wechat/bind',

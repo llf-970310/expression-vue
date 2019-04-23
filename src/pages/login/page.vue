@@ -54,7 +54,7 @@
                         </el-card>
                         <p class="page-login--options"
                            flex="main:justify cross:center">
-                            <span style="cursor: pointer" @click="wechatLogin">微信登录</span>
+                            <span style="cursor: pointer" @click="wechat">微信登录</span>
                             <span style="cursor: pointer" @click="toRegisterPage">注册用户</span>
                         </p>
                     </div>
@@ -168,10 +168,9 @@
             toRegisterPage() {
                 this.$router.push('register')
             },
-            wechatLogin() {
-                //todo 这里用了外链
-                // let redirectUrl = '/%23/login-wechat'
-                let redirectUrl = '/api/auth/wechat/login'
+            wechat() {
+                let redirectUrl = '/%23/wechat'
+                // let redirectUrl = '/api/auth/wechat/login'
                 location.href = 'https://open.weixin.qq.com/connect/qrconnect?' +
                     'appid=wxd7bad9aab33bb581&' +
                     'redirect_uri=https://expression.iselab.cn' + redirectUrl + '&' +

@@ -84,9 +84,13 @@ const frameOut = [
         name: 'register',
         component: () => import('@/pages/register')
     }, {
-        path: '/login-wechat',
-        name: 'login-wechat',
-        component: () => import ('@/pages/login-wechat')
+        path: '/bind-wechat',
+        name: 'bind-wechat',
+        component: () => import ('@/pages/bind-wechat')
+    }, {
+        path: '/wechat',
+        name: 'wechat',
+        component: () => import('@/pages/wechat')
     }
 ]
 
