@@ -112,17 +112,18 @@
             new Promise((resolve, reject) => {
                 uploadRecording(this.uploadLocation, this.uploadUrl)
             }).then(
-                uploadSuccess(this.questionIndex).then(res=>{
-                    console.log(res);
-                    resolve();
-                }).catch(err => {
-                    if(this.retryCount<this.maxRetry) {
-                        this.reTry( ([location, url]) => uploadRecording(location, url), [this.uploadLocation, this.uploadUrl] )
-                    } else {
-                       this.errorMessage(err);
-                    }
-                })
-
+                new Promise((resolve, reject) => {
+                    uploadSuccess(this.questionIndex).then(res=>{
+                        console.log(res);
+                        resolve();
+                    }).catch(err => {
+                        if(this.retryCount<this.maxRetry) {
+                            this.reTry( ([location, url]) => uploadRecording(location, url), [this.uploadLocation, this.uploadUrl] )
+                        } else {
+                            this.errorMessage(err);
+                        }
+                    })
+                }).then().catch()
             ).catch( err =>{
                 console.log( 'err: ', err)
                 reject();
