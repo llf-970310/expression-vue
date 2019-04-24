@@ -35,7 +35,7 @@
         filename: __filename,
 
         // 测试结束的标志
-        hasFinishExercise: true,
+        hasFinishExercise: false,
 
         // 最后一道题的标志
         isLastQuestion: false,

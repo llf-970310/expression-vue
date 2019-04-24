@@ -31,6 +31,16 @@ export function getUploadPath (nowQuestionNum) {
   })
 }
 
+export function uploadSuccess (nowQuestionNum) {
+    return request({
+        url: '/exam/upload-success',
+        method: 'post',
+        data: qs.stringify({
+            nowQuestionNum: nowQuestionNum
+        })
+    })
+}
+
 /**
  * 获取测评结果数据
  */
