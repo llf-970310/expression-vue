@@ -114,6 +114,9 @@
             }).then(
                 new Promise((resolve, reject) => {
                     uploadSuccess(this.questionIndex).then(res=>{
+                        if(this.isLastQuestion) {
+                            this.$emit('showResult',true);
+                        }
                         console.log(res);
                         resolve();
                     }).catch(err => {

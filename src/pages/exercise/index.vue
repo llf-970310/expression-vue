@@ -10,6 +10,7 @@
                       :question-preparation-time="curQuestionPreparationTime"
                       :question-answer-time="curQuestionAnswerTime"
                       :is-last-question="isLastQuestion"
+                      v-on:showResult="finishTest"
                       @next="nextQuestion">
       </question-frame>
     </div>
@@ -61,7 +62,7 @@
       nextQuestion() {
         if (this.isLastQuestion) {
           // TODO 做题已结束
-          this.hasFinishExercise = true
+//          this.hasFinishExercise = true
         } else {
           // 继续做题
           new Promise((resolve, reject) => {
@@ -83,7 +84,10 @@
             })
           }).then().catch()
         }
-      }
+      },
+        finishTest() {
+          this.hasFinishExercise = true
+        }
     }
   }
 </script>

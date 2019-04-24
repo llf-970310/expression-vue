@@ -65,7 +65,7 @@
                return;
               }
               new Promise((resolve, reject) => {
-                  setTimeout(getResult().then(res => {
+                  getResult().then(res => {
                       this.counter++;
                       let status = res.status;
                       if(status === "Success") {
@@ -82,7 +82,7 @@
                   }).catch( err => {
                       this.errorMessage(err);
                       reject()
-                  }), 500);
+                  });
               }).then().catch();
             },
 
