@@ -83,7 +83,9 @@
                       this.errorMessage(err);
                       reject()
                   });
-              }).then().catch();
+              }).then().catch(err => {
+                  console.log(err)
+              });
             },
 
             initChart() {

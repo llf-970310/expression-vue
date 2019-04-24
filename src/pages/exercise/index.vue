@@ -10,7 +10,7 @@
                       :question-preparation-time="curQuestionPreparationTime"
                       :question-answer-time="curQuestionAnswerTime"
                       :is-last-question="isLastQuestion"
-                      v-on:showResult="finishTest"
+                      @showResult="finishTest"
                       @next="nextQuestion">
       </question-frame>
     </div>
