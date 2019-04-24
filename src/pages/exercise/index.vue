@@ -9,6 +9,7 @@
                       :question-raw-text="curQuestionRawText"
                       :question-preparation-time="curQuestionPreparationTime"
                       :question-answer-time="curQuestionAnswerTime"
+                      :is-last-question="isLastQuestion"
                       @next="nextQuestion">
       </question-frame>
     </div>
@@ -39,7 +40,6 @@
 
         // 最后一道题的标志
         isLastQuestion: false,
-
         curQuestionIndex: 0,
         curQuestionType: 1,
         curQuestionRawText: '',
@@ -53,7 +53,7 @@
     },
     mounted() {
       // 初始化音频设备
-      initAudio()
+      initAudio();
 
       this.nextQuestion()
     },
