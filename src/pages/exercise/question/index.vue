@@ -115,24 +115,20 @@
             }).then(
                 new Promise((resolve, reject) => {
                     //上传成功调用，告知服务器进行分析
-                    setTimeout(() => {
-                        uploadSuccess(this.questionIndex).then(res=>{
-                            console.log('uploadSuccess'+new Date());
-                            if(this.isLastQuestion) {
-                                this.$emit('showResult',true);
-                            }
-                            console.log(res);
-                            resolve();
-                        }).catch(err => {
-                            if(this.retryCount<this.maxRetry) {
-                                this.reTry( ([location, url]) => uploadRecording(location, url), [this.uploadLocation, this.uploadUrl] )
-                            } else {
-                                this.errorMessage(err);
-                            }
-                        })
-                    }, 3000);
-
-                }).then().catch(),
+                   uploadSuccess(this.questionIndex).then(res=>{
+                         if(this.isLastQuestion) {
+                             this.$emit('showResult',true);
+                         }
+                         console.log(res);
+                         resolve();
+                     }).catch(err => {
+                         if(this.retryCount<this.maxRetry) {
+                             this.reTry( ([location, url]) => uploadRecording(location, url), [this.uploadLocation, this.uploadUrl] )
+                         } else {
+                             this.errorMessage(err);
+                         }
+                     })
+                 }).then().catch()
 
             ).catch( err =>{
                 console.log( 'err: ', err)
