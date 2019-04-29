@@ -111,7 +111,6 @@
             // 上传音频
             new Promise((resolve, reject) => {
                 uploadRecording(this.uploadLocation, this.uploadUrl);
-                console.log('uploadRecording'+new Date())
             }).then(
                 new Promise((resolve, reject) => {
                     //上传成功调用，告知服务器进行分析
