@@ -193,17 +193,16 @@
                 new Promise((resolve, reject) => {
                     getInfo().then(
                         res => {
-
                             this.info = res;
                             this.form.name = res.name;
                             this.form.email = res.email;
                             this.form.password = res.password;
-                            this.form.register_time = this.toLocalDate(res.register_time);
+                            this.form.register_time = res.register_time;
                             this.form.remaining_exam_num = res.remaining_exam_num;
-                            this.form.last_login_time = this.toLocalDate(res.last_login_time);
+                            this.form.last_login_time = res.last_login_time;
                             this.form.wx_id = res.wx_id;
-                            this.form.vip_start_time = this.toLocalDate(res.vip_start_time);
-                            this.form.vip_end_time = this.toLocalDate(res.vip_end_time);
+                            this.form.vip_start_time = res.vip_start_time;
+                            this.form.vip_end_time = res.vip_end_time;
                             resolve();
                         }
                     ).catch(err => {
@@ -320,11 +319,6 @@
                         }).then().catch()
                     }
                 }).catch(() => {});
-            },
-
-            toLocalDate(date){
-                let localdate = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-                return new Date(localdate)
             }
 
         }
