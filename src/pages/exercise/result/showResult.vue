@@ -50,6 +50,8 @@
                 background: 'rgba(0, 0, 0, 0.7)'
             });
             this.queryResult();
+            console.log(this.chart);
+            console.log(this.chart.data)
         },
         beforeDestroy() {
             if (!this.chart) {
@@ -148,7 +150,7 @@
                                 },
                                 data : [
                                     {
-                                        value : [90, 80, 30, 60, 50],
+                                        value : this.chart.data,
                                         name : '得分情况',
 //                                        label: {
 //                                            normal: {
