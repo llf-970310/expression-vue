@@ -95,9 +95,9 @@
                 let chart = echarts.init(document.getElementById('chart'));
 //                let indicator = [];
 //                let value = [];
-//                Object.keys(this.chartData).forEach(function (key) {
+//                Object.keys(this.chart).forEach(function (key) {
 //                    indicator.push({name: key, max: 100});
-//                    value.push(chartData[key].toFixed(2));
+//                    value.push(this.chart[key].toFixed(2));
 //                });
                 // 把配置和数据放这里
                 chart.setOption(
@@ -150,7 +150,7 @@
                                 },
                                 data : [
                                     {
-                                        value : this.chart.data,
+                                        value : [this.chart],
                                         name : '得分情况',
 //                                        label: {
 //                                            normal: {
