@@ -31,7 +31,7 @@
                                      size="default">
                                 <p align="center">表达力评测登录</p>
                                 <el-form-item prop="username">
-                                    <el-input type="text" v-model="formLogin.username" placeholder="邮箱">
+                                    <el-input type="text" v-model="formLogin.username" placeholder="手机/邮箱">
                                         <i slot="prepend" class="fa fa-user-circle-o"></i>
                                     </el-input>
                                 </el-form-item>
@@ -106,7 +106,7 @@
                 // 校验
                 rules: {
                     username: [
-                        {required: true, message: '请输入用户名', trigger: 'blur'}
+                        {required: true, message: '请输入手机号或邮箱', trigger: 'blur'}
                     ],
                     password: [
                         {required: true, message: '请输入密码', trigger: 'blur'}
@@ -161,7 +161,7 @@
                                 this.$router.push(this.$route.query.redirect || '/')
                             })
                     } else {
-                        this.$message.error('表单校验失败')
+                        this.$message.error('手机号/邮箱,密码验证失败')
                     }
                 })
             },
