@@ -23,9 +23,9 @@
           <el-table-column align="right" width="260px">
             <template slot-scope="scope">
               <el-button size="mini" @click="watchOpt(scope.$index, scope.row)"
-                         :disabled="!scope.row.auto_optimized">查看优化状态
+                         :disabled="!scope.row.auto_optimized">查看详情
               </el-button>
-              <el-button size="mini" @click="handleOpt(scope.$index, scope.row)" :disabled=scope.row.inUse>自动优化
+              <el-button size="mini" @click="handleOpt(scope.$index, scope.row)" :disabled=scope.row.inUse>去优化
               </el-button>
             </template>
           </el-table-column>
@@ -49,9 +49,9 @@
           <div style="width: 100%; height: 28px; overflow: hidden">
             <div class="page-optimize--subtitle">关键词权重分布图</div>
             <div style="float: right; margin-right: 0; color: #666666; font-size: 14px">
-              选择栏数
+              选择箱数
               <el-input-number v-model="weightHistNum" @change="handleWeightHistChange" :min="3" :max="50" size="mini"
-                               label="选择栏数" controls-position="right"></el-input-number>
+                               label="选择箱数" controls-position="right"></el-input-number>
             </div>
           </div>
           <template>
@@ -66,9 +66,9 @@
               <el-button icon="el-icon-refresh" type="text" size="mini" @click="refreshScoreChart">刷新数据</el-button>
             </div>
             <div style="float: right; margin-right: 20px; color: #666666; font-size: 14px">
-              选择栏数
+              选择箱数
               <el-input-number v-model="scoreHistNum" @change="handleScoreHistChange" :min="3" :max="50" size="mini"
-                               label="选择栏数" controls-position="right"></el-input-number>
+                               label="选择箱数" controls-position="right"></el-input-number>
             </div>
           </div>
           <template>
@@ -229,7 +229,7 @@
     methods: {
       // 获得question表格的数据
       getQuestionTableData() {
-        new Promise((resolve, reject) => {
+        // new Promise((resolve, reject) => {
           getAllType2().then(res => {
             this.questionTable = [];
             res.questions.forEach(question => {
@@ -243,12 +243,12 @@
               });
             });
 
-            resolve()
+            // resolve()
           }).catch(err => {
             console.log('err: ', err);
-            reject(err);
+            // reject(err);
           })
-        }).then().catch();
+        // }).then().catch();
       },
 
       // 获得score chart的数据

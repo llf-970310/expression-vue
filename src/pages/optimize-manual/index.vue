@@ -45,7 +45,7 @@
           <div style="width: 100%; height: 28px; overflow: hidden">
             <div class="page-optimize--subtitle">关键词权重分布图</div>
             <div style="float: right; margin-right: 0; color: #666666; font-size: 14px">
-              选择栏数
+              选择箱数
               <el-input-number v-model="weightHistNum" @change="handleWeightHistChange" :min="3" :max="50" size="mini"
                                label="选择栏数" controls-position="right"></el-input-number>
             </div>
@@ -62,7 +62,7 @@
               <el-button icon="el-icon-refresh" type="text" size="mini" @click="refreshScoreChart">刷新数据</el-button>
             </div>
             <div style="float: right; margin-right: 20px; color: #666666; font-size: 14px">
-              选择栏数
+              选择箱数
               <el-input-number v-model="scoreHistNum" @change="handleScoreHistChange" :min="3" :max="50" size="mini"
                                label="选择栏数" controls-position="right"></el-input-number>
             </div>
@@ -161,11 +161,11 @@
         filename: __filename,
         // v-charts
         paramData: {
-          columns: ['关键词权重', '主旨关键词数', '细节关键词数'],
+          columns: ['关键词权重', '主旨关键词', '细节关键词'],
           rows: [],
         },
         scoreData: {
-          columns: ['得分', '主旨人数', '细节人数', '总分人数'],
+          columns: ['得分', '主旨频率', '细节频率', '总分频率'],
           rows: [],
         },
 
@@ -236,9 +236,9 @@
             for (let i = 0; i < histNum; i++) {
               this.scoreData.rows.push({
                 '得分': (i * 100 / histNum).toFixed(0) + ' ~ ' + ((i + 1) * 100 / histNum).toFixed(0),
-                '主旨人数': keyHist[i],
-                '细节人数': detailHist[i],
-                '总分人数': totalHist[i],
+                '主旨频率': keyHist[i],
+                '细节频率': detailHist[i],
+                '总分频率': totalHist[i],
               });
             }
             this.scoreStatistic = [];
@@ -293,8 +293,8 @@
             for (let i = 0; i < histNum; i++) {
               this.paramData.rows.push({
                 '关键词权重': (i * max / histNum).toFixed(1) + ' ~ ' + ((i + 1) * max / histNum).toFixed(1),
-                '主旨关键词数': keyHist[i],
-                '细节关键词数': detailHist[i],
+                '主旨关键词': keyHist[i],
+                '细节关键词': detailHist[i],
               });
             }
             // table部分
@@ -302,7 +302,7 @@
             for (let i = 0; i < res.keyWords.length; i++) {
               this.keyTableData.push({
                 word: this.array2str(res.keyWords[i]),
-                hitRate: res.keyAllHitTimes === 0 ? 0 : (res.keyHitTimes[i] / res.keyAllHitTimes * 100).toFixed(2) +
+                hitRate: res.allHitTimes === 0 ? 0 : (res.keyHitTimes[i] / res.allHitTimes * 100).toFixed(2) +
                   "%",
                 weight: res.keyWeight[i + 1],
               });
@@ -311,8 +311,8 @@
             for (let i = 0; i < res.detailWords.length; i++) {
               this.detailTableData.push({
                 word: this.array2str(res.detailWords[i]),
-                hitRate: res.detailAllHitTimes === 0 ? 0 :
-                  (res.detailHitTimes[i] / res.detailAllHitTimes * 100).toFixed(2) +  "%",
+                hitRate: res.allHitTimes === 0 ? 0 :
+                  (res.detailHitTimes[i] / res.allHitTimes * 100).toFixed(2) +  "%",
                 weight: res.detailWeight[i + 1],
               });
             }
@@ -420,14 +420,19 @@
         for (let i = 0; i < histNum; i++) {
           hist.push(0);
         }
+        let sum = 0;
         data.forEach(score => {
           for (let i = 0; i < histNum; i++) {
             if (score <= (i + 1) * limit / histNum) {
               hist[i]++;
+              sum++;
               break;
             }
           }
         });
+        for (let i = 0; i < hist.length; i++) {
+          hist[i] /= sum;
+        }
       },
 
       // 关键词数组转string
