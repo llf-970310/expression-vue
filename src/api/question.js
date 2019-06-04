@@ -21,7 +21,7 @@ export function nextQuestion(nowQuestionNum) {
  * @param nowQuestionNum 当前题号
  * TODO GET
  */
-export function getUploadPath(nowQuestionNum) {
+export function getUploadPath (nowQuestionNum) {
   return request({
     url: '/exam/get-upload-url',
     method: 'post',
@@ -29,4 +29,24 @@ export function getUploadPath(nowQuestionNum) {
       nowQuestionNum: nowQuestionNum
     })
   })
+}
+
+export function uploadSuccess (nowQuestionNum) {
+    return request({
+        url: '/exam/upload-success',
+        method: 'post',
+        data: qs.stringify({
+            nowQuestionNum: nowQuestionNum
+        })
+    })
+}
+
+/**
+ * 获取测评结果数据
+ */
+export function getResult () {
+    return request({
+        url: '/exam/get-result',
+        method: 'post'
+    })
 }

@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import {uploadSoundToBOS} from '@/api/bos'
+import {uploadSuccess} from "../api/question"
 
 let canAudioUse = true;
 let audio_context;

@@ -9,21 +9,28 @@
                       :question-raw-text="curQuestionRawText"
                       :question-preparation-time="curQuestionPreparationTime"
                       :question-answer-time="curQuestionAnswerTime"
+                      :is-last-question="isLastQuestion"
+                      @showResult="finishTest"
                       @next="nextQuestion">
       </question-frame>
+    </div>
+    <div v-else>
+      <show-result></show-result>
     </div>
   </d2-container>
 </template>
 
 <script>
   import QuestionFrame from './question/index'
+  import ShowResult from './result/showResult'
   import {nextQuestion} from '@/api/question'
   import {initAudio} from '@/libs/my-recorder'
 
   export default {
     name: "index",
     components: {
-      'question-frame': QuestionFrame
+        'question-frame': QuestionFrame,
+        'show-result': ShowResult
     },
     data() {
       return {
@@ -34,7 +41,6 @@
 
         // 最后一道题的标志
         isLastQuestion: false,
-
         curQuestionIndex: 0,
         curQuestionType: 1,
         curQuestionRawText: '',
@@ -48,7 +54,7 @@
     },
     mounted() {
       // 初始化音频设备
-      initAudio()
+      initAudio();
 
       this.nextQuestion()
     },
@@ -56,7 +62,7 @@
       nextQuestion() {
         if (this.isLastQuestion) {
           // TODO 做题已结束
-          this.hasFinishExercise = true
+//          this.hasFinishExercise = true
         } else {
           // 继续做题
           new Promise((resolve, reject) => {
@@ -78,7 +84,10 @@
             })
           }).then().catch()
         }
-      }
+      },
+        finishTest() {
+          this.hasFinishExercise = true
+        }
     }
   }
 </script>

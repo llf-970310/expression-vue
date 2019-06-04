@@ -193,7 +193,6 @@
                 new Promise((resolve, reject) => {
                     getInfo().then(
                         res => {
-                            console.log(res);
                             this.info = res;
                             this.form.name = res.name;
                             this.form.email = res.email;
@@ -320,7 +319,7 @@
                         }).then().catch()
                     }
                 }).catch(() => {});
-            },
+            }
 
         }
     }

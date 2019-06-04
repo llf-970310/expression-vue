@@ -40,6 +40,44 @@ export default {
          *
          * @param dispatch
          * @param vm
+         * @param code
+         */
+        loginWechat({dispatch}, {vm, code}) {
+            return new Promise((resolve, reject) => {
+                api.wechatLogin({
+                    code
+                })
+                    .then(async res => {
+                        if (res.uuid) {
+                            util.cookies.set('uuid', res.uuid);
+                            // 设置 vuex 用户信息
+                            await dispatch('d2admin/user/set', {
+                                name: res.name
+                            }, {root: true});
+                            // 用户登录后从持久化数据加载一系列的设置
+                            await dispatch('load');
+                            // 结束
+                            resolve()
+                        } else {
+                            vm.$router.push({
+                                name: 'bind-wechat',
+                                query: {
+                                    headimgurl: res.headimgurl,
+                                    nickname: res.nickname
+                                }
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        console.log('err: ', err);
+                        reject(err)
+                    })
+            })
+        },
+        /**
+         *
+         * @param dispatch
+         * @param vm
          * @param username
          * @param password
          */
@@ -85,7 +123,7 @@ export default {
                 await dispatch('d2admin/user/set', {}, {root: true})
                 // 跳转路由
                 vm.$router.push({
-                    name: 'login'
+                    name: 'login',
                 })
             }
 

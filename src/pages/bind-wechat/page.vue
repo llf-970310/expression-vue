@@ -117,6 +117,7 @@
             }
         },
         mounted() {
+            //
             const nickname = this.$route.query.nickname
             const headimgurl = this.$route.query.headimgurl
             if (nickname && nickname !== "undefined" && headimgurl && headimgurl !== "undefined") {
@@ -157,7 +158,7 @@
             submit() {
                 this.$refs.loginForm.validate((valid) => {
                     if (valid) {
-                        this.bindWeChat(this.$store,{  // ?
+                        this.bindWeChat({
                             vm: this,
                             username: this.formLogin.username,
                             password: this.formLogin.password
@@ -234,14 +235,16 @@
             width: 400px;
             margin-top: -2em;
         }
+
         .page-WeChat--headImg {
             width: 60%;
             padding-left: 20%;
             margin-top: 1.5em;
         }
+
         .page-WeChat--nickname {
-            text-align:center;
-            margin:0.5em;
+            text-align: center;
+            margin: 0.5em;
         }
 
         // 登录表单

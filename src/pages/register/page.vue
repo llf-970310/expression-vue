@@ -26,8 +26,8 @@
                             <el-form ref="registerForm" :rules="rules" :model="registerForm"
                                      size="mini">
                                 <p align="center">注册</p>
-                                <el-form-item prop="email">
-                                    <el-input type="text" v-model="registerForm.email" placeholder="邮箱"></el-input>
+                                <el-form-item prop="username">
+                                    <el-input type="text" v-model="registerForm.username" placeholder="手机号/邮箱"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="name">
                                     <el-input type="text" v-model="registerForm.name" placeholder="用户名"></el-input>
@@ -92,22 +92,22 @@
                 timeInterval: null,
                 time: dayjs().format('HH:mm:ss'),
                 registerForm: {
-                    email: '',
+                    username: '',
                     name: '',
                     password: '',
                     passwordConfirm: '',
                     code: ''
                 },
                 rules: {
-                    email: [{
+                    username: [{
                         validator: (rule, value, callback) => {
                             if (!value) {
-                                return callback(new Error('邮箱不能为空'))
+                                return callback(new Error('手机/邮箱不能为空'))
                             }
-                            let reg = /^([^@]+@[^@]+\.[^@]+)$/
-                            if (!reg.test(value)) {
-                                return callback(new Error('邮箱格式不正确'))
-                            }
+                            // let reg = /^([^@]+@[^@]+\.[^@]+)$/
+                            // if (!reg.test(value)) {
+                            //     return callback(new Error('邮箱格式不正确'))
+                            // }
                             return callback()
                         },
                         trigger: 'blur'
@@ -173,7 +173,7 @@
                         this.register({
                             vm: this,
                             formData: {
-                                email: this.registerForm.email,
+                                username: this.registerForm.username,
                                 password: this.registerForm.password,
                                 name: this.registerForm.name,
                                 code: this.registerForm.code
