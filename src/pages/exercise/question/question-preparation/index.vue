@@ -1,4 +1,4 @@
-<!--【题型一】朗读-->
+<!--【预测试题】-->
 <template>
   <div>
     <!--准备-->
@@ -27,7 +27,7 @@
   import answer from '../components/answer'
 
   export default {
-    name: "question-one",
+    name: "question-preparation",
     components: {
       answer
     },
@@ -40,6 +40,13 @@
       answerTime: Number
 
     },
+    data() {
+      return {
+        // 是否正在准备中
+        isPreparation: true,
+      }
+    },
+
     computed: {
       preparationTimeByMilliSec: function () {
         return this.preparationTime * 1000
@@ -47,12 +54,6 @@
 
       answerTimeByMilliSec: function () {
         return this.answerTime * 1000
-      }
-    },
-    data() {
-      return {
-        // 是否正在准备中
-        isPreparation: true
       }
     },
     methods: {

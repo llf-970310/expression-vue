@@ -4,7 +4,7 @@
 
     <!--题目编号-->
     <el-row class="d2-text-center index">
-      {{ questionIndex }}
+      <h3>{{ questionIndex }}</h3>
     </el-row>
 
     <!--题目tip-->
@@ -43,9 +43,8 @@
   import QuestionTwo from './question-two/index'
   import QuestionThree from './question-three/index'
 
-  import {getUploadPath} from '@/api/question'
+  import {getUploadPath, uploadSuccess} from '@/api/question'
   import {uploadRecording} from '@/libs/my-recorder'
-  import {uploadSuccess} from '@api/question'
 
   export default {
     name: "question-frame",
@@ -72,7 +71,7 @@
       // 问题时间限制，【以秒为单位】
       questionPreparationTime: Number,
       questionAnswerTime: Number,
-        isLastQuestion: Boolean
+      isLastQuestion: Boolean
     },
     data() {
       return {
@@ -85,8 +84,8 @@
 
         audio_context: '',
         recorder: '',
-          retryCount:0,
-          maxRetry:20
+        retryCount: 0,
+        maxRetry: 20
       }
     },
     methods: {
@@ -110,29 +109,28 @@
         }).then(() => {
             // 上传音频
             new Promise((resolve, reject) => {
-                uploadRecording(this.uploadLocation, this.uploadUrl);
-            }).then(
-                new Promise((resolve, reject) => {
-                    //上传成功调用，告知服务器进行分析
-                   uploadSuccess(this.questionIndex).then(res=>{
-                         if(this.isLastQuestion) {
-                             this.$emit('showResult',true);
-                         }
-                         console.log(res);
-                         resolve();
-                     }).catch(err => {
-                         if(this.retryCount<this.maxRetry) {
-                             this.reTry( ([location, url]) => uploadRecording(location, url), [this.uploadLocation, this.uploadUrl] )
-                         } else {
-                             this.errorMessage(err);
-                         }
-                     })
-                 }).then().catch()
-
-            ).catch( err =>{
-                console.log( 'err: ', err)
+              uploadRecording(this.uploadLocation, this.uploadUrl);
+            }).then(() => {
+              new Promise((resolve, reject) => {
+                //上传成功调用，告知服务器进行分析
+                uploadSuccess(this.questionIndex).then(res => {
+                  if (this.isLastQuestion) {
+                    this.$emit('showResult', true);
+                  }
+                  console.log(res);
+                  resolve();
+                }).catch(err => {
+                  if (this.retryCount < this.maxRetry) {
+                    this.reTry(([location, url]) => uploadRecording(location, url), [this.uploadLocation, this.uploadUrl])
+                  } else {
+                    this.errorMessage(err);
+                  }
+                })
+              }).then().catch()
+            }).catch(err => {
+                console.log('err: ', err)
                 reject();
-            }
+              }
             );
 
           }
@@ -140,36 +138,15 @@
 
         this.$emit('next')
       },
-        reTry(func, arg) {
-          this.retryCount++;
-            setTimeout(() => func(arg), 500);
-        },
-        errorMessage(e) {
-            try {
-                if (e === 'timeout') {
-//                        this.$message('获取结果超时');
-                    this.subTitle = '服务器正忙，请稍后刷新重试';
-                    clearInterval(this.timer);
-                    this.loading.close();
-                    return;
-                }
-                let response = JSON.parse(e.responseText);
-                console.log(response);
-                if(response.needDisplay) {
-                    this.$message(response.tip);
-                    this.subTitle = '处理错误，请重新测试';
-                } else {
-//                        elsethis.$message('服务器出错了');
-                    this.subTitle='处理出错，请重新测试';
-                }
-            } catch (e) {
-//                    this.$message('服务器出错了');
-                this.subTitle='处理出错，请重新测试';
-            }finally {
-                clearInterval(this.timer);
-                this.loading.close();
-            }
-        }
+
+      reTry(func, arg) {
+        this.retryCount++;
+        setTimeout(() => func(arg), 500);
+      },
+
+      errorMessage(e) {
+        console.log('Try upload audio max times!')
+      }
     }
 
   }

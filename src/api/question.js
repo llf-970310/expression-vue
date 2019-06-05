@@ -3,6 +3,60 @@ import request from '@/plugin/axios'
 const qs = require('qs')
 
 /**
+ * 获取预测试的音频数据
+ * TODO GET
+ */
+export function getPrepareTestInfo() {
+  return request({
+    url: '/exam/get-test-wav-info',
+    method: 'post',
+  })
+}
+
+/**
+ * 获取当次预测试应该上传的路径
+ * @param test_id 此次预测试 ID
+ * TODO GET
+ */
+export function getPrepareTestUploadPath(test_id) {
+  return request({
+    url: '/exam/get-test-wav-url',
+    method: 'post',
+    data: qs.stringify({
+      test_id
+    })
+  })
+}
+
+/**
+ * 通知服务器，预测试音频已上传成功
+ * @param test_id 此次预测试 ID
+ */
+export function uploadPrepareTestSuccess(test_id) {
+  return request({
+    url: '/exam/upload-test-wav-success',
+    method: 'post',
+    data: qs.stringify({
+      test_id
+    })
+  })
+}
+
+/**
+ * 获取预测试音频已上传成功
+ * @param test_id 此次预测试 ID
+ */
+export function getPrepareTestResult(test_id) {
+  return request({
+    url: '/exam/get_test_result',
+    method: 'post',
+    data: qs.stringify({
+      test_id
+    })
+  })
+}
+
+/**
  * 获取下一题
  * TODO GET
  */
@@ -21,7 +75,7 @@ export function nextQuestion(nowQuestionNum) {
  * @param nowQuestionNum 当前题号
  * TODO GET
  */
-export function getUploadPath (nowQuestionNum) {
+export function getUploadPath(nowQuestionNum) {
   return request({
     url: '/exam/get-upload-url',
     method: 'post',
@@ -31,22 +85,22 @@ export function getUploadPath (nowQuestionNum) {
   })
 }
 
-export function uploadSuccess (nowQuestionNum) {
-    return request({
-        url: '/exam/upload-success',
-        method: 'post',
-        data: qs.stringify({
-            nowQuestionNum: nowQuestionNum
-        })
+export function uploadSuccess(nowQuestionNum) {
+  return request({
+    url: '/exam/upload-success',
+    method: 'post',
+    data: qs.stringify({
+      nowQuestionNum: nowQuestionNum
     })
+  })
 }
 
 /**
  * 获取测评结果数据
  */
-export function getResult () {
-    return request({
-        url: '/exam/get-result',
-        method: 'post'
-    })
+export function getResult() {
+  return request({
+    url: '/exam/get-result',
+    method: 'post'
+  })
 }

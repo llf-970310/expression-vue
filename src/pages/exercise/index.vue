@@ -1,40 +1,55 @@
 <!--所有的题目控制-->
 <template>
   <d2-container :filename="filename">
-    <div v-if="!hasFinishExercise">
-      <question-frame :key="curQuestionIndex"
-                      :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
-                      :question-index="curQuestionIndex"
-                      :question-type="curQuestionType"
-                      :question-raw-text="curQuestionRawText"
-                      :question-preparation-time="curQuestionPreparationTime"
-                      :question-answer-time="curQuestionAnswerTime"
-                      :is-last-question="isLastQuestion"
-                      @showResult="finishTest"
-                      @next="nextQuestion">
-      </question-frame>
+    <div v-if="hasFinishedPreparation">
+      <div v-if="hasFinishExercise">
+        <show-result></show-result>
+      </div>
+      <div v-else>
+        <question-frame :key="curQuestionIndex"
+                        :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
+                        :question-index="curQuestionIndex"
+                        :question-type="curQuestionType"
+                        :question-raw-text="curQuestionRawText"
+                        :question-preparation-time="curQuestionPreparationTime"
+                        :question-answer-time="curQuestionAnswerTime"
+                        :is-last-question="isLastQuestion"
+                        @showResult="finishTest"
+                        @next="nextQuestion"/>
+      </div>
     </div>
     <div v-else>
-      <show-result></show-result>
+      <preparation :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
+                   :preparation-id="preparationId"
+                   :question-raw-text="curQuestionRawText"
+                   :question-preparation-time="curQuestionPreparationTime"
+                   :question-answer-time="curQuestionAnswerTime"
+                   @prepared="finishPreparation"/>
     </div>
   </d2-container>
 </template>
 
 <script>
+  import Preparation from './question/preparation'
   import QuestionFrame from './question/index'
   import ShowResult from './result/showResult'
-  import {nextQuestion} from '@/api/question'
+  import {getPrepareTestInfo, nextQuestion} from '@/api/question'
   import {initAudio} from '@/libs/my-recorder'
 
   export default {
     name: "index",
     components: {
-        'question-frame': QuestionFrame,
-        'show-result': ShowResult
+      'preparation': Preparation,
+      'question-frame': QuestionFrame,
+      'show-result': ShowResult
     },
     data() {
       return {
         filename: __filename,
+
+        // 预测试已完成的标志
+        hasFinishedPreparation: false,
+        preparationId: '',
 
         // 测试结束的标志
         hasFinishExercise: false,
@@ -56,9 +71,37 @@
       // 初始化音频设备
       initAudio();
 
-      this.nextQuestion()
+      this.preparation()
+      // this.nextQuestion()
     },
     methods: {
+      preparation() {
+        new Promise((resolve, reject) => {
+          getPrepareTestInfo().then(res => {
+            console.log(res)
+            this.preparationId = res['test_id']
+            this.curQuestionRawText = res.questionContent
+            this.curQuestionTip.detail = res.questionInfo.detail
+            this.curQuestionTip.tip = res.questionInfo.tip
+            this.curQuestionPreparationTime = res.readLimitTime
+            this.curQuestionAnswerTime = res.questionLimitTime
+
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        }).then().catch()
+      },
+
+      /**
+       * 结束预测试的准备阶段
+       */
+      finishPreparation() {
+        this.hasFinishedPreparation = true
+      },
+
+
       nextQuestion() {
         if (this.isLastQuestion) {
           // TODO 做题已结束
@@ -85,9 +128,9 @@
           }).then().catch()
         }
       },
-        finishTest() {
-          this.hasFinishExercise = true
-        }
+      finishTest() {
+        this.hasFinishExercise = true
+      }
     }
   }
 </script>

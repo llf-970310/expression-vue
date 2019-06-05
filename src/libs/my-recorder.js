@@ -88,13 +88,15 @@ export function endRecording() {
 
 /**
  * 上传录音文件
+ * @param location 录音上传的位置
  * @param path 录音上传的路径
+ * @param onUploaded 录音上传结束后的回调函数
  */
-export function uploadRecording(location, path) {
+export function uploadRecording(location, path, onUploaded) {
   recorder.exportWAV((blob) => {
     // console.log(blob)
     if (location === 'BOS') {
-      uploadSoundToBOS(path, blob)
+      uploadSoundToBOS(path, blob, onUploaded)
       recorder.clear()
     }
   });

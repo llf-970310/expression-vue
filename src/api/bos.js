@@ -15,8 +15,9 @@ let client = new BosClient(config);
  * 将音频上传到百度云 BOS
  * @param path 上传路径
  * @param blob 音频文件
+ * @param onUploaded 上传成功的回调函数
  */
-export function uploadSoundToBOS(path, blob) {
+export function uploadSoundToBOS(path, blob, onUploaded) {
   // console.log(blob)
 
   listBOSObject('before')
@@ -55,6 +56,9 @@ export function uploadSoundToBOS(path, blob) {
     client.putObjectFromDataUrl(bucketName, path, dataUrl, options).then(res => {
       // console.log(res)
       listBOSObject('after')
+
+      // 成功回调
+      onUploaded()
     }).catch(err => {
       console.log(err)
     });
@@ -80,7 +84,7 @@ function downloadCurrentWav(wavDataUrl) {
   let link = document.createElement('a');
   link.style.display = 'none';
   link.href = wavDataUrl;
-  link.setAttribute('download', path);
+  link.setAttribute('download', 'test.wav');
   document.body.appendChild(link);
   link.click();
 }
