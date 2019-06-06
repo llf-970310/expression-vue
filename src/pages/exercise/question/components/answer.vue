@@ -14,7 +14,7 @@
           <el-button type="success" @click="directToAnswer">立刻回答</el-button>
         </div>
         <div v-else>
-          <el-button type="danger" @click="finishAnswer">结束回答</el-button>
+          <el-button type="danger" :loading="answerFinishing" @click="finishAnswer">结束回答</el-button>
         </div>
       </el-col>
     </el-row>
@@ -57,6 +57,7 @@
     data() {
       return {
         finishCheckDialogVisible: false,
+        answerFinishing: false,
       }
     },
     mounted() {
@@ -91,13 +92,16 @@
 
       // 确定主动结束回答
       confirmFinishAnswer() {
-        this.finishCheckDialogVisible = false
+        this.finishCheckDialogVisible = false;
 
         // 停止录音
         endRecording()
 
         // 停止倒计时
-        this.$refs.countdown.endCounting()
+        this.$refs.countdown.endCounting();
+
+        // 按钮动画
+        this.answerFinishing = true;
 
         // 告诉父组件下一题
         this.$emit('next')

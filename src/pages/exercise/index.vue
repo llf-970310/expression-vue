@@ -1,6 +1,6 @@
 <!--所有的题目控制-->
 <template>
-  <d2-container :filename="filename">
+  <d2-container :filename="filename" v-loading="dataLoading">
     <div v-if="hasFinishedPreparation">
       <div v-if="hasFinishExercise">
         <show-result></show-result>
@@ -51,8 +51,11 @@
       return {
         filename: __filename,
 
+        // 数据加载中
+        dataLoading: false,
+
         // 预测试已完成的标志
-        hasFinishedPreparation: true,
+        hasFinishedPreparation: false,
         preparationId: '',
 
         // 测试结束的标志
@@ -75,14 +78,14 @@
       // 初始化音频设备
       initAudio();
 
-      // this.preparation()
-      this.nextQuestion()
+      this.preparation()
     },
     methods: {
       /**
        * 新建一次预测试
        */
       preparation() {
+        this.dataLoading = true;
         new Promise((resolve, reject) => {
           getPrepareTestInfo().then(res => {
             console.log(res)
@@ -98,7 +101,9 @@
             console.log('err: ', err)
             reject(err)
           })
-        }).then().catch()
+        }).then(() => {
+          this.dataLoading = false;
+        }).catch()
       },
 
       /**
@@ -113,6 +118,7 @@
        * 预测试通过，进行正式的试题测试
        */
       nextQuestion() {
+        this.dataLoading = true;
         if (this.isLastQuestion) {
           // TODO 做题已结束
 //          this.hasFinishExercise = true
@@ -135,7 +141,9 @@
               console.log('err: ', err)
               reject(err)
             })
-          }).then().catch()
+          }).then(() => {
+            this.dataLoading = false;
+          }).catch()
         }
       },
       finishTest() {
