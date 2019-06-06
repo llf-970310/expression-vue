@@ -19,6 +19,16 @@
       </el-col>
     </el-row>
 
+    <el-dialog
+        title="警告"
+        :visible.sync="finishCheckDialogVisible"
+        width="40%">
+      <span>您的回答时间太短，有可能致使您的该题评分异常，确定要提前结束吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="finishCheckDialogVisible = false">再想想</el-button>
+        <el-button type="danger" @click="confirmFinishAnswer">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -44,6 +54,11 @@
       // 是【准备阶段】立刻回答 或 【回答阶段】结束回答
       isPreparation: Boolean
     },
+    data() {
+      return {
+        finishCheckDialogVisible: false,
+      }
+    },
     mounted() {
       // 【回答阶段】
       if (!this.isPreparation) {
@@ -64,11 +79,19 @@
         if (this.isPreparation) {
           this.directToAnswer()
         } else {
-          this.finishAnswer()
+          this.confirmFinishAnswer()
         }
       },
-      // 主动结束回答
+
+      // 主动结束回答，告知用户操作风险
       finishAnswer() {
+        // TODO 根据音频时长来确定需不需要
+        this.finishCheckDialogVisible = true
+      },
+
+      // 确定主动结束回答
+      confirmFinishAnswer() {
+        this.finishCheckDialogVisible = false
         endRecording()
 
         this.$emit('next')
