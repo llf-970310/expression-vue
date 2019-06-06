@@ -86,8 +86,13 @@
 
       // 主动结束回答，告知用户操作风险
       finishAnswer() {
-        // TODO 根据音频时长来确定需不需要
-        this.finishCheckDialogVisible = true
+        // 根据音频时长确定是否需要提醒
+        let usedSeconds = this.timeToCount / 1000 - this.$refs.countdown.$refs.countdown.totalSeconds;
+        if (usedSeconds < 10) {
+          this.finishCheckDialogVisible = true
+        } else {
+          this.confirmFinishAnswer()
+        }
       },
 
       // 确定主动结束回答
