@@ -52,7 +52,7 @@
         filename: __filename,
 
         // 预测试已完成的标志
-        hasFinishedPreparation: false,
+        hasFinishedPreparation: true,
         preparationId: '',
 
         // 测试结束的标志
@@ -75,8 +75,8 @@
       // 初始化音频设备
       initAudio();
 
-      this.preparation()
-      // this.nextQuestion()
+      // this.preparation()
+      this.nextQuestion()
     },
     methods: {
       /**
