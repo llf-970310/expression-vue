@@ -6,7 +6,7 @@
       <read :text="text"></read>
     </div>
 
-    <count-down :time-to-count="timeToCount" @end="handleCountDown"></count-down>
+    <count-down ref="countdown" :time-to-count="timeToCount" @end="handleCountDown"></count-down>
 
     <el-row class="answer_btn">
       <el-col class="d2-text-center">
@@ -92,8 +92,14 @@
       // 确定主动结束回答
       confirmFinishAnswer() {
         this.finishCheckDialogVisible = false
+
+        // 停止录音
         endRecording()
 
+        // 停止倒计时
+        this.$refs.countdown.endCounting()
+
+        // 告诉父组件下一题
         this.$emit('next')
       },
 

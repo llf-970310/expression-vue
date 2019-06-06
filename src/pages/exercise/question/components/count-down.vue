@@ -2,7 +2,7 @@
 <template>
   <div>
 
-    <countdown :time="timeToCount" @end="handleEnd">
+    <countdown ref="countdown" :time="timeToCount" @end="handleEnd">
       <template slot-scope="props">
         <p class="d2-text-center">剩余时间：{{ props.totalSeconds }} 秒</p>
         <!--timeToCount为ms单位，props.totalSeconds为秒单位-->
@@ -27,9 +27,19 @@
       'countdown': VueCountdown
     },
     methods: {
+      /**
+       * 倒计时结束通知父组件
+       */
       handleEnd() {
         console.log('countdown end')
         this.$emit('end')
+      },
+
+      /**
+       * 停止倒计时
+       */
+      endCounting() {
+        this.$refs.countdown.abort()
       }
     }
   };
