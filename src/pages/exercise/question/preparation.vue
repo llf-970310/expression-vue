@@ -65,7 +65,7 @@
         audio_context: '',
         recorder: '',
         retryCount: 0,
-        maxRetry: 20,
+        maxRetry: 100,
 
         // 正在尝试重试
         isReTrying: false,

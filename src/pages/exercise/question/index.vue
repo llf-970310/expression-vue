@@ -94,7 +94,9 @@
         this.isTipShowing = false
       },
 
-      // 回答结束，在获取下一道题目前，获取录音上传路径，并根据返回的上传 url 将音频上传
+      /**
+       * 回答结束，在获取下一道题目前，获取录音上传路径，并根据返回的上传 url 将音频上传
+       */
       nextQuestion() {
         new Promise((resolve, reject) => {
           getUploadPath(this.questionIndex).then(res => {
@@ -107,46 +109,43 @@
             reject(err)
           })
         }).then(() => {
-            // 上传音频
-            new Promise((resolve, reject) => {
-              uploadRecording(this.uploadLocation, this.uploadUrl);
-            }).then(() => {
-              new Promise((resolve, reject) => {
-                //上传成功调用，告知服务器进行分析
-                uploadSuccess(this.questionIndex).then(res => {
-                  if (this.isLastQuestion) {
-                    this.$emit('showResult', true);
-                  }
-                  console.log(res);
-                  resolve();
-                }).catch(err => {
-                  if (this.retryCount < this.maxRetry) {
-                    this.reTry(([location, url]) => uploadRecording(location, url), [this.uploadLocation, this.uploadUrl])
-                  } else {
-                    this.errorMessage(err);
-                  }
-                })
-              }).then().catch()
-            }).catch(err => {
-                console.log('err: ', err)
-                reject();
-              }
-            );
-
+            this.uploadCurRecording()
           }
         ).catch()
 
         this.$emit('next')
       },
 
+      /**
+       * 上传当前的音频
+       */
+      uploadCurRecording() {
+        const _this = this
+
+        uploadRecording(_this.uploadLocation, _this.uploadUrl, function () {
+          new Promise((resolve, reject) => {
+            //上传成功调用，告知服务器进行分析
+            uploadSuccess(_this.questionIndex).then(res => {
+              if (_this.isLastQuestion) {
+                _this.$emit('showResult', true);
+              }
+              console.log(res);
+              resolve();
+            }).catch(err => {
+              if (_this.retryCount < _this.maxRetry) {
+                _this.reTry(([location, url]) => uploadRecording(location, url), [_this.uploadLocation, _this.uploadUrl])
+              } else {
+                console.log('Try uploadCurRecording() max times!')
+              }
+            })
+          }).then().catch()
+        });
+      },
+
       reTry(func, arg) {
         this.retryCount++;
         setTimeout(() => func(arg), 500);
       },
-
-      errorMessage(e) {
-        console.log('Try upload audio max times!')
-      }
     }
 
   }
