@@ -78,9 +78,10 @@ service.interceptors.response.use(
           errorCreate(`[ code: xxx ] ${dataAxios.msg}: ${response.config.url}`)
           break
         default:
-          // 不是正确的 code
-          errorCreate(`${dataAxios.msg}: ${response.config.url}`)
-          break
+          // 返回给请求中自己处理
+          // errorCreate(`${dataAxios.msg}: ${response.config.url}`)
+          // errorLog(dataAxios)
+          return Promise.reject(dataAxios)
       }
     }
   },

@@ -15,16 +15,20 @@
                         :question-answer-time="curQuestionAnswerTime"
                         :is-last-question="isLastQuestion"
                         @showResult="finishTest"
-                        @next="nextQuestion"/>
+                        @next="nextQuestion">
+        </question-frame>
       </div>
     </div>
     <div v-else>
-      <preparation :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
+      <preparation :key="preparationId"
+                   :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
                    :preparation-id="preparationId"
                    :question-raw-text="curQuestionRawText"
                    :question-preparation-time="curQuestionPreparationTime"
                    :question-answer-time="curQuestionAnswerTime"
-                   @prepared="finishPreparation"/>
+                   @retest="preparation"
+                   @prepared="finishPreparation">
+      </preparation>
     </div>
   </d2-container>
 </template>
@@ -75,6 +79,9 @@
       // this.nextQuestion()
     },
     methods: {
+      /**
+       * 新建一次预测试
+       */
       preparation() {
         new Promise((resolve, reject) => {
           getPrepareTestInfo().then(res => {
@@ -99,9 +106,12 @@
        */
       finishPreparation() {
         this.hasFinishedPreparation = true
+        this.nextQuestion()
       },
 
-
+      /**
+       * 预测试通过，进行正式的试题测试
+       */
       nextQuestion() {
         if (this.isLastQuestion) {
           // TODO 做题已结束
