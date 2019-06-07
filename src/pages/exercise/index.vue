@@ -118,12 +118,12 @@
        * 预测试通过，进行正式的试题测试
        */
       nextQuestion() {
-        this.dataLoading = true;
         if (this.isLastQuestion) {
           // TODO 做题已结束
 //          this.hasFinishExercise = true
         } else {
           // 继续做题
+          this.dataLoading = true;
           new Promise((resolve, reject) => {
             nextQuestion(this.curQuestionIndex).then(res => {
               // console.log(res)
