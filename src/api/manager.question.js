@@ -2,6 +2,21 @@ import request from '@/plugin/axios'
 
 const qs = require('qs')
 
+
+/**
+ * 重新生成文本的关键词
+ * @param text 题目文本
+ */
+export function getRegeneratedWords(text) {
+  return request({
+    url: '/admin/generate-keywords',
+    method: 'post',
+    data: qs.stringify({
+      text
+    })
+  })
+}
+
 /**
  * 查看所有题目
  * @param page 页数，从 1 开始

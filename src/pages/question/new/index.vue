@@ -23,6 +23,10 @@
           placeholder="请输入题目原文"
           v-model="curQuestion.rawText">
       </el-input>
+
+      <el-button type="info" plain @click="regenerateWordbase" class="btn-generate-words">一键生成关键词
+        <i class="el-icon-caret-bottom"></i>
+      </el-button>
     </el-row>
 
     <el-row>
@@ -75,6 +79,7 @@
 <script>
   import SynonymsModifiable from './synonyms-modifiable'
   import {
+    getRegeneratedWords,
     getQuestion,
     getQuestionFromPool,
     deleteQuestionFromPool,
@@ -330,11 +335,37 @@
       openQuestionOriginUrl() {
         window.open(this.curQuestion.url)
       },
+
+      // 从题目文本中重新生成关键词信息
+      regenerateWordbase() {
+        new Promise((resolve, reject) => {
+          getRegeneratedWords(this.curQuestion.rawText).then(res => {
+            this.curQuestion.keywords = res.keywords
+            this.curQuestion.detailwords= res.detailwords
+
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        }).then(() => {
+          this.$message({
+            message: '已重新生成关键词属性～',
+            type: 'success',
+            center: true,
+            showClose: true,
+            duration: 5000
+          });
+        }).catch()
+      }
     }
   }
 </script>
 
 <style scoped>
+  .btn-generate-words {
+    margin-top: 10px;
+  }
   .new-synonyms {
     margin-top: 5px;
   }
