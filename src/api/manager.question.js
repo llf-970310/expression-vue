@@ -53,6 +53,17 @@ export function getQuestion(id) {
 }
 
 /**
+ * 删除某题目
+ * @param id 题目ID
+ */
+export function delQuestion(id) {
+  return request({
+    url: '/admin/question/' + id,
+    method: 'delete'
+  })
+}
+
+/**
  * 获取题库中题目
  */
 export function getQuestionFromPool() {

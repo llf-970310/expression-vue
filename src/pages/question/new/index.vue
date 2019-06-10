@@ -314,7 +314,10 @@
             this.init()
             this.$message({
               type: 'success',
-              message: '已为您导入题库中新题目!'
+              message: '已为您导入题库中新题目!',
+              center: true,
+              showClose: true,
+              duration: 5000
             })
           }).catch(err => {
           })
