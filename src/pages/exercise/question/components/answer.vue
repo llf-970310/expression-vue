@@ -88,7 +88,8 @@
       finishAnswer() {
         // 根据音频时长确定是否需要提醒
         let usedSeconds = this.timeToCount / 1000 - this.$refs.countdown.$refs.countdown.totalSeconds;
-        if (usedSeconds < 10) {
+        // 声音测试输入音频短于3秒才提示
+        if (usedSeconds < 3) {
           this.finishCheckDialogVisible = true
         } else {
           this.confirmFinishAnswer()
