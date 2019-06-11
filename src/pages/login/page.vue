@@ -60,6 +60,11 @@
                     </div>
                 </div>
                 <div class="page-login--content-footer">
+                    <div class="page-login--content-help">
+                        <p class="page-login--content-footer-copyright">使用过程中的任何疑问，请直接联系汤大业</p>
+                        <p class="page-login--content-footer-copyright">手机/微信：18362926130</p>
+                        <p class="page-login--content-footer-copyright">QQ：1138833148</p>
+                    </div>
                     <!--<p class="page-login&#45;&#45;content-footer-options">-->
                     <!--<a href="#">帮助</a>-->
                     <!--<a href="#">隐私</a>-->
@@ -314,6 +319,10 @@
             }
         }
 
+        .page-login--content-help{
+            text-align: center;
+            margin: 0 0 10px 0;
+        }
         // footer
         .page-login--content-footer {
             padding: 1em 0;
