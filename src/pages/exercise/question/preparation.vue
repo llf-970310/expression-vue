@@ -17,6 +17,7 @@
           <question-preparation :text="questionRawText"
                                 :preparation-time="questionPreparationTime"
                                 :answer-time="questionAnswerTime"
+                                :audio-volume="audioVolume"
                                 @next="uploadAndCheckPreparation">
           </question-preparation>
         </el-col>
@@ -52,6 +53,9 @@
       // 预测试的问题时间限制，【以秒为单位】
       questionPreparationTime: Number,
       questionAnswerTime: Number,
+
+      // 音量大小
+      audioVolume: Number,
     },
     data() {
       return {

@@ -1,26 +1,13 @@
-import $ from 'jquery'
 import {uploadSoundToBOS} from '@/api/bos'
-import {uploadSuccess} from "../api/question"
 
 let canAudioUse = true;
 let audio_context;
 let recorder;
 
 /**
- * 用户同意使用音频的回调
- */
-function startUserMedia(stream) {
-  let input = audio_context.createMediaStreamSource(stream);
-  console.log('Media stream created.');
-
-  recorder = new Recorder(input);
-  console.log('Recorder initialised.');
-}
-
-/**
  * 当资源已加载时被触发
  */
-export function initAudio() {
+export function initAudio(onProcessFunc) {
   try {
     // webkit shim
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -45,8 +32,17 @@ export function initAudio() {
 
   try {
     // 提醒用户需要使用音频输入设备
-    navigator.getUserMedia({audio: true},
-      startUserMedia,
+    navigator.getUserMedia(
+      {audio: true},
+      function (stream) {
+        let input = audio_context.createMediaStreamSource(stream);
+        console.log('Media stream created.');
+
+        recorder = new Recorder(input, {
+          onAudioProcess: onProcessFunc
+        });
+        console.log('Recorder initialised.');
+      },
       function (e) {
         console.log('No live audio input: ' + e);
       });

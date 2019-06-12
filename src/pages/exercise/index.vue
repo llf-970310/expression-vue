@@ -26,6 +26,7 @@
                    :question-raw-text="curQuestionRawText"
                    :question-preparation-time="curQuestionPreparationTime"
                    :question-answer-time="curQuestionAnswerTime"
+                   :audio-volume="audioVolume"
                    @retest="preparation"
                    @prepared="finishPreparation">
       </preparation>
@@ -54,6 +55,9 @@
         // 数据加载中
         dataLoading: false,
 
+        // 音量大小
+        audioVolume: 0,
+
         // 预测试已完成的标志
         hasFinishedPreparation: false,
         preparationId: '',
@@ -76,7 +80,19 @@
     },
     mounted() {
       // 初始化音频设备
-      initAudio();
+      const _this = this;
+      initAudio(function (data) {
+        let avg = 0;
+        let max_data = 0;
+        for (let i = 0; i < data.length; i++) {
+          let temp = Math.abs(data[i]);
+          avg += temp;
+          max_data = Math.max(max_data, temp)
+        }
+        avg /= data.length;
+        _this.audioVolume = avg * 80;
+        console.log(`avg: ${avg}, sound: ${_this.audioVolume}`);
+      });
 
       this.preparation()
     },

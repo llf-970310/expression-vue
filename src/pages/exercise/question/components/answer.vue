@@ -19,6 +19,10 @@
       </el-col>
     </el-row>
 
+    <div v-if="audioVolume">
+      <p>{{audioVolume}}</p>
+    </div>
+
     <el-dialog
         title="警告"
         :visible.sync="finishCheckDialogVisible"
@@ -52,7 +56,10 @@
       timeToCount: Number,
 
       // 是【准备阶段】立刻回答 或 【回答阶段】结束回答
-      isPreparation: Boolean
+      isPreparation: Boolean,
+
+      // 音量大小
+      audioVolume: Number,
     },
     data() {
       return {

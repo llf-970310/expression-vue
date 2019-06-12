@@ -17,6 +17,7 @@
               :is-text-showing="true" :text="text"
               :time-to-count="answerTimeByMilliSec"
               :is-preparation="false"
+              :audio-volume="audioVolume"
               @next="finishAnswer">
       </answer>
     </div>
@@ -37,7 +38,10 @@
 
       // 准备/回答的时长限制
       preparationTime: Number,
-      answerTime: Number
+      answerTime: Number,
+
+      // 音量大小
+      audioVolume: Number,
 
     },
     data() {
