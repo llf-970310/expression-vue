@@ -19,11 +19,6 @@
         default: '300px'
       },
 
-      // 图表标题
-      title: {
-        required: true,
-        type: String
-      },
       // x轴自变量
       variables: {
         required: true,
@@ -68,11 +63,6 @@
             position: function (pt) {
               return [pt[0], '10%'];
             }
-          },
-          title: {
-            text: _this.title,
-            x: 'center',
-            y: 'top'
           },
           toolbox: {
             right: '15px',

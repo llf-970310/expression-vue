@@ -1,14 +1,34 @@
 <template>
   <div>
 
+    <el-row>
+      <el-col :span="12">
+        <span class="title">{{ titleDistribution }}</span>
+      </el-col>
+      <el-col :span="12" class="input-num">
+        <span>区间大小：</span>
+        <el-input-number v-model="scorePartitionSize"
+                         @change="initScoreDistribution"
+                         :min="2" :max="50"
+                         size="small"
+                         label="区间大小"
+                         controls-position="right">
+        </el-input-number>
+      </el-col>
+    </el-row>
     <score-distribution v-loading="distributionLoading"
-                        :title="titleDistribution"
                         :score-partition="scorePartition"
                         :num-by-partition="scoreNumByPartition"
+                        :proportion-by-partition="scoreProportionByPartition"
                         @ready="distributionReady"
                         @prepare="distributionPrepare">
     </score-distribution>
 
+    <el-row>
+      <el-col :span="12">
+        <span class="title">{{ titleChange }}</span>
+      </el-col>
+    </el-row>
     <score-change v-loading="changeLoading"
                   :title="titleChange"
                   :variables="variables"
@@ -32,7 +52,7 @@
 
 <script>
   import ScoreChange from './score-change'
-  import ScoreDistribution from './score-distribution'
+  import ScoreDistribution from './score-distribution-histogram'
   import ScoreTable from './score-table'
 
   import {extractVariableAsList} from '@/libs/my-util'
@@ -82,8 +102,10 @@
         tableLoading: true,
 
         // 成绩分布图
+        scorePartitionSize: 2,
         scorePartition: [],
         scoreNumByPartition: [],
+        scoreProportionByPartition: [],
 
         // 成绩变化图
         mainScore: [],
@@ -100,30 +122,29 @@
     methods: {
       // 根据总分成绩初始化分布图
       initScoreDistribution() {
-        this.scorePartition = ['60分以下', '60-70', '70-80', '80-90', '90-100']
-        this.scoreNumByPartition = [
-          {value: 0, name: '60分以下'},
-          {value: 0, name: '60-70'},
-          {value: 0, name: '70-80'},
-          {value: 0, name: '80-90'},
-          {value: 0, name: '90-100'},
-        ]
-        for (let i = 0; i < this.scoreData.length; i++) {
-          let curScore = this.scoreData[i].totalScore
-          if (curScore < 60) {
-            this.scoreNumByPartition[0].value++
-          } else if (curScore >= 60 && curScore < 70) {
-            this.scoreNumByPartition[1].value++
-          } else if (curScore >= 70 && curScore < 80) {
-            this.scoreNumByPartition[2].value++
-          } else if (curScore >= 80 && curScore < 90) {
-            this.scoreNumByPartition[3].value++
-          } else {
-            this.scoreNumByPartition[4].value++
-          }
+        let partitionNum = Math.ceil(100.0 / this.scorePartitionSize);
+
+        // 初始化分区（X轴）
+        this.scorePartition = [];
+        for (let i = 0; i < partitionNum; i++) {
+          let max = (i + 1) * this.scorePartitionSize;
+          this.scorePartition.push(`${i * this.scorePartitionSize} - ${max > 100 ? 100 : max}`)
         }
 
-        // console.log(this.scoreNumByPartition)
+        // 初始化该分区人数（Y1轴）
+        this.scoreNumByPartition = Array(partitionNum).fill(0);
+        for (let i = 0; i < this.scoreData.length; i++) {
+          let curScore = this.scoreData[i].totalScore;
+          let n = Math.floor(curScore / this.scorePartitionSize);
+          this.scoreNumByPartition[n]++
+        }
+
+        // 初始化该分区人数比例（Y2轴）
+        this.scoreProportionByPartition = []
+        for (let i = 0; i < this.scoreNumByPartition.length; i++) {
+          let curScoreNum = this.scoreNumByPartition[i];
+          this.scoreProportionByPartition.push(curScoreNum / this.scoreData.length)
+        }
       },
 
       // 根据总分成绩初始化分布图
@@ -179,5 +200,12 @@
 </script>
 
 <style scoped>
+  .input-num {
+    text-align: right;
+  }
 
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+  }
 </style>
