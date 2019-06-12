@@ -80,6 +80,10 @@
         required: true,
         type: String
       },
+      distributionData: {
+        required: true,
+        type: Array
+      },
 
       // 成绩变化图的x轴自变量数据
       variables: {
@@ -142,9 +146,8 @@
 
         // 初始化该分区人数（Y1轴）
         this.scoreNumByPartition = Array(partitionNum).fill(0);
-        for (let i = 0; i < this.scoreData.length; i++) {
-          let curScore = this.scoreData[i].totalScore;
-          let n = Math.floor(curScore / this.scorePartitionSize);
+        for (let i = 0; i < this.distributionData.length; i++) {
+          let n = Math.floor(this.distributionData[i] / this.scorePartitionSize);
           this.scoreNumByPartition[n]++
         }
 
@@ -152,7 +155,7 @@
         this.scoreProportionByPartition = []
         for (let i = 0; i < this.scoreNumByPartition.length; i++) {
           let curScoreNum = this.scoreNumByPartition[i];
-          this.scoreProportionByPartition.push(curScoreNum / this.scoreData.length)
+          this.scoreProportionByPartition.push(curScoreNum / this.distributionData.length)
         }
       },
 

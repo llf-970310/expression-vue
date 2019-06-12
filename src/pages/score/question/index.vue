@@ -19,6 +19,7 @@
       <score-representation :title-distribution="titleDistributionSpecific"
                             :title-change="titleChangeSpecific"
                             distribution-legend="区间人数"
+                            :distribution-data="distributionData"
                             :variables="dates"
                             :variable='variable'
                             variable-name="日期"
@@ -31,9 +32,10 @@
     </div>
     <div v-else>
       <!--概况-->
-      <score-representation title-distribution="各题目平均分的成绩分布情况"
-                            title-change="各题目平均分的成绩变化情况"
+      <score-representation title-distribution="各题目的平均分分布情况"
+                            title-change="各题目各日的平均分变化情况"
                             distribution-legend="区间题数"
+                            :distribution-data="distributionData"
                             :variables="questions"
                             :variable='variable'
                             variable-name="题目编号"
@@ -69,6 +71,9 @@
         // 查看详情部分
         searchedQuestionId: '',
 
+        // 成绩分布图的全部数据
+        distributionData: [],
+
         // 成绩变化图x轴自变量
         variable: '',
 
@@ -80,11 +85,11 @@
     },
     computed: {
       titleDistributionSpecific() {
-        return `题目 ${this.searchedQuestionId} 的成绩分布情况`
+        return `题目 ${this.searchedQuestionId} 各次测试的成绩分布情况`
       },
 
       titleChangeSpecific() {
-        return `题目 ${this.searchedQuestionId} 的成绩变化情况`
+        return `题目 ${this.searchedQuestionId} 各日的平均成绩变化情况`
       }
     },
     mounted() {
@@ -121,8 +126,7 @@
         new Promise((resolve, reject) => {
           getScoreOfQuestions().then(res => {
             const result = res.result
-            console.log(result)
-
+            this.distributionData = extractVariableAsList(result, 'totalScore')
             this.scoreData = result
 
             this.variable = 'questionId'
@@ -144,13 +148,11 @@
         console.log(this.searchedQuestionId)
         new Promise((resolve, reject) => {
           getScoreOfSpecoficQuestion(this.searchedQuestionId).then(res => {
-            const result = res.result
-            console.log(result)
-
-            this.scoreData = result
+            this.distributionData = res.allResult
+            this.scoreData = res.resultByDate
 
             this.variable = 'date'
-            this.dates = extractVariableAsList(result, this.variable)
+            this.dates = extractVariableAsList(this.scoreData, this.variable)
             console.log(this.dates)
 
             resolve()
