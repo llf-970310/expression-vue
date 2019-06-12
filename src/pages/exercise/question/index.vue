@@ -20,16 +20,19 @@
                         :text="questionRawText"
                         :preparation-time="questionPreparationTime"
                         :answer-time="questionAnswerTime"
+                        :audio-volume="audioVolume"
                         @next="nextQuestion"></question-one>
           <question-two v-if="questionType === 2"
                         :text="questionRawText"
                         :preparation-time="questionPreparationTime"
                         :answer-time="questionAnswerTime"
+                        :audio-volume="audioVolume"
                         @next="nextQuestion"></question-two>
           <question-three v-if="questionType === 3"
                           :text="questionRawText"
                           :preparation-time="questionPreparationTime"
                           :answer-time="questionAnswerTime"
+                          :audio-volume="audioVolume"
                           @next="nextQuestion"></question-three>
         </el-col>
       </el-row>
@@ -71,7 +74,10 @@
       // 问题时间限制，【以秒为单位】
       questionPreparationTime: Number,
       questionAnswerTime: Number,
-      isLastQuestion: Boolean
+      isLastQuestion: Boolean,
+
+      // 音量大小
+      audioVolume: Number,
     },
     data() {
       return {

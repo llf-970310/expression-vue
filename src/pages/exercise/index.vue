@@ -90,8 +90,7 @@
           max_data = Math.max(max_data, temp)
         }
         avg /= data.length;
-        _this.audioVolume = avg * 80;
-        console.log(`avg: ${avg}, sound: ${_this.audioVolume}`);
+        _this.audioVolume = avg * 800;
       });
 
       this.preparation()

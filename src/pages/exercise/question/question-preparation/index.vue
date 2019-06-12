@@ -42,7 +42,6 @@
 
       // 音量大小
       audioVolume: Number,
-
     },
     data() {
       return {
