@@ -19,15 +19,18 @@
         default: '300px'
       },
 
-      // x轴自变量
+      // x轴自变量的数据
       variables: {
         required: true,
         type: Array
       },
+      // x轴自变量的名称
       variableName: {
         required: true,
         type: String
       },
+
+      // y轴
       mainScore: {
         required: true,
         type: Array
@@ -82,13 +85,13 @@
           xAxis: {
             name: _this.variableName,
             type: 'category',
-            boundaryGap: false,
+            boundaryGap: true,
             data: _this.variables
           },
           yAxis: {
             name: '分数',
             type: 'value',
-            // boundaryGap: [0, '5%'],
+            boundaryGap: [0.2, 0.2],
             min: 0,
             max: 100
           },

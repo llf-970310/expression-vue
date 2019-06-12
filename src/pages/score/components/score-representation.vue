@@ -17,6 +17,7 @@
       </el-col>
     </el-row>
     <score-distribution v-loading="distributionLoading"
+                        :legend="distributionLegend"
                         :score-partition="scorePartition"
                         :num-by-partition="scoreNumByPartition"
                         :proportion-by-partition="scoreProportionByPartition"
@@ -30,7 +31,6 @@
       </el-col>
     </el-row>
     <score-change v-loading="changeLoading"
-                  :title="titleChange"
                   :variables="variables"
                   :variable-name="variableName"
                   :main-score="mainScore"
@@ -75,16 +75,25 @@
         type: String
       },
 
-      // 成绩变化图的x轴自变量
+      // 分布图的图例
+      distributionLegend: {
+        required: true,
+        type: String
+      },
+
+      // 成绩变化图的x轴自变量数据
       variables: {
         required: true,
         type: Array
       },
-      variable: {
+      // 成绩变化图x轴自变量名称的和数据表格第一项展现的名称
+      variableName: {
         required: true,
         type: String
       },
-      variableName: {
+
+      // 成绩数据表格中的第一项的 prop 变量名
+      variable: {
         required: true,
         type: String
       },

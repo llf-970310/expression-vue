@@ -19,6 +19,10 @@
         default: '300px'
       },
 
+      legend: {
+        required: true,
+        type: String
+      },
       scorePartition: {
         required: true,
         type: Array
@@ -48,9 +52,6 @@
         this.chart = echarts.init(this.$el, 'macarons');
 
         const _this = this
-        // console.log('----------')
-        // console.log(_this.numByPartition)
-        // console.log(_this.proportionByPartition)
         this.chart.setOption({
           tooltip: {
             trigger: 'axis',
@@ -96,10 +97,11 @@
               }
             }],
           legend: {
-            data: ['区间人数', '区间比例']
+            data: [this.legend, '区间比例']
           },
           xAxis: [
             {
+              name: '区间',
               type: 'category',
               boundaryGap: true,
               data: _this.scorePartition
@@ -109,7 +111,7 @@
             {
               type: 'value',
               scale: true,
-              name: '人数',
+              name: _this.legend,
               min: 0,
               minInterval: 1,
               boundaryGap: [0.2, 0.2],
@@ -127,7 +129,7 @@
           ],
           series: [
             {
-              name: '区间人数',
+              name: _this.legend,
               type: 'bar',
               data: _this.numByPartition,
               yAxisIndex: 0,

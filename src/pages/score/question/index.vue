@@ -16,11 +16,12 @@
 
     <div v-if="searchedQuestionId">
       <!--指定查询-->
-      <score-representation :title-distribution="titleDistribution"
-                            :title-change="titleChange"
+      <score-representation :title-distribution="titleDistributionSpecific"
+                            :title-change="titleChangeSpecific"
+                            distribution-legend="区间人数"
                             :variables="dates"
                             :variable='variable'
-                            :variable-name="variableNameDate"
+                            variable-name="日期"
                             :score-data="scoreData">
       </score-representation>
 
@@ -30,11 +31,12 @@
     </div>
     <div v-else>
       <!--概况-->
-      <score-representation :title-distribution="overviewTitleDistribution"
-                            :title-change="overviewTitleChange"
+      <score-representation title-distribution="各题目平均分的成绩分布情况"
+                            title-change="各题目平均分的成绩变化情况"
+                            distribution-legend="区间题数"
                             :variables="questions"
                             :variable='variable'
-                            :variable-name="variableNameQuestionId"
+                            variable-name="题目编号"
                             :score-data="scoreData">
       </score-representation>
     </div>
@@ -67,14 +69,8 @@
         // 查看详情部分
         searchedQuestionId: '',
 
-        // 概况图表标题
-        overviewTitleDistribution: '各题目平均分的成绩分布情况',
-        overviewTitleChange: '各题目平均分的成绩变化情况',
-
         // 成绩变化图x轴自变量
         variable: '',
-        variableNameQuestionId: '题目编号',
-        variableNameDate: '日期',
 
         // 具体数据
         scoreData: [],
@@ -83,12 +79,12 @@
       }
     },
     computed: {
-      titleDistribution() {
-        return '题目' + this.searchedQuestionId + '的成绩分布情况'
+      titleDistributionSpecific() {
+        return `题目 ${this.searchedQuestionId} 的成绩分布情况`
       },
 
-      titleChange() {
-        return '题目' + this.searchedQuestionId + '的成绩变化情况'
+      titleChangeSpecific() {
+        return `题目 ${this.searchedQuestionId} 的成绩变化情况`
       }
     },
     mounted() {
