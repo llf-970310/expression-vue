@@ -19,18 +19,29 @@
         default: '300px'
       },
 
+      // 图例的数字部分（图例由数字 + 比例组成）
       legend: {
         required: true,
         type: String
       },
-      scorePartition: {
+
+      // x轴的变量数据
+      partition: {
         required: true,
         type: Array
       },
+      // x轴的名称
+      partitionName: {
+        required: true,
+        type: String
+      },
+
+      // y1轴的数字数据
       numByPartition: {
         required: true,
         type: Array
       },
+      // y2轴的比例数据
       proportionByPartition: {
         required: true,
         type: Array
@@ -42,7 +53,7 @@
       }
     },
     watch: {
-      scorePartition: function () {
+      partition: function () {
         this.initCharts()
       }
     },
@@ -97,14 +108,14 @@
               }
             }],
           legend: {
-            data: [this.legend, '区间比例']
+            data: [this.legend, '比例']
           },
           xAxis: [
             {
-              name: '区间',
+              name: _this.partitionName,
               type: 'category',
               boundaryGap: true,
-              data: _this.scorePartition
+              data: _this.partition
             },
           ],
           yAxis: [
@@ -136,7 +147,7 @@
               large: true,
             },
             {
-              name: '区间比例',
+              name: '比例',
               type: 'line',
               data: _this.proportionByPartition,
               yAxisIndex: 1,

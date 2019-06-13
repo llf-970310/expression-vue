@@ -19,11 +19,14 @@
       <score-representation :title-distribution="titleDistributionSpecific"
                             :title-change="titleChangeSpecific"
                             distribution-legend="区间人数"
+                            :distribution-variables="distributionVariables"
+                            distribution-variable-name="区间"
                             :distribution-data="distributionData"
                             :variables="dates"
                             :variable='variable'
                             variable-name="日期"
-                            :score-data="scoreData">
+                            :score-data="scoreData"
+                            @distributionPartitionSizeChanged="handleDistributionDataOrigin">
       </score-representation>
 
       <div class="d2-text-center">
@@ -35,11 +38,14 @@
       <score-representation title-distribution="各题目的平均分分布情况"
                             title-change="各题目各日的平均分变化情况"
                             distribution-legend="区间题数"
+                            :distribution-variables="distributionVariables"
+                            distribution-variable-name="区间"
                             :distribution-data="distributionData"
                             :variables="questions"
                             :variable='variable'
                             variable-name="题目编号"
-                            :score-data="scoreData">
+                            :score-data="scoreData"
+                            @distributionPartitionSizeChanged="handleDistributionDataOrigin">
       </score-representation>
     </div>
 
@@ -71,8 +77,15 @@
         // 查看详情部分
         searchedQuestionId: '',
 
-        // 成绩分布图的全部数据
-        distributionData: [],
+        // 成绩分布图的x轴变量
+        distributionVariables: [],
+        // 保存分布图需要的所有原始数据，减少网络IO
+        distributionDataOrigin: [],
+        // 分布图所需要的真实数据
+        distributionData: {
+          num: [],
+          proportion: [],
+        },
 
         // 成绩变化图x轴自变量
         variable: '',
@@ -126,7 +139,7 @@
         new Promise((resolve, reject) => {
           getScoreOfQuestions().then(res => {
             const result = res.result
-            this.distributionData = extractVariableAsList(result, 'totalScore')
+            this.distributionDataOrigin = extractVariableAsList(result, 'totalScore')
             this.scoreData = result
 
             this.variable = 'questionId'
@@ -138,7 +151,9 @@
             console.log('err: ', err)
             reject(err)
           })
-        }).then().catch()
+        }).then(() => {
+          this.handleDistributionDataOrigin()
+        }).catch()
       },
 
 
@@ -148,7 +163,7 @@
         console.log(this.searchedQuestionId)
         new Promise((resolve, reject) => {
           getScoreOfSpecoficQuestion(this.searchedQuestionId).then(res => {
-            this.distributionData = res.allResult
+            this.distributionDataOrigin = res.allResult
             this.scoreData = res.resultByDate
 
             this.variable = 'date'
@@ -160,8 +175,36 @@
             console.log('err: ', err)
             reject(err)
           })
-        }).then().catch()
+        }).then(() => {
+          this.handleDistributionDataOrigin()
+        }).catch()
       },
+
+      // 对分布图的原始数据进行处理，
+      handleDistributionDataOrigin(partitionSize = 2) {
+        let partitionNum = Math.ceil(100.0 / partitionSize);
+
+        // 初始化分区（X轴）
+        this.distributionVariables = [];
+        for (let i = 0; i < partitionNum; i++) {
+          let max = (i + 1) * partitionSize;
+          this.distributionVariables.push(`${i * partitionSize} - ${max > 100 ? 100 : max}`)
+        }
+
+        // 初始化该分区人数（Y1轴）
+        this.distributionData.num = Array(partitionNum).fill(0);
+        for (let i = 0; i < this.distributionDataOrigin.length; i++) {
+          let n = Math.floor(this.distributionDataOrigin[i] / partitionSize);
+          this.distributionData.num[n]++
+        }
+
+        // 初始化该分区人数比例（Y2轴）
+        this.distributionData.proportion = []
+        for (let i = 0; i < this.distributionData.num.length; i++) {
+          let curScoreNum = this.distributionData.num[i];
+          this.distributionData.proportion.push(curScoreNum / this.distributionDataOrigin.length)
+        }
+      }
     }
   }
 </script>

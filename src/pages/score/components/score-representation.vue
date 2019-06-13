@@ -18,9 +18,10 @@
     </el-row>
     <score-distribution v-loading="distributionLoading"
                         :legend="distributionLegend"
-                        :score-partition="scorePartition"
-                        :num-by-partition="scoreNumByPartition"
-                        :proportion-by-partition="scoreProportionByPartition"
+                        :partition="distributionVariables"
+                        :partition-name="distributionVariableName"
+                        :num-by-partition="distributionData.num"
+                        :proportion-by-partition="distributionData.proportion"
                         @ready="distributionReady"
                         @prepare="distributionPrepare">
     </score-distribution>
@@ -80,9 +81,20 @@
         required: true,
         type: String
       },
-      distributionData: {
+      // 分布图的x轴自变量数据
+      distributionVariables: {
         required: true,
         type: Array
+      },
+      // 分布图的x轴自变量名称
+      distributionVariableName: {
+        required: true,
+        type: String
+      },
+      // 分布图的数据
+      distributionData: {
+        required: true,
+        type: Object
       },
 
       // 成绩变化图的x轴自变量数据
@@ -90,7 +102,7 @@
         required: true,
         type: Array
       },
-      // 成绩变化图x轴自变量名称的和数据表格第一项展现的名称
+      // 成绩变化图x轴自变量名称和数据表格第一项展现的名称
       variableName: {
         required: true,
         type: String
@@ -116,9 +128,6 @@
 
         // 成绩分布图
         scorePartitionSize: 2,
-        scorePartition: [],
-        scoreNumByPartition: [],
-        scoreProportionByPartition: [],
 
         // 成绩变化图
         mainScore: [],
@@ -135,28 +144,7 @@
     methods: {
       // 根据总分成绩初始化分布图
       initScoreDistribution() {
-        let partitionNum = Math.ceil(100.0 / this.scorePartitionSize);
-
-        // 初始化分区（X轴）
-        this.scorePartition = [];
-        for (let i = 0; i < partitionNum; i++) {
-          let max = (i + 1) * this.scorePartitionSize;
-          this.scorePartition.push(`${i * this.scorePartitionSize} - ${max > 100 ? 100 : max}`)
-        }
-
-        // 初始化该分区人数（Y1轴）
-        this.scoreNumByPartition = Array(partitionNum).fill(0);
-        for (let i = 0; i < this.distributionData.length; i++) {
-          let n = Math.floor(this.distributionData[i] / this.scorePartitionSize);
-          this.scoreNumByPartition[n]++
-        }
-
-        // 初始化该分区人数比例（Y2轴）
-        this.scoreProportionByPartition = []
-        for (let i = 0; i < this.scoreNumByPartition.length; i++) {
-          let curScoreNum = this.scoreNumByPartition[i];
-          this.scoreProportionByPartition.push(curScoreNum / this.distributionData.length)
-        }
+        this.$emit('distributionPartitionSizeChanged', this.scorePartitionSize)
       },
 
       // 根据总分成绩初始化分布图
