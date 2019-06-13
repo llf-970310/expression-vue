@@ -180,25 +180,25 @@
         }).catch()
       },
 
-      // 对分布图的原始数据进行处理，
+      // 对分布图的原始数据进行处理
       handleDistributionDataOrigin(partitionSize = 2) {
         let partitionNum = Math.ceil(100.0 / partitionSize);
 
-        // 初始化分区（X轴）
+        // 初始化分区（x轴）
         this.distributionVariables = [];
         for (let i = 0; i < partitionNum; i++) {
           let max = (i + 1) * partitionSize;
           this.distributionVariables.push(`${i * partitionSize} - ${max > 100 ? 100 : max}`)
         }
 
-        // 初始化该分区人数（Y1轴）
+        // 初始化该分区人数（y1轴）
         this.distributionData.num = Array(partitionNum).fill(0);
         for (let i = 0; i < this.distributionDataOrigin.length; i++) {
           let n = Math.floor(this.distributionDataOrigin[i] / partitionSize);
           this.distributionData.num[n]++
         }
 
-        // 初始化该分区人数比例（Y2轴）
+        // 初始化该分区人数比例（y2轴）
         this.distributionData.proportion = []
         for (let i = 0; i < this.distributionData.num.length; i++) {
           let curScoreNum = this.distributionData.num[i];

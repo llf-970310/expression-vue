@@ -2,10 +2,10 @@
   <div>
 
     <el-row>
-      <el-col :span="12">
+      <el-col :span="18">
         <span class="title">{{ titleDistribution }}</span>
       </el-col>
-      <el-col :span="12" class="input-num">
+      <el-col v-if="distributionPartitionAdjustable" :span="6" class="input-num">
         <span>区间大小：</span>
         <el-input-number v-model="scorePartitionSize"
                          @change="initScoreDistribution"
@@ -76,6 +76,11 @@
         type: String
       },
 
+      // 分布图x轴大小可调整
+      distributionPartitionAdjustable: {
+        type: Boolean,
+        default: true,
+      },
       // 分布图的图例
       distributionLegend: {
         required: true,
@@ -126,7 +131,7 @@
         changeLoading: true,
         tableLoading: true,
 
-        // 成绩分布图
+        // 成绩分布图x轴的分区大小
         scorePartitionSize: 2,
 
         // 成绩变化图
