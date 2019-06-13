@@ -14,39 +14,41 @@
       </el-col>
     </el-row>
 
-    <div v-if="searchedUserEmail">
-      <!--指定查询-->
-      <score-representation :title-distribution="titleDistributionSpecific"
-                            :title-change="titleChangeSpecific"
-                            :distribution-partition-adjustable="false"
-                            distribution-legend="平均分数"
-                            :distribution-variables="distributionVariables"
-                            distribution-variable-name="题号"
-                            :distribution-data="distributionData"
-                            :variables="dates"
-                            :variable='variable'
-                            variable-name="日期"
-                            :score-data="scoreData">
-      </score-representation>
+    <div v-loading="dataLoading">
+      <div v-if="searchedUserEmail">
+        <!--指定查询-->
+        <score-representation :title-distribution="titleDistributionSpecific"
+                              :title-change="titleChangeSpecific"
+                              :distribution-partition-adjustable="false"
+                              distribution-legend="平均分数"
+                              :distribution-variables="distributionVariables"
+                              distribution-variable-name="题号"
+                              :distribution-data="distributionData"
+                              :variables="dates"
+                              :variable='variable'
+                              variable-name="日期"
+                              :score-data="scoreData">
+        </score-representation>
 
-      <div class="d2-text-center">
-        <el-button type="primary" @click="backToOverview" class="back">返回查看概况</el-button>
+        <div class="d2-text-center">
+          <el-button type="primary" @click="backToOverview" class="back">返回查看概况</el-button>
+        </div>
       </div>
-    </div>
-    <div v-else>
-      <!--概况-->
-      <score-representation title-distribution="各用户的平均分分布情况"
-                            title-change="各用户的平均分变化情况"
-                            distribution-legend="区间人数"
-                            :distribution-variables="distributionVariables"
-                            distribution-variable-name="区间"
-                            :distribution-data="distributionData"
-                            :variables="users"
-                            :variable='variable'
-                            variable-name="用户邮箱"
-                            :score-data="scoreData"
-                            @distributionPartitionSizeChanged="handleDistributionDataOriginByPartition">
-      </score-representation>
+      <div v-else>
+        <!--概况-->
+        <score-representation title-distribution="各用户的平均分分布情况"
+                              title-change="各用户的平均分变化情况"
+                              distribution-legend="区间人数"
+                              :distribution-variables="distributionVariables"
+                              distribution-variable-name="区间"
+                              :distribution-data="distributionData"
+                              :variables="users"
+                              :variable='variable'
+                              variable-name="用户邮箱"
+                              :score-data="scoreData"
+                              @distributionPartitionSizeChanged="handleDistributionDataOriginByPartition">
+        </score-representation>
+      </div>
     </div>
 
   </div>
@@ -75,6 +77,9 @@
             {type: 'email', message: '请输入合法的用户邮箱', trigger: 'blur'}
           ]
         },
+
+        // 数据加载动画
+        dataLoading: true,
 
         // 查看详情部分
         searchedUserEmail: '',
@@ -137,6 +142,7 @@
 
       // 未指定具体的用户邮箱，查看总体情况
       initOverview() {
+        this.dataLoading = true;
         console.log('user initOverview')
         new Promise((resolve, reject) => {
           getScoreOfUsers().then(res => {
@@ -155,11 +161,13 @@
           })
         }).then(() => {
           this.handleDistributionDataOriginByPartition()
+          this.dataLoading = false;
         }).catch()
       },
 
       // 通过用户邮箱具体查询
       initByUserEmail() {
+        this.dataLoading = true;
         console.log('initByUserEmail')
         console.log(this.searchedUserEmail)
         new Promise((resolve, reject) => {
@@ -178,6 +186,7 @@
           })
         }).then(() => {
           this.handleDistributionDataOriginByQuestionId()
+          this.dataLoading = false;
         }).catch()
       },
 

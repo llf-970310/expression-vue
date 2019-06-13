@@ -141,8 +141,10 @@
       }
     },
     watch: {
-      scoreData: function () {
+      distributionData: function () {
         this.initScoreDistribution()
+      },
+      scoreData: function () {
         this.initScoreChange()
       }
     },

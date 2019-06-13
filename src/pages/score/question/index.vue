@@ -14,39 +14,41 @@
       </el-col>
     </el-row>
 
-    <div v-if="searchedQuestionId">
-      <!--指定查询-->
-      <score-representation :title-distribution="titleDistributionSpecific"
-                            :title-change="titleChangeSpecific"
-                            distribution-legend="区间人数"
-                            :distribution-variables="distributionVariables"
-                            distribution-variable-name="区间"
-                            :distribution-data="distributionData"
-                            :variables="dates"
-                            :variable='variable'
-                            variable-name="日期"
-                            :score-data="scoreData"
-                            @distributionPartitionSizeChanged="handleDistributionDataOrigin">
-      </score-representation>
+    <div v-loading="dataLoading">
+      <div v-if="searchedQuestionId">
+        <!--指定查询-->
+        <score-representation :title-distribution="titleDistributionSpecific"
+                              :title-change="titleChangeSpecific"
+                              distribution-legend="区间人数"
+                              :distribution-variables="distributionVariables"
+                              distribution-variable-name="区间"
+                              :distribution-data="distributionData"
+                              :variables="dates"
+                              :variable='variable'
+                              variable-name="日期"
+                              :score-data="scoreData"
+                              @distributionPartitionSizeChanged="handleDistributionDataOrigin">
+        </score-representation>
 
-      <div class="d2-text-center">
-        <el-button type="primary" @click="backToOverview" class="back">返回查看概况</el-button>
+        <div class="d2-text-center">
+          <el-button type="primary" @click="backToOverview" class="back">返回查看概况</el-button>
+        </div>
       </div>
-    </div>
-    <div v-else>
-      <!--概况-->
-      <score-representation title-distribution="各题目的平均分分布情况"
-                            title-change="各题目各日的平均分变化情况"
-                            distribution-legend="区间题数"
-                            :distribution-variables="distributionVariables"
-                            distribution-variable-name="区间"
-                            :distribution-data="distributionData"
-                            :variables="questions"
-                            :variable='variable'
-                            variable-name="题目编号"
-                            :score-data="scoreData"
-                            @distributionPartitionSizeChanged="handleDistributionDataOrigin">
-      </score-representation>
+      <div v-else>
+        <!--概况-->
+        <score-representation title-distribution="各题目的平均分分布情况"
+                              title-change="各题目各日的平均分变化情况"
+                              distribution-legend="区间题数"
+                              :distribution-variables="distributionVariables"
+                              distribution-variable-name="区间"
+                              :distribution-data="distributionData"
+                              :variables="questions"
+                              :variable='variable'
+                              variable-name="题目编号"
+                              :score-data="scoreData"
+                              @distributionPartitionSizeChanged="handleDistributionDataOrigin">
+        </score-representation>
+      </div>
     </div>
 
   </div>
@@ -73,6 +75,9 @@
         questionSearchRules: {
           questionId: [{required: true, trigger: 'blur', validator: validateQuestionId}]
         },
+
+        // 数据加载动画
+        dataLoading: true,
 
         // 查看详情部分
         searchedQuestionId: '',
@@ -135,6 +140,7 @@
 
       // 未指定具体的题目编号，查看总体情况
       initOverview() {
+        this.dataLoading = true;
         console.log('question initOverview')
         new Promise((resolve, reject) => {
           getScoreOfQuestions().then(res => {
@@ -153,12 +159,14 @@
           })
         }).then(() => {
           this.handleDistributionDataOrigin()
+          this.dataLoading = false;
         }).catch()
       },
 
 
       // 通过问题编号具体查询
       initByQuestionId() {
+        this.dataLoading = true;
         console.log('initByQuestionId')
         console.log(this.searchedQuestionId)
         new Promise((resolve, reject) => {
@@ -177,6 +185,7 @@
           })
         }).then(() => {
           this.handleDistributionDataOrigin()
+          this.dataLoading = false;
         }).catch()
       },
 
