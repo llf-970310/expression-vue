@@ -57,6 +57,16 @@ export function getPrepareTestResult(test_id) {
 }
 
 /**
+ * 检查是否有未完成的考试
+ */
+export function checkUnfinishedExam() {
+  return request({
+    url: '/exam/find-left-exam',
+    method: 'post',
+  })
+}
+
+/**
  * 获取下一题
  * TODO GET
  */

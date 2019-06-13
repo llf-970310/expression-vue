@@ -34,7 +34,7 @@
           </el-image>
         </div>
       </div>
-      <p>{{audioVolume}}</p>
+<!--      <p>{{audioVolume}}</p>-->
     </div>
 
     <el-dialog

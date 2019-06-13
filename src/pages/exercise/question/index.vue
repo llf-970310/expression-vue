@@ -21,19 +21,22 @@
                         :preparation-time="questionPreparationTime"
                         :answer-time="questionAnswerTime"
                         :audio-volume="audioVolume"
-                        @next="nextQuestion"></question-one>
+                        @next="nextQuestion">
+          </question-one>
           <question-two v-if="questionType === 2"
                         :text="questionRawText"
                         :preparation-time="questionPreparationTime"
                         :answer-time="questionAnswerTime"
                         :audio-volume="audioVolume"
-                        @next="nextQuestion"></question-two>
+                        @next="nextQuestion">
+          </question-two>
           <question-three v-if="questionType === 3"
                           :text="questionRawText"
                           :preparation-time="questionPreparationTime"
                           :answer-time="questionAnswerTime"
                           :audio-volume="audioVolume"
-                          @next="nextQuestion"></question-three>
+                          @next="nextQuestion">
+          </question-three>
         </el-col>
       </el-row>
     </div>

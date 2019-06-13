@@ -14,6 +14,7 @@
                         :question-preparation-time="curQuestionPreparationTime"
                         :question-answer-time="curQuestionAnswerTime"
                         :is-last-question="isLastQuestion"
+                        :audio-volume="audioVolume"
                         @showResult="finishTest"
                         @next="nextQuestion">
         </question-frame>
@@ -38,7 +39,7 @@
   import Preparation from './question/preparation'
   import QuestionFrame from './question/index'
   import ShowResult from './result/showResult'
-  import {getPrepareTestInfo, nextQuestion} from '@/api/question'
+  import {getPrepareTestInfo, checkUnfinishedExam, nextQuestion} from '@/api/question'
   import {initAudio} from '@/libs/my-recorder'
 
   export default {
@@ -122,17 +123,49 @@
       },
 
       /**
-       * 结束预测试的准备阶段
+       * 结束预测试的准备阶段，检查是否有未完成的测试
        */
       finishPreparation() {
         this.hasFinishedPreparation = true
-        this.nextQuestion()
+
+        new Promise((resolve, reject) => {
+          checkUnfinishedExam().then(() => {
+            // 没有未完成的考试
+            console.log('dont have unfinished exam')
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+
+            if (err.code === 2) {
+              // 有考试正在进行中
+              this.$confirm('监测到您有正在进行的考试，请问是否需要继续考试?', '提示', {
+                confirmButtonText: '继续考试',
+                cancelButtonText: '重新考试',
+                type: 'error'
+              }).then(() => {
+
+                const questionData = err.data;
+                this.curQuestionIndex = parseInt(questionData['next_q_num']) - 1;
+                resolve()
+              }).catch(() => {
+                reject()
+              })
+            }
+          })
+        }).then(() => {
+          console.log('checkUnfinishedExam resolved')
+          this.nextQuestion()
+        }).catch(() => {
+          console.log('checkUnfinishedExam reset')
+          this.nextQuestion(true)
+        })
       },
 
       /**
        * 预测试通过，进行正式的试题测试
+       * @param forceNew 强制新建考试，即考试题目从 0 开始计数
        */
-      nextQuestion() {
+      nextQuestion(forceNew = false) {
         if (this.isLastQuestion) {
           // TODO 做题已结束
 //          this.hasFinishExercise = true
@@ -140,7 +173,7 @@
           // 继续做题
           this.dataLoading = true;
           new Promise((resolve, reject) => {
-            nextQuestion(this.curQuestionIndex).then(res => {
+            nextQuestion(forceNew ? 0 : this.curQuestionIndex).then(res => {
               // console.log(res)
               this.curQuestionIndex = res.questionNumber
               this.curQuestionType = res.questionType
