@@ -2,7 +2,8 @@
   <div>
 
     <el-row class="d2-text-center index">
-      <h3>音频环境测试</h3>
+      <h3 v-if="isResultShowing">音频环境测试结果</h3>
+      <h3 v-else>音频环境测试</h3>
     </el-row>
 
     <!--题目tip-->
@@ -12,16 +13,32 @@
 
     <!--题目内容-->
     <div v-else>
-      <el-row>
-        <el-col :offset="3" :span="18">
-          <question-preparation :text="questionRawText"
-                                :preparation-time="questionPreparationTime"
-                                :answer-time="questionAnswerTime"
-                                :audio-volume="audioVolume"
-                                @next="uploadAndCheckPreparation">
-          </question-preparation>
-        </el-col>
-      </el-row>
+      <!--测试结果-->
+      <div v-if="isResultShowing">
+        <el-row>
+          <el-col :offset="3" :span="18">
+            <result-preparation :analysis-result="analysisResult"
+                                :audio-url="uploadUrl"
+                                @ready="goToOfficialExercise"
+                                @fail="goToPreparationAgain">
+            </result-preparation>
+          </el-col>
+        </el-row>
+      </div>
+
+      <!--测试-->
+      <div v-else>
+        <el-row>
+          <el-col :offset="3" :span="18">
+            <question-preparation :text="questionRawText"
+                                  :preparation-time="questionPreparationTime"
+                                  :answer-time="questionAnswerTime"
+                                  :audio-volume="audioVolume"
+                                  @next="uploadAndCheckPreparation">
+            </question-preparation>
+          </el-col>
+        </el-row>
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +46,7 @@
 <script>
   import tip from './components/tip'
   import QuestionPreparation from './question-preparation/index'
+  import ResultPreparation from '../result/preparation/index'
 
   import {getPrepareTestUploadPath, uploadPrepareTestSuccess, getPrepareTestResult} from '@/api/question'
   import {uploadRecording} from '@/libs/my-recorder'
@@ -38,6 +56,7 @@
     components: {
       tip,
       'question-preparation': QuestionPreparation,
+      'result-preparation': ResultPreparation,
     },
     props: {
       // 预测试的问题提示
@@ -62,12 +81,19 @@
         // 是否显示 tip
         isTipShowing: true,
 
+        // 预测试之后的结果展示
+        isResultShowing: false,
+        analysisResult: {
+          canRcg: false,
+          qualityIsOk: false,
+          msg: '',
+        },
+
         // 录音上传路径
         uploadLocation: '',
         uploadUrl: '',
 
-        audio_context: '',
-        recorder: '',
+        // 重试相关的参数
         retryCount: 0,
         maxRetry: 100,
 
@@ -139,7 +165,7 @@
       },
 
       /**
-       *
+       * 根据预测试的结果判断是否合格
        */
       checkPreparation() {
         // 获取上传路径
@@ -147,35 +173,24 @@
           getPrepareTestResult(this.preparationId).then(res => {
             console.log(res)
             // 分析结果，判断是否需要重做
-            this.isReTrying = false
+            this.isReTrying = false;
+            this.isResultShowing = true;
+            this.analysisResult.canRcg = res['canRcg'];
+            this.analysisResult.qualityIsOk = res['qualityIsOk'];
 
-            if (res['canRcg']) {
+            if (this.analysisResult.canRcg) {
               // 能识别
-              let qualityIsOk = res['qualityIsOk']
-              if (qualityIsOk) {
+              if (this.analysisResult.qualityIsOk) {
                 // 声音预测试通过
+                this.analysisResult.msg = '音频环境测试结束，您的环境质量符合要求。';
                 resolve()
               } else {
                 // 声音预测试不通过，重新测试
-                this.$message({
-                  message: '您的声音质量不高，这可能由环境或麦克风记录导致，请进行调整噢～',
-                  type: 'error',
-                  duration: 10 * 1000,
-                  center: true,
-                  showClose: true
-                });
-                this.$emit('retest')
+                this.analysisResult.msg = '您的声音质量不高，这可能由环境或麦克风记录导致，请进行调整噢～'
               }
             } else {
               // 不能识别，重新测试
-              this.$message({
-                message: '您的声音暂不能识别，请尽可能说清楚，并保持环境安静噢～',
-                type: 'error',
-                duration: 10 * 1000,
-                center: true,
-                showClose: true
-              });
-              this.$emit('retest')
+              this.analysisResult.msg = '您的声音暂不能识别，请尽可能说清楚，并保持环境安静噢～'
             }
           }).catch(err => {
             console.log('err: ' + err)
@@ -201,7 +216,6 @@
           })
         }).then(() => {
             this.isReTrying = false
-            this.$emit('prepared')
           }
         ).catch()
       },
@@ -209,6 +223,16 @@
       reTry(func, arg) {
         this.retryCount++;
         setTimeout(() => func(arg), 500);
+      },
+
+      // 正式测试
+      goToOfficialExercise() {
+        this.$emit('prepared')
+      },
+
+      // 重新测试
+      goToPreparationAgain() {
+        this.$emit('retest')
       },
     }
   }

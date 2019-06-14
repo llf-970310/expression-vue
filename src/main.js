@@ -9,6 +9,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
+import VuePlyr from 'vue-plyr'
+import 'vue-plyr/dist/vue-plyr.css'
+Vue.use(VuePlyr)
+
 // store
 import store from '@/store/index'
 // 多国语

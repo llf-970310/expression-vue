@@ -91,8 +91,7 @@
         uploadLocation: '',
         uploadUrl: '',
 
-        audio_context: '',
-        recorder: '',
+        // 重试相关的参数
         retryCount: 0,
         maxRetry: 20
       }
