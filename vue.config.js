@@ -1,4 +1,5 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin');
 
 // 拼接路径
 const resolve = dir => require('path').join(__dirname, dir)
@@ -81,7 +82,8 @@ module.exports = {
                   pure_funcs: ['console.log']
                 }
               }
-            })
+            }),
+            new TerserPlugin()
           ])
       })
     // markdown
