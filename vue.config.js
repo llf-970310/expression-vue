@@ -70,7 +70,16 @@ module.exports = {
       .when(process.env.NODE_ENV !== 'development', config => {
         config.optimization
           .minimizer([
-            new TerserPlugin()
+            new TerserPlugin({
+              terserOptions: {
+                compress: {
+                  drop_console: true,
+                  drop_debugger: true,
+                  pure_funcs: ['console.log'],
+                  warnings: false,
+                },
+              }
+            })
           ])
       })
     // markdown
