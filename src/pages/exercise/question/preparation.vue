@@ -18,7 +18,7 @@
         <el-row>
           <el-col :offset="3" :span="18">
             <result-preparation :analysis-result="analysisResult"
-                                :audio-url="uploadUrl"
+                                :audio-url="audioData"
                                 @ready="goToOfficialExercise"
                                 @fail="goToPreparationAgain">
             </result-preparation>
@@ -93,6 +93,9 @@
         uploadLocation: '',
         uploadUrl: '',
 
+        // 录音音频数据
+        audioData: '',
+
         // 重试相关的参数
         retryCount: 0,
         maxRetry: 100,
@@ -136,12 +139,13 @@
        */
       uploadCurRecording() {
         const _this = this
-        uploadRecording(_this.uploadLocation, _this.uploadUrl, function () {
+        uploadRecording(_this.uploadLocation, _this.uploadUrl, function (audioData) {
           new Promise((resolve, reject) => {
             //上传成功调用，告知服务器进行分析
             uploadPrepareTestSuccess(_this.preparationId).then(res => {
-              console.log('SUCCESS')
-              _this.isReTrying = false
+              console.log('SUCCESS');
+              _this.isReTrying = false;
+              _this.audioData = audioData;
               resolve();
             }).catch(err => {
               console.log('FAIL')
@@ -182,7 +186,7 @@
               // 能识别
               if (this.analysisResult.qualityIsOk) {
                 // 声音预测试通过
-                this.analysisResult.msg = '音频环境测试结束，您的环境质量符合要求。';
+                this.analysisResult.msg = '音频环境测试结束，您的环境符合要求。';
                 resolve()
               } else {
                 // 声音预测试不通过，重新测试

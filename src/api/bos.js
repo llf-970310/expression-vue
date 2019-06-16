@@ -17,7 +17,8 @@ let client = new BosClient(config);
  * @param blob 音频文件
  * @param onUploaded 上传成功的回调函数
  */
-export function uploadSoundToBOS(path, blob, onUploaded) {
+export function uploadSoundToBOS(path, blob, onUploaded = function () {
+}) {
   // console.log(blob)
 
   listBOSObject('before')
@@ -43,6 +44,7 @@ export function uploadSoundToBOS(path, blob, onUploaded) {
   };
 
   blobToDataURL(blob, function (dataUrl) {
+    let audioDataBase64 = dataUrl;
     // console.log('original dataUrl');
     // console.log(dataUrl);
     // downloadCurrentWav(dataUrl)
@@ -58,7 +60,7 @@ export function uploadSoundToBOS(path, blob, onUploaded) {
       listBOSObject('after')
 
       // 成功回调
-      onUploaded()
+      onUploaded(audioDataBase64)
     }).catch(err => {
       console.log(err)
     });

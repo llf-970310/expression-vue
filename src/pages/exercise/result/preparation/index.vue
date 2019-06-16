@@ -1,11 +1,15 @@
 <template>
   <div>
     <!--播放录音音频-->
-    <vue-plyr>
-      <audio>
-        <source :src="audioUrl" type="audio/wav"/>
-      </audio>
-    </vue-plyr>
+    <el-row type="flex" justify="center">
+      <el-col :span="12">
+        <vue-plyr>
+          <audio>
+            <source :src="audioUrl" type="audio/wav"/>
+          </audio>
+        </vue-plyr>
+      </el-col>
+    </el-row>
 
     <el-row type="flex" justify="space-around">
       <el-col :span="8">
