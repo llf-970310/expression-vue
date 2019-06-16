@@ -1,4 +1,3 @@
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin');
 
 // 拼接路径
@@ -62,7 +61,7 @@ module.exports = {
     config.resolve
       .symlinks(true)
     config
-      // 开发环境
+    // 开发环境
       .when(process.env.NODE_ENV === 'development',
         // sourcemap不包含列信息
         config => config.devtool('cheap-source-map')
@@ -71,19 +70,30 @@ module.exports = {
       .when(process.env.NODE_ENV !== 'development', config => {
         config.optimization
           .minimizer([
-            new UglifyJsPlugin({
-              uglifyOptions: {
-                // 移除 console
-                // 其它优化选项 https://segmentfault.com/a/1190000010874406
-                compress: {
-                  warnings: false,
-                  drop_console: true,
-                  drop_debugger: true,
-                  pure_funcs: ['console.log']
+            new TerserPlugin({
+              minify: (file, sourceMap) => {
+                // https://github.com/mishoo/UglifyJS2#minify-options
+                const uglifyJsOptions = {
+                  // 移除 console
+                  // 其它优化选项 https://segmentfault.com/a/1190000010874406
+                  compress: {
+                    warnings: false,
+                    drop_console: true,
+                    drop_debugger: true,
+                    pure_funcs: ['console.log']
+                  }
+                };
+
+                if (sourceMap) {
+                  uglifyJsOptions.sourceMap = {
+                    content: sourceMap,
+                  };
                 }
-              }
-            }),
-            new TerserPlugin()
+
+                return require('uglify-js').minify(file, uglifyJsOptions);
+              },
+
+            })
           ])
       })
     // markdown
