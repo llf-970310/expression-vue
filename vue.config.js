@@ -68,10 +68,7 @@ module.exports = {
       )
       // 非开发环境
       .when(process.env.NODE_ENV !== 'development', config => {
-        config.optimization
-          .minimizer([
-            new TerserPlugin()
-          ])
+
       })
     // markdown
     config.module
