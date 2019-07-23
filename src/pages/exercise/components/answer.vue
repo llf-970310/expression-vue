@@ -53,7 +53,7 @@
 <script>
   import read from './read'
   import MyCountDown from './count-down'
-  import {checkRecorderReady, startRecording, endRecording} from '@/libs/my-recorder'
+  import { checkRecorderReady, startRecording, endRecording } from '@/libs/my-recorder'
 
   export default {
     name: "answer",

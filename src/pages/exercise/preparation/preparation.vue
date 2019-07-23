@@ -48,8 +48,8 @@
   import QuestionPreparation from './question-preparation/index'
   import ResultPreparation from './result'
 
-  import {getPrepareTestUploadPath, uploadPrepareTestSuccess, getPrepareTestResult} from '@/api/question'
-  import {uploadRecording} from '@/libs/my-recorder'
+  import { getPrepareTestUploadPath, uploadPrepareTestSuccess, getPrepareTestResult } from '@/api/question'
+  import { uploadRecording } from '@/libs/my-recorder'
 
   export default {
     name: "preparation",

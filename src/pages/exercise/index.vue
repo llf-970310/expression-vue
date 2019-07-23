@@ -38,8 +38,8 @@
   import Preparation from './preparation/index'
   import QuestionFrame from './question/index'
   import ShowResult from './question/showResult'
-  import {getPrepareTestInfo, checkUnfinishedExam, nextQuestion} from '@/api/question'
-  import {initAudio} from '@/libs/my-recorder'
+  import { getPrepareTestInfo, checkUnfinishedExam, nextQuestion } from '@/api/question'
+  import { initAudio } from '@/libs/my-recorder'
 
   export default {
     name: "index",

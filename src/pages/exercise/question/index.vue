@@ -49,8 +49,8 @@
   import QuestionTwo from './question-two/index'
   import QuestionThree from './question-three/index'
 
-  import {getUploadPath, uploadSuccess} from '@/api/question'
-  import {uploadRecording} from '@/libs/my-recorder'
+  import { getUploadPath, uploadSuccess } from '@/api/question'
+  import { uploadRecording } from '@/libs/my-recorder'
 
   export default {
     name: "question-frame",

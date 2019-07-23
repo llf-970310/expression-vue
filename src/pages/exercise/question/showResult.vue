@@ -15,7 +15,7 @@
     import echarts from 'echarts';
     import tooltip from 'echarts/lib/component/tooltip'
     import toolbox from 'echarts/lib/component/toolbox'
-    import {getResult} from '@api/question'
+    import { getResult } from '@api/question'
     export default {
         components: {},
         props: {

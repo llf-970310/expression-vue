@@ -19,7 +19,7 @@
 <script>
   import Preparation from './preparation'
   import Notice from './notice'
-  import {getPrepareTestInfo} from '@/api/question'
+  import { getPrepareTestInfo } from '@/api/question'
 
   export default {
     name: "preparation-index",
