@@ -68,7 +68,19 @@ module.exports = {
       )
       // 非开发环境
       .when(process.env.NODE_ENV !== 'development', config => {
-
+        config.optimization
+          .minimizer([
+            new TerserPlugin({
+              terserOptions: {
+                compress: {
+                  drop_console: true,
+                  drop_debugger: true,
+                  pure_funcs: ['console.log'],
+                  warnings: false,
+                },
+              }
+            })
+          ])
       })
     // markdown
     config.module
