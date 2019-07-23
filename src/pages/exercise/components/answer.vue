@@ -83,7 +83,7 @@
     },
     computed: {
       audioVolumeEmptyHeight: function () {
-        let audioFullHeight = this.audioVolume > 100 ? 100 : this.audioVolume
+        let audioFullHeight = this.audioVolume > 100 ? 100 : this.audioVolume;
         return (100 - audioFullHeight) + 'px'
       }
     },

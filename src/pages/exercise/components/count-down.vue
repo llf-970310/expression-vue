@@ -31,7 +31,7 @@
        * 倒计时结束通知父组件
        */
       handleEnd() {
-        console.log('countdown end')
+        console.log('countdown end');
         this.$emit('end')
       },
 
