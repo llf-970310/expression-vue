@@ -19,8 +19,8 @@
           <el-col :offset="3" :span="18">
             <result-preparation :analysis-result="analysisResult"
                                 :audio-url="audioData"
-                                @ready="goToOfficialExercise"
-                                @fail="goToPreparationAgain">
+                                @ready="$emit('prepared')"
+                                @fail="$emit('retest')">
             </result-preparation>
           </el-col>
         </el-row>
@@ -44,9 +44,9 @@
 </template>
 
 <script>
-  import tip from './components/tip'
+  import tip from '../components/tip'
   import QuestionPreparation from './question-preparation/index'
-  import ResultPreparation from '../result/preparation/index'
+  import ResultPreparation from './result'
 
   import {getPrepareTestUploadPath, uploadPrepareTestSuccess, getPrepareTestResult} from '@/api/question'
   import {uploadRecording} from '@/libs/my-recorder'
@@ -227,16 +227,6 @@
       reTry(func, arg) {
         this.retryCount++;
         setTimeout(() => func(arg), 500);
-      },
-
-      // 正式测试
-      goToOfficialExercise() {
-        this.$emit('prepared')
-      },
-
-      // 重新测试
-      goToPreparationAgain() {
-        this.$emit('retest')
       },
     }
   }

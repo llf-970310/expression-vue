@@ -28,7 +28,6 @@
                    :question-preparation-time="curQuestionPreparationTime"
                    :question-answer-time="curQuestionAnswerTime"
                    :audio-volume="audioVolume"
-                   @retest="preparation"
                    @prepared="finishPreparation">
       </preparation>
     </div>
@@ -36,9 +35,9 @@
 </template>
 
 <script>
-  import Preparation from './question/preparation'
+  import Preparation from './preparation/index'
   import QuestionFrame from './question/index'
-  import ShowResult from './result/showResult'
+  import ShowResult from './question/showResult'
   import {getPrepareTestInfo, checkUnfinishedExam, nextQuestion} from '@/api/question'
   import {initAudio} from '@/libs/my-recorder'
 
@@ -93,35 +92,8 @@
         avg /= data.length;
         _this.audioVolume = avg * 800;
       });
-
-      this.preparation()
     },
     methods: {
-      /**
-       * 新建一次预测试
-       */
-      preparation() {
-        this.dataLoading = true;
-        new Promise((resolve, reject) => {
-          getPrepareTestInfo().then(res => {
-            console.log(res)
-            this.preparationId = res['test_id']
-            this.curQuestionRawText = res.questionContent
-            this.curQuestionTip.detail = res.questionInfo.detail
-            this.curQuestionTip.tip = res.questionInfo.tip
-            this.curQuestionPreparationTime = res.readLimitTime
-            this.curQuestionAnswerTime = res.questionLimitTime
-
-            resolve()
-          }).catch(err => {
-            console.log('err: ', err)
-            reject(err)
-          })
-        }).then(() => {
-          this.dataLoading = false;
-        }).catch()
-      },
-
       /**
        * 结束预测试的准备阶段，检查是否有未完成的测试
        */

@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import answer from '../components/answer'
+  import answer from '../../components/answer'
 
   export default {
     name: "question-three",

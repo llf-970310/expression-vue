@@ -44,7 +44,7 @@
 </template>
 
 <script>
-  import tip from './components/tip'
+  import tip from '../components/tip'
   import QuestionOne from './question-one/index'
   import QuestionTwo from './question-two/index'
   import QuestionThree from './question-three/index'
