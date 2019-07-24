@@ -98,7 +98,7 @@
        * 结束预测试的准备阶段，检查是否有未完成的测试
        */
       finishPreparation() {
-        // this.hasFinishedPreparation = true
+        this.hasFinishedPreparation = true;
 
         new Promise((resolve, reject) => {
           checkUnfinishedExam().then(() => {
