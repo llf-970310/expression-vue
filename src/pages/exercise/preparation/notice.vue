@@ -46,9 +46,9 @@
       <el-row>
         您的电脑可以运行chrome浏览器，并且没有禁用 JavaScript 功能。如果您不了解是否禁用了 JavaScript 功能，您可以在
         Chrome 浏览器地址栏输入并访问 "
-        <el-button type="text" @click="checkJS">
+        <strong>
           chrome://settings/content/javascript
-        </el-button>
+        </strong>
         "，
         启用 JavaScript 时您将看到如下状态：
         <el-image
