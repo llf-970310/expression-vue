@@ -178,11 +178,26 @@
                                 name: this.registerForm.name,
                                 code: this.registerForm.code
                             }
+                        }).then(() => {
+                            // 重定向对象不存在则返回顶层路径
+                            this.$router.replace(this.$route.query.redirect || '/')
+
+                            this.$message({
+                                message: '注册成功！已为您自动登录～',
+                                type: 'success',
+                                center: true,
+                                showClose: true,
+                                duration: 5000
+                            });
+                        }).catch(err => {
+                            this.$message({
+                                message: err.msg,
+                                type: 'error',
+                                center: true,
+                                showClose: true,
+                                duration: 5000
+                            });
                         })
-                            .then(() => {
-                                // 重定向对象不存在则返回顶层路径
-                                this.$router.replace(this.$route.query.redirect || '/')
-                            })
                     } else {
                         // 登录表单校验失败
                         this.$message.error('表单校验失败')

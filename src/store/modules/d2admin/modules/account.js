@@ -180,7 +180,7 @@ export default {
                         //注册完了之后干嘛……和登录完了差不多吧
                         util.cookies.set('uuid', response.uuid)
                         await dispatch('d2admin/user/set', {
-                            name: response.name``
+                            name: response.name
                         }, {root: true})
                         await dispatch('load')
                         resolve()
