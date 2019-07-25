@@ -34,6 +34,9 @@
           <el-form-item label="测试次数" prop="remainingExamNum">
             <el-input-number v-model="formData.remainingExamNum" :min="1"></el-input-number>
           </el-form-item>
+          <el-form-item label="邀请码个数" prop="codeNum">
+            <el-input-number v-model="formData.codeNum" :min="1"></el-input-number>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">创建邀请码</el-button>
             <el-button @click="resetForm">重置</el-button>
@@ -43,6 +46,7 @@
       <el-col :span="16">
         <el-table v-loading="allInvitationsLoading"
                   :data="allInvitations"
+                  :default-sort="{prop: 'create_time', order: 'descending'}"
                   ref="invitationTable"
                   border stripe highlight-current-row style="width: 100%">
           <el-table-column
@@ -54,6 +58,11 @@
               prop="creator"
               label="创建者"
               width="80">
+          </el-table-column>
+          <el-table-column
+              prop="create_time"
+              label="创建时间"
+              width="155">
           </el-table-column>
           <el-table-column
               label="有效时间"
@@ -71,7 +80,7 @@
           <el-table-column
               prop="remaining_exam_num"
               label="测试次数"
-              width="80">
+              width="60">
           </el-table-column>
           <el-table-column
               prop="activate_users"
@@ -80,7 +89,7 @@
           <el-table-column
               prop="available_times"
               label="剩余可用人数"
-              width="105">
+              width="60">
           </el-table-column>
         </el-table>
       </el-col>
@@ -102,6 +111,7 @@
           vipStartTime: '',
           vipEndTime: '',
           remainingExamNum: 3,
+          codeNum: 1,
           availableTimes: 1
         },
         startTimeOptions: {
@@ -174,17 +184,7 @@
       }
     },
     mounted() {
-      new Promise((resolve, reject) => {
-        getAllInvitations().then(res => {
-          this.allInvitations = res.result
-          resolve()
-        }).catch(err => {
-          console.log('err: ', err)
-          reject(err)
-        })
-      }).then(() => {
-        this.allInvitationsLoading = false
-      }).catch()
+      this.resetForm()
     },
     methods: {
       onSubmit() {
@@ -197,10 +197,12 @@
               vipStartTime: start,
               vipEndTime: end,
               remainingExamNum: this.formData.remainingExamNum,
-              availableTimes: this.formData.availableTimes
+              availableTimes: this.formData.availableTimes,
+              codeNum: this.formData.codeNum
             }).then((response) => {
               // 成功之后做的事情
-              this.$alert('邀请码：' + response['invitationCode'], '创建成功', {
+              this.$alert('邀请码：</br>' + this.addLine(response['invitationCode']), '创建成功', {
+                dangerouslyUseHTMLString: true,
                 confirmButtonText: '点击复制到粘贴板',
                 callback: action => {
                   if (action === 'confirm') {
@@ -226,7 +228,26 @@
         })
       },
       resetForm() {
-        this.$refs['invitationForm'].resetFields()
+        new Promise((resolve, reject) => {
+          getAllInvitations().then(res => {
+            this.allInvitations = res.result
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        }).then(() => {
+          this.allInvitationsLoading = false
+        }).catch()
+      },
+      addLine(arr) {
+        let str = '';
+        for (let i = 0; i < arr.length; i++) {
+          str += arr[i];
+          str += '</br>';
+        }
+        console.log(str);
+        return str
       }
     }
   }
