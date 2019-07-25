@@ -104,8 +104,8 @@
                 time: dayjs().format('HH:mm:ss'),
                 // 表单
                 formLogin: {
-                    username: 'chudongyu@site.com',
-                    password: '1234',
+                    username: '',
+                    password: '',
                     // code: ''
                 },
                 // 校验
