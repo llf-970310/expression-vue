@@ -4,7 +4,7 @@
     <template slot="header">邀请管理</template>
     <el-row>
       <el-col :span="8">
-        <el-form ref="invitationForm" :model="formData" label-width="80px" :rules="rules">
+        <el-form ref="invitationForm" :model="formData" label-width="100px" :rules="rules">
           <el-form-item label="开始时间" prop="vipStartTime">
             <el-date-picker
                 :editable="false"
