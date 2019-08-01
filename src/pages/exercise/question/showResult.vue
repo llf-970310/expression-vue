@@ -62,32 +62,43 @@
         },
         methods: {
             queryResult() {
-              if (this.counter * this.queryTime > this.limitTime) {
-                  this.errorMessage("timeout");
-               return;
-              }
-              new Promise((resolve, reject) => {
-                  getResult().then(res => {
-                      this.counter++;
-                      let status = res.status;
-                      if(status === "Success") {
-                          clearInterval(this.timer);
-                          this.loading.close();
-                          this.chart = res.data;
-                          this.totalScore = res.totalScore;
-                          this.initChart();
-                      }else {
-                          this.counter++;
-                          setTimeout(this.queryResult(),this.queryTime);
-                      }
-                      resolve();
-                  }).catch( err => {
-                      this.errorMessage(err);
-                      reject()
-                  });
-              }).then().catch(err => {
-                  console.log(err)
-              });
+                new Promise((resolve, reject) => {
+                    getResult().then(res => {
+                        let status = res.status;
+                        if (status === "Success") {
+                            clearInterval(this.timer);
+                            this.loading.close();
+                            this.chart = res.data;
+                            this.totalScore = res.totalScore;
+                            this.initChart();
+                        } else {
+                            // 不可能的情况
+                            this.$message({
+                                message: '系统出了点状况，请联系管理员解决噢～',
+                                type: 'error',
+                                duration: 5 * 1000,
+                                center: true,
+                                showClose: true
+                            })
+                        }
+                        resolve();
+                    }).catch(err => {
+                        console.log('err: ' + err)
+
+                        if (err.code === 5104) {
+                            if (this.counter * this.queryTime <= this.limitTime) {
+                                this.reTry(() => this.queryResult())
+                            } else {
+                                console.log('Try queryResult() max times! But the task is still waiting')
+                            }
+                        } else {
+                            this.errorMessage(err);
+                        }
+                        reject(err);
+                    });
+                }).then().catch(err => {
+                    console.log(err)
+                });
             },
 
             initChart() {
@@ -198,7 +209,12 @@
             },
             logout() {
                 window.location.href = '/';
-            }
+            },
+
+            reTry(func, arg) {
+                this.counter++;
+                setTimeout(() => func(arg), this.queryTime);
+            },
         }
     }
 </script>
