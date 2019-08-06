@@ -69,39 +69,38 @@
       <el-table v-if="historyScoreList"
                 :data="historyScoreList"
                 empty-text="该账号没有历史测试记录"
-                height="250"
+                height="400"
                 border
                 style="width: 100%">
         <el-table-column
             prop="test_start_time"
             label="开始时间"
-            width="180">
+            width="95">
         </el-table-column>
         <el-table-column
             prop="paper_type"
             label="类型"
-            width="180">
+            width="50">
         </el-table-column>
         <el-table-column
             prop="current_q_num"
             label="当前题号"
-            width="180">
+            width="50">
         </el-table-column>
         <el-table-column
             prop="total_score"
             label="总得分"
-            width="180">
+            width="70">
         </el-table-column>
         <el-table-column
-            prop="questions"
-            label="题目"
-            width="180">
+            prop="question"
+            label="题目">
         </el-table-column>
-        <el-table-column
-            prop="all_analysed"
-            label="是否分析"
-            width="180">
-        </el-table-column>
+<!--        <el-table-column-->
+<!--            prop="all_analysed"-->
+<!--            label="是否分析"-->
+<!--            width="180">-->
+<!--        </el-table-column>-->
       </el-table>
     </div>
   </d2-container>
@@ -232,11 +231,7 @@
         new Promise((resolve, reject) => {
           showScore().then(res => {
             console.log(res);
-            if (res.data) {
-              this.historyScoreList = res;
-            } else {
-
-            }
+            this.historyScoreList = res.scores;
             resolve();
           }).catch(err => {
             console.log('err: ', err);
