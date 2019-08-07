@@ -167,8 +167,8 @@
             }).catch(err => {
               console.log(err)
 
-              // 微信已绑定
-              if (err.code === 4040) {
+              if (err.code === 4301 || err.code === 4040) {
+                // 账号密码错误 或 微信已绑定
                 this.$message({
                   message: err.msg,
                   type: 'error',
