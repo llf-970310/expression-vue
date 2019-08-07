@@ -75,32 +75,52 @@
         <el-table-column
             prop="test_start_time"
             label="开始时间"
-            width="95">
+            width="155">
+        </el-table-column>
+        <!--        <el-table-column-->
+        <!--            prop="paper_type"-->
+        <!--            label="类型"-->
+        <!--            width="50">-->
+        <!--        </el-table-column>-->
+        <el-table-column
+            prop="score_info.音质"
+            label="音质"
+            width="60">
         </el-table-column>
         <el-table-column
-            prop="paper_type"
-            label="类型"
-            width="50">
+            prop="score_info.结构"
+            label="结构"
+            width="60">
         </el-table-column>
         <el-table-column
-            prop="current_q_num"
-            label="当前题号"
-            width="50">
+            prop="score_info.逻辑"
+            label="逻辑"
+            width="60">
         </el-table-column>
         <el-table-column
-            prop="total_score"
+            prop="score_info.细节"
+            label="细节"
+            width="60">
+        </el-table-column>
+        <el-table-column
+            prop="score_info.主旨"
+            label="主旨"
+            width="60">
+        </el-table-column>
+        <el-table-column
+            prop="score_info.total"
             label="总得分"
             width="70">
         </el-table-column>
         <el-table-column
-            prop="question"
-            label="题目">
+            prop="all_analysed"
+            label="是否分析"
+            width="100">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.all_analysed" type="success">已分析</el-tag>
+            <el-tag v-else type="info">未分析</el-tag>
+          </template>
         </el-table-column>
-<!--        <el-table-column-->
-<!--            prop="all_analysed"-->
-<!--            label="是否分析"-->
-<!--            width="180">-->
-<!--        </el-table-column>-->
       </el-table>
     </div>
   </d2-container>
@@ -231,7 +251,8 @@
         new Promise((resolve, reject) => {
           showScore().then(res => {
             console.log(res);
-            this.historyScoreList = res.scores;
+            this.historyScoreList = res.history;
+            console.log(this.historyScoreList)
             resolve();
           }).catch(err => {
             console.log('err: ', err);
