@@ -31,7 +31,6 @@ export default {
                         resolve()
                     })
                     .catch(err => {
-                        console.log('err: ', err)
                         reject(err)
                     })
             })
@@ -69,7 +68,6 @@ export default {
                         }
                     })
                     .catch(err => {
-                        console.log('err: ', err);
                         reject(err)
                     })
             })
@@ -100,7 +98,6 @@ export default {
                         resolve()
                     })
                     .catch(err => {
-                        console.log('err: ', err);
                         reject(err)
                     })
             })

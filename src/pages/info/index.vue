@@ -112,15 +112,15 @@
             label="总得分"
             width="70">
         </el-table-column>
-<!--        <el-table-column-->
-<!--            prop="all_analysed"-->
-<!--            label="是否分析"-->
-<!--            width="100">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-tag v-if="scope.row.all_analysed" type="success">已分析</el-tag>-->
-<!--            <el-tag v-else type="info">未分析</el-tag>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
+        <!--        <el-table-column-->
+        <!--            prop="all_analysed"-->
+        <!--            label="是否分析"-->
+        <!--            width="100">-->
+        <!--          <template slot-scope="scope">-->
+        <!--            <el-tag v-if="scope.row.all_analysed" type="success">已分析</el-tag>-->
+        <!--            <el-tag v-else type="info">未分析</el-tag>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
       </el-table>
 
       <el-row>
@@ -301,7 +301,7 @@
 
       //解除微信绑定
       releaseBind() {
-        if (this.form.wx_id == '') {
+        if (this.form.wx_id === '') {
           this.$message({
             showClose: true,
             message: '您尚未绑定微信，无需解绑!',
@@ -320,8 +320,11 @@
                   message: '解绑成功!',
                   type: 'success'
                 });
+                resolve()
               }).catch()
-            }).then().catch();
+            }).then(() => {
+              this.form.wx_id = ''
+            }).catch();
           }).catch(() => {
           });
         }
