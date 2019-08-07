@@ -69,7 +69,7 @@
       <el-table v-if="historyScoreList"
                 :data="historyScoreList"
                 empty-text="该账号没有历史测试记录"
-                height="400"
+                height="300"
                 border
                 style="width: 100%">
         <el-table-column
@@ -112,16 +112,22 @@
             label="总得分"
             width="70">
         </el-table-column>
-        <el-table-column
-            prop="all_analysed"
-            label="是否分析"
-            width="100">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.all_analysed" type="success">已分析</el-tag>
-            <el-tag v-else type="info">未分析</el-tag>
-          </template>
-        </el-table-column>
+<!--        <el-table-column-->
+<!--            prop="all_analysed"-->
+<!--            label="是否分析"-->
+<!--            width="100">-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-tag v-if="scope.row.all_analysed" type="success">已分析</el-tag>-->
+<!--            <el-tag v-else type="info">未分析</el-tag>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
       </el-table>
+
+      <el-row>
+        <p>
+          历史成绩的显示可能会有所延迟，如果暂时没有，请三小时后再来查看哦～
+        </p>
+      </el-row>
     </div>
   </d2-container>
 </template>
