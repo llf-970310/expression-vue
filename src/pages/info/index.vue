@@ -42,7 +42,7 @@
               <el-input v-model="form.vip_start_time" readonly style="width: 100%"></el-input>
             </el-form-item>
           </el-col>
-          <el-col class="line" :span="2">&nbsp;&nbsp;&nbsp;——</el-col>
+          <el-col class="line" :span="2">&nbsp;——&nbsp;</el-col>
           <el-col :span="11">
             <el-form-item>
               <el-input v-model="form.vip_end_time" readonly style="width: 100%"></el-input>
@@ -57,7 +57,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="save">保存</el-button>
-          <el-button>取消</el-button>
+          <!--          <el-button>取消</el-button>-->
         </el-form-item>
       </el-form>
     </div>
@@ -235,6 +235,8 @@
               this.form.name = res.name;
               this.form.email = res.email;
               this.form.password = res.password;
+              this.form.pass = '';
+              this.form.checkPass = '';
               this.form.register_time = res.register_time;
               this.form.remaining_exam_num = res.remaining_exam_num;
               this.form.last_login_time = res.last_login_time;
@@ -361,7 +363,20 @@
                 password: this.pass,
                 name: this.form.name
               }).then(res => {
-                window.location.reload();
+                // window.location.reload();
+                this.isModifyName = false;
+                this.isModifyPass = false;
+                this.nameText = '修改';
+                this.passText = '修改';
+                this.initInfo();
+
+                this.$message({
+                  message: '已成功保存！',
+                  type: 'success',
+                  center: true,
+                  showClose: true,
+                  duration: 5000
+                });
               }).catch();
             }).then().catch()
           }

@@ -16,7 +16,7 @@ export function getInfo () {
  *  修改用户信息
  */
 export function modifyInfo (data) {
-    console.log(data)
+    // console.log(data)
     return request({
         url: '/auth/update',
         method: 'post',
