@@ -32,7 +32,7 @@
               <el-form ref="loginForm" label-position="top" :rules="rules" :model="formLogin"
                        size="default">
                 <el-form-item prop="username">
-                  <el-input type="text" v-model="formLogin.username" placeholder="邮箱">
+                  <el-input type="text" v-model="formLogin.username" placeholder="手机/邮箱">
                     <i slot="prepend" class="fa fa-user-circle-o"></i>
                   </el-input>
                 </el-form-item>
@@ -95,14 +95,14 @@
         time: dayjs().format('HH:mm:ss'),
         // 表单
         formLogin: {
-          username: 'ccc@site.com',
-          password: '1234',
+          username: '',
+          password: '',
           // code: ''
         },
         // 校验
         rules: {
           username: [
-            {required: true, message: '请输入用户名', trigger: 'blur'}
+            {required: true, message: '请输入手机号或邮箱', trigger: 'blur'}
           ],
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'}
