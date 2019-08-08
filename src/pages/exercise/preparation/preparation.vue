@@ -125,6 +125,18 @@
             resolve()
           }).catch(err => {
             console.log('err: ', err)
+
+            if (err.code === 4002) {
+              // test_id 错误，不应该出现的情况
+              this.$message({
+                message: '系统出了点状况，请联系管理员解决噢～',
+                type: 'error',
+                duration: 5 * 1000,
+                center: true,
+                showClose: true
+              })
+            }
+
             reject(err)
           })
         }).then(() => {
@@ -143,26 +155,25 @@
           new Promise((resolve, reject) => {
             //上传成功调用，告知服务器进行分析
             uploadPrepareTestSuccess(_this.preparationId).then(res => {
-              console.log('SUCCESS');
-              _this.isReTrying = false;
+              // console.log('uploadPrepareTestSuccess');
               _this.audioData = audioData;
               resolve();
             }).catch(err => {
-              console.log('FAIL')
-              console.log(`uploadCurRecording cur retry: ${_this.retryCount}`)
+              console.log(err)
 
-              // 正在尝试
-              _this.isReTrying = true
-              if (_this.retryCount < _this.maxRetry) {
-                _this.reTry(([location, url]) => _this.uploadCurRecording(location, url), [_this.uploadLocation, _this.uploadUrl])
-              } else {
-                console.log('Try uploadCurRecording() max times!')
+              if (err.code === 4002) {
+                // test_id 错误，不应该出现的情况
+                this.$message({
+                  message: '系统出了点状况，请联系管理员解决噢～',
+                  type: 'error',
+                  duration: 5 * 1000,
+                  center: true,
+                  showClose: true
+                })
               }
             })
           }).then(() => {
             // 重置重试次数
-            _this.isReTrying = false
-            _this.retryCount = 0
             _this.checkPreparation()
           }).catch()
         });
@@ -172,7 +183,8 @@
        * 根据预测试的结果判断是否合格
        */
       checkPreparation() {
-        // 获取上传路径
+        // console.log(`isRetrying: ${this.isReTrying}, curRetry: ${this.retryCount}`);
+        // 获取测试结果
         new Promise((resolve, reject) => {
           getPrepareTestResult(this.preparationId).then(res => {
             console.log(res)

@@ -3,24 +3,32 @@
   <d2-container :filename="filename" v-loading="dataLoading">
     <div v-if="hasFinishedPreparation">
       <div v-if="hasFinishExercise">
+        <!--考试结束-->
         <show-result></show-result>
       </div>
       <div v-else>
-        <question-frame :key="curQuestionIndex"
-                        :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
-                        :question-index="curQuestionIndex"
-                        :question-type="curQuestionType"
-                        :question-raw-text="curQuestionRawText"
-                        :question-preparation-time="curQuestionPreparationTime"
-                        :question-answer-time="curQuestionAnswerTime"
-                        :is-last-question="isLastQuestion"
-                        :audio-volume="audioVolume"
-                        @showResult="finishTest"
-                        @next="nextQuestion">
-        </question-frame>
+        <div v-if="hasExerciseTime">
+          <question-frame :key="curQuestionIndex"
+                          :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
+                          :question-index="curQuestionIndex"
+                          :question-type="curQuestionType"
+                          :question-raw-text="curQuestionRawText"
+                          :question-preparation-time="curQuestionPreparationTime"
+                          :question-answer-time="curQuestionAnswerTime"
+                          :is-last-question="isLastQuestion"
+                          :audio-volume="audioVolume"
+                          @showResult="finishTest"
+                          @next="nextQuestion">
+          </question-frame>
+        </div>
+        <div v-else class="really-center">
+          <!--没有剩余考试次数-->
+          <h2>您的考试次数已用尽</h2>
+        </div>
       </div>
     </div>
     <div v-else>
+      <!--考试预准备-->
       <preparation :key="preparationId"
                    :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
                    :preparation-id="preparationId"
@@ -38,8 +46,8 @@
   import Preparation from './preparation/index'
   import QuestionFrame from './question/index'
   import ShowResult from './question/showResult'
-  import { checkUnfinishedExam, nextQuestion } from '@/api/question'
-  import { initAudio } from '@/libs/my-recorder'
+  import {checkUnfinishedExam, nextQuestion} from '@/api/question'
+  import {initAudio} from '@/libs/my-recorder'
 
   export default {
     name: "index",
@@ -61,6 +69,9 @@
         // 预测试已完成的标志
         hasFinishedPreparation: false,
         preparationId: '',
+
+        // 包含可测试次数
+        hasExerciseTime: true,
 
         // 测试结束的标志
         hasFinishExercise: false,
@@ -159,11 +170,31 @@
               resolve()
             }).catch(err => {
               console.log('err: ', err)
+
+              if (err.code === 4004) {
+                // 没有剩余考试次数
+                this.hasExerciseTime = false;
+              } else if (err.code === 5101 || err.code === 5102) {
+                // 题目生成失败 或 获取题目失败
+                this.$message({
+                  message: '您的测试题目获取失败，请重新打开页面或联系管理员解决噢～',
+                  type: 'error',
+                  duration: 5 * 1000,
+                  center: true,
+                  showClose: true
+                })
+              } else if (err.code === 5100) {
+                // 测试已完成
+                this.hasFinishExercise = true;
+              }
+
               reject(err)
             })
           }).then(() => {
             this.dataLoading = false;
-          }).catch()
+          }).catch(err => {
+            this.dataLoading = false;
+          })
         }
       },
       finishTest() {
@@ -174,5 +205,14 @@
 </script>
 
 <style scoped>
-
+  .really-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
 </style>

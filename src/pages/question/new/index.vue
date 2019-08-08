@@ -150,6 +150,18 @@
                 resolve()
               }).catch(err => {
                 console.log('err: ', err)
+
+                if (err.code === 4702) {
+                  // 题库中暂无题目
+                  this.$message({
+                    message: '题库中暂无数据',
+                    type: 'error',
+                    duration: 5 * 1000,
+                    center: true,
+                    showClose: true
+                  })
+                }
+
                 reject(err)
               })
             }).then(() => {

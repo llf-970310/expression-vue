@@ -190,6 +190,10 @@
                                 duration: 5000
                             });
                         }).catch(err => {
+                            // Params_error = {'code': 4000, 'msg': '请求参数错误'}
+                            // Register_not_allowed = {'code': 4305, 'msg': '当前不允许注册'}
+                            // User_already_exist = {'code': 4303, 'msg': '用户已存在'}
+                            // Illegal_invitation_code = {'code': 4039, 'msg': '无效的邀请码'}
                             this.$message({
                                 message: err.msg,
                                 type: 'error',

@@ -182,6 +182,9 @@
             resolve()
           }).catch(err => {
             console.log('err: ', err)
+
+            // TODO fjj User_not_exist = {'code': 4302, 'msg': '用户不存在'}
+
             reject(err)
           })
         }).then(() => {
