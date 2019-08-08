@@ -115,8 +115,12 @@ export default {
             async function logout() {
                 // 删除cookie
                 util.cookies.remove('uuid')
+                try {
+                    await api.accountLogout()
+                } catch (e) {
+                    // 后台此接口只会因session已过期报错需要登录，无需处理
+                }
                 // 清空 vuex 用户信息
-                await api.accountLogout()
                 await dispatch('d2admin/user/set', {}, {root: true})
                 // 跳转路由
                 vm.$router.push({
