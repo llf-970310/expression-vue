@@ -62,9 +62,15 @@
       </el-form>
     </div>
 
-    <el-row class="title-container">
-      <span class="title">历史成绩</span>
-    </el-row>
+    <el-popover placement="top-start"
+                title="注意"
+                content="历史成绩的显示可能会有所延迟，如果暂时没有，请三小时后再来查看哦～"
+                trigger="hover">
+      <el-row slot="reference" class="title-container">
+        <span class="title">历史成绩</span>
+      </el-row>
+    </el-popover>
+
     <div v-loading="historyScoreLoading">
       <el-table v-if="historyScoreList"
                 :data="historyScoreList"
@@ -123,11 +129,6 @@
         <!--        </el-table-column>-->
       </el-table>
 
-      <el-row>
-        <p>
-          历史成绩的显示可能会有所延迟，如果暂时没有，请三小时后再来查看哦～
-        </p>
-      </el-row>
     </div>
   </d2-container>
 </template>
