@@ -3,8 +3,17 @@
   <div>
 
     <!--题目编号-->
-    <el-row class="d2-text-center index">
-      <h3>{{ questionIndex }}</h3>
+    <el-row class="index">
+      <el-col :span="18" class="d2-text-center">
+        <el-row>
+          <el-col :offset="15" :span="2">
+            <h3>{{ questionIndex }}</h3>
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="6" class="total-timer">
+        <exercise-timer :time-to-count="exerciseLeftTime" :only-seconds="false"></exercise-timer>
+      </el-col>
     </el-row>
 
     <!--题目tip-->
@@ -45,17 +54,19 @@
 
 <script>
   import tip from '../components/tip'
+  import ExerciseTimer from '../components/count-down'
   import QuestionOne from './question-one/index'
   import QuestionTwo from './question-two/index'
   import QuestionThree from './question-three/index'
 
-  import { getUploadPath, uploadSuccess } from '@/api/question'
-  import { uploadRecording } from '@/libs/my-recorder'
+  import {getUploadPath, uploadSuccess} from '@/api/question'
+  import {uploadRecording} from '@/libs/my-recorder'
 
   export default {
     name: "question-frame",
     components: {
       tip,
+      'exercise-timer': ExerciseTimer,
       'question-one': QuestionOne,
       'question-two': QuestionTwo,
       'question-three': QuestionThree,
@@ -77,6 +88,9 @@
       // 问题时间限制，【以秒为单位】
       questionPreparationTime: Number,
       questionAnswerTime: Number,
+      exerciseLeftTime: Number,
+
+      // 是否是最后一题
       isLastQuestion: Boolean,
 
       // 音量大小
@@ -162,5 +176,9 @@
 <style scoped>
   .index {
     margin-bottom: 20px;
+  }
+
+  .total-timer {
+    text-align: right;
   }
 </style>

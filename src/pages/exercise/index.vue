@@ -15,6 +15,7 @@
                           :question-raw-text="curQuestionRawText"
                           :question-preparation-time="curQuestionPreparationTime"
                           :question-answer-time="curQuestionAnswerTime"
+                          :exerciseLeftTime="exerciseLeftTime"
                           :is-last-question="isLastQuestion"
                           :audio-volume="audioVolume"
                           @showResult="finishTest"
@@ -86,7 +87,10 @@
           tip: ''
         },
         curQuestionPreparationTime: 0,
-        curQuestionAnswerTime: 0
+        curQuestionAnswerTime: 0,
+
+        // 整场测试的剩余时间
+        exerciseLeftTime: 1800,
       }
     },
     mounted() {
@@ -156,7 +160,7 @@
           // 继续做题
           this.dataLoading = true;
           new Promise((resolve, reject) => {
-            nextQuestion(forceNew ? 0 : this.curQuestionIndex).then(res => {
+            nextQuestion(forceNew ? -1 : this.curQuestionIndex).then(res => {
               // console.log(res)
               this.curQuestionIndex = res.questionNumber
               this.curQuestionType = res.questionType
@@ -166,6 +170,7 @@
               this.curQuestionPreparationTime = res.readLimitTime
               this.curQuestionAnswerTime = res.questionLimitTime
               this.isLastQuestion = res.lastQuestion
+              this.exerciseLeftTime = res.examLeftTime
 
               resolve()
             }).catch(err => {

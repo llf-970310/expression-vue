@@ -114,7 +114,7 @@
       // 主动结束回答，告知用户操作风险
       finishAnswer() {
         // 根据音频时长确定是否需要提醒
-        let usedSeconds = this.timeToCount / 1000 - this.$refs.countdown.$refs.countdown.totalSeconds;
+        let usedSeconds = this.timeToCount - this.$refs.countdown.$refs.countdown.totalSeconds;
         // 声音测试输入音频短于3秒才提示
         if (usedSeconds < 3) {
           this.finishCheckDialogVisible = true

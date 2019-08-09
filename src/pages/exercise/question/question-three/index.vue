@@ -5,7 +5,7 @@
     <div v-if="isPreparation">
       <answer :key="isPreparation"
               :is-text-showing="true" :text="text"
-              :time-to-count="preparationTimeByMilliSec"
+              :time-to-count="preparationTime"
               :is-preparation="true"
               @direct="finishPreparation">
       </answer>
@@ -15,7 +15,7 @@
     <div v-else>
       <answer :key="isPreparation"
               :is-text-showing="true" :text="text"
-              :time-to-count="answerTimeByMilliSec"
+              :time-to-count="answerTime"
               :is-preparation="false"
               :audio-volume="audioVolume"
               @next="finishAnswer">
@@ -42,15 +42,6 @@
 
       // 音量大小
       audioVolume: Number,
-    },
-    computed: {
-      preparationTimeByMilliSec: function () {
-        return this.preparationTime * 1000
-      },
-
-      answerTimeByMilliSec: function () {
-        return this.answerTime * 1000
-      }
     },
     data() {
       return {
