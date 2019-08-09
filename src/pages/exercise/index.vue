@@ -16,6 +16,7 @@
                           :question-preparation-time="curQuestionPreparationTime"
                           :question-answer-time="curQuestionAnswerTime"
                           :exerciseLeftTime="exerciseLeftTime"
+                          :exerciseTime="exerciseTime"
                           :is-last-question="isLastQuestion"
                           :audio-volume="audioVolume"
                           @showResult="finishTest"
@@ -91,6 +92,8 @@
 
         // 整场测试的剩余时间
         exerciseLeftTime: 1800,
+        // 整场考试的时间
+        exerciseTime: 1800,
       }
     },
     mounted() {
@@ -118,8 +121,8 @@
         new Promise((resolve, reject) => {
           checkUnfinishedExam().then(() => {
             // 没有未完成的考试
-            console.log('dont have unfinished exam')
-            resolve()
+            console.log('don\'t have unfinished exam')
+            reject()
           }).catch(err => {
             console.log('err: ', err)
 
@@ -140,9 +143,11 @@
             }
           })
         }).then(() => {
+          // 恢复原考试
           console.log('checkUnfinishedExam resolved')
           this.nextQuestion()
         }).catch(() => {
+          // 生成新考试
           console.log('checkUnfinishedExam reset')
           this.nextQuestion(true)
         })
@@ -161,7 +166,7 @@
           this.dataLoading = true;
           new Promise((resolve, reject) => {
             nextQuestion(forceNew ? -1 : this.curQuestionIndex).then(res => {
-              // console.log(res)
+              console.log(res)
               this.curQuestionIndex = res.questionNumber
               this.curQuestionType = res.questionType
               this.curQuestionRawText = res.questionContent
@@ -171,6 +176,7 @@
               this.curQuestionAnswerTime = res.questionLimitTime
               this.isLastQuestion = res.lastQuestion
               this.exerciseLeftTime = res.examLeftTime
+              this.exerciseTime = res.examTime
 
               resolve()
             }).catch(err => {

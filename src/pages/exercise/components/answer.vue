@@ -6,7 +6,11 @@
       <read :text="text"></read>
     </div>
 
-    <count-down ref="countdown" :time-to-count="timeToCount" @end="handleCountDown"></count-down>
+    <count-down ref="countdown"
+                :time-to-count="timeToCount"
+                :total-time="timeToCount"
+                @end="handleCountDown">
+    </count-down>
 
     <el-row class="answer_btn">
       <el-col class="d2-text-center">

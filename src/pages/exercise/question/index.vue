@@ -12,7 +12,11 @@
         </el-row>
       </el-col>
       <el-col :span="6" class="total-timer">
-        <exercise-timer :time-to-count="exerciseLeftTime" :only-seconds="false"></exercise-timer>
+        <exercise-timer :time-to-count="exerciseLeftTime"
+                        :total-time="exerciseTime"
+                        :only-seconds="false"
+                        @end="handleExerciseTimeEnd">
+        </exercise-timer>
       </el-col>
     </el-row>
 
@@ -89,6 +93,7 @@
       questionPreparationTime: Number,
       questionAnswerTime: Number,
       exerciseLeftTime: Number,
+      exerciseTime: Number,
 
       // 是否是最后一题
       isLastQuestion: Boolean,
@@ -168,6 +173,11 @@
         this.retryCount++;
         setTimeout(() => func(arg), 500);
       },
+
+      // 考试时间超时
+      handleExerciseTimeEnd() {
+      //  TODO fjj
+      }
     }
 
   }
