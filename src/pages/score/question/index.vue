@@ -155,12 +155,26 @@
             resolve()
           }).catch(err => {
             console.log('err: ', err)
+
+            if (err.code === 4701) {
+              this.$message({
+                message: '暂无成绩数据',
+                type: 'error',
+                duration: 5 * 1000,
+                center: true,
+                showClose: true
+              })
+            }
+
             reject(err)
           })
         }).then(() => {
           this.handleDistributionDataOrigin()
           this.dataLoading = false;
-        }).catch()
+        }).catch(err => {
+          this.emptyData();
+          this.dataLoading = false;
+        })
       },
 
 
@@ -181,12 +195,26 @@
             resolve()
           }).catch(err => {
             console.log('err: ', err)
+
+            if (err.code === 4701) {
+              this.$message({
+                message: '暂无成绩数据',
+                type: 'error',
+                duration: 5 * 1000,
+                center: true,
+                showClose: true
+              })
+            }
+
             reject(err)
           })
         }).then(() => {
           this.handleDistributionDataOrigin()
           this.dataLoading = false;
-        }).catch()
+        }).catch(err => {
+          this.emptyData();
+          this.dataLoading = false;
+        })
       },
 
       // 对分布图的原始数据进行处理
@@ -213,6 +241,20 @@
           let curScoreNum = this.distributionData.num[i];
           this.distributionData.proportion.push(curScoreNum / this.distributionDataOrigin.length)
         }
+      },
+
+      // 清空数据
+      emptyData() {
+        this.distributionVariables = [];
+        this.distributionDataOrigin = [];
+        this.distributionData = {
+          num: [],
+          proportion: [],
+        };
+        this.variable = '';
+        this.scoreData = [];
+        this.questions = [];
+        this.dates = [];
       }
     }
   }

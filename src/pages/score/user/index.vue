@@ -4,8 +4,8 @@
     <el-row>
       <el-col :span="10" :offset="7">
         <el-form :inline="true" :model="userSearchForm" :rules="userSearchRules" ref="userSearchForm">
-          <el-form-item label="用户邮箱" prop="userEmail">
-            <el-input v-model.trim="userSearchForm.userEmail" placeholder="请输入用户邮箱"></el-input>
+          <el-form-item label="邮箱 / 手机号" prop="username">
+            <el-input v-model.trim="userSearchForm.username" placeholder="请输入用户邮箱 / 手机号"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchUser">查询用户</el-button>
@@ -15,7 +15,7 @@
     </el-row>
 
     <div v-loading="dataLoading">
-      <div v-if="searchedUserEmail">
+      <div v-if="searchedUsername">
         <!--指定查询-->
         <score-representation :title-distribution="titleDistributionSpecific"
                               :title-change="titleChangeSpecific"
@@ -44,7 +44,7 @@
                               :distribution-data="distributionData"
                               :variables="users"
                               :variable='variable'
-                              variable-name="用户邮箱"
+                              variable-name="用户邮箱 / 手机号"
                               :score-data="scoreData"
                               @distributionPartitionSizeChanged="handleDistributionDataOriginByPartition">
         </score-representation>
@@ -69,12 +69,11 @@
       return {
         // 搜索框部分
         userSearchForm: {
-          userEmail: ''
+          username: ''
         },
         userSearchRules: {
-          userEmail: [
-            {required: true, message: '用户邮箱不可为空', trigger: 'blur'},
-            {type: 'email', message: '请输入合法的用户邮箱', trigger: 'blur'}
+          username: [
+            {required: true, message: '用户邮箱 / 手机号不可为空', trigger: 'blur'},
           ]
         },
 
@@ -82,7 +81,7 @@
         dataLoading: true,
 
         // 查看详情部分
-        searchedUserEmail: '',
+        searchedUsername: '',
 
         // 成绩分布图的x轴变量
         distributionVariables: [],
@@ -105,22 +104,22 @@
     },
     computed: {
       titleDistributionSpecific() {
-        return `用户 ${this.searchedUserEmail} 的成绩分布情况`
+        return `用户 ${this.searchedUsername} 的成绩分布情况`
       },
 
       titleChangeSpecific() {
-        return `用户 ${this.searchedUserEmail} 的成绩变化情况`
+        return `用户 ${this.searchedUsername} 的成绩变化情况`
       }
     },
     mounted() {
       this.initOverview()
     },
     watch: {
-      searchedUserEmail: function (val, oldVal) {
+      searchedUsername: function (val, oldVal) {
         if (val === '') {
           this.initOverview()
         } else {
-          this.initByUserEmail()
+          this.initByUsername()
         }
       }
     },
@@ -128,7 +127,7 @@
       searchUser() {
         this.$refs['userSearchForm'].validate((valid) => {
           if (valid) {
-            this.searchedUserEmail = this.userSearchForm.userEmail
+            this.searchedUsername = this.userSearchForm.username
           } else {
             console.log('error submit!!');
             return false;
@@ -137,7 +136,7 @@
       },
 
       backToOverview() {
-        this.searchedUserEmail = ''
+        this.searchedUsername = ''
       },
 
       // 未指定具体的用户邮箱，查看总体情况
@@ -150,28 +149,42 @@
             this.distributionDataOrigin = extractVariableAsList(result, 'totalScore')
             this.scoreData = result
 
-            this.variable = 'userEmail'
+            this.variable = 'username'
             this.users = extractVariableAsList(result, this.variable)
             // console.log(this.users)
 
             resolve()
           }).catch(err => {
             console.log('err: ', err)
+
+            if (err.code === 4701) {
+              this.$message({
+                message: '暂无成绩数据',
+                type: 'error',
+                duration: 5 * 1000,
+                center: true,
+                showClose: true
+              })
+            }
+
             reject(err)
           })
         }).then(() => {
           this.handleDistributionDataOriginByPartition()
           this.dataLoading = false;
-        }).catch()
+        }).catch(err => {
+          this.emptyData();
+          this.dataLoading = false;
+        })
       },
 
-      // 通过用户邮箱具体查询
-      initByUserEmail() {
+      // 通过用户邮箱 / 手机号具体查询
+      initByUsername() {
         this.dataLoading = true;
-        console.log('initByUserEmail')
-        console.log(this.searchedUserEmail)
+        console.log('initByUsername')
+        console.log(this.searchedUsername)
         new Promise((resolve, reject) => {
-          getScoreOfSpecoficUser(this.searchedUserEmail).then(res => {
+          getScoreOfSpecoficUser(this.searchedUsername).then(res => {
             this.distributionDataOrigin = res.allResult
             this.scoreData = res.resultByDate
 
@@ -183,14 +196,44 @@
           }).catch(err => {
             console.log('err: ', err)
 
-            // TODO fjj User_not_exist = {'code': 4302, 'msg': '用户不存在'}
+            let curMsg = '';
+            if (err.code === 4000) {
+              // 邮箱格式错误
+              curMsg = '邮箱格式错误';
+            } else if (err.code === 4302) {
+              curMsg = '该用户不存在'
+            }
+
+            if (curMsg !== '') {
+              this.$message({
+                message: curMsg,
+                type: 'error',
+                duration: 5 * 1000,
+                center: true,
+                showClose: true
+              })
+              this.backToOverview();
+            }
+
+            if (err.code === 4701) {
+              this.$message({
+                message: '暂无成绩数据',
+                type: 'error',
+                duration: 5 * 1000,
+                center: true,
+                showClose: true
+              })
+            }
 
             reject(err)
           })
         }).then(() => {
           this.handleDistributionDataOriginByQuestionId()
           this.dataLoading = false;
-        }).catch()
+        }).catch(err => {
+          this.emptyData();
+          this.dataLoading = false;
+        })
       },
 
       // 对x轴为分数区间的分布图的原始数据进行处理
@@ -240,6 +283,20 @@
           let curScoreNum = this.distributionData.num[i];
           this.distributionData.proportion.push(allTotalScore > 0 ? curScoreNum / allTotalScore : 0)
         }
+      },
+
+      // 清空数据
+      emptyData() {
+        this.distributionVariables = [];
+        this.distributionDataOrigin = [];
+        this.distributionData = {
+          num: [],
+          proportion: [],
+        };
+        this.variable = '';
+        this.scoreData = [];
+        this.users = [];
+        this.dates = [];
       }
     }
   }

@@ -42,6 +42,7 @@
     </score-change>
 
     <score-table v-loading="tableLoading"
+                 empty-text="暂无数据"
                  :variable="variable"
                  :variable-name="variableName"
                  :score-data="scoreData"
