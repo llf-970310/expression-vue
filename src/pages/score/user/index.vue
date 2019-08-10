@@ -200,10 +200,9 @@
             if (err.code === 4000) {
               // 邮箱格式错误
               curMsg = '邮箱格式错误';
-            } else if (err.code === 4302) {
+            } else if (err.code === 4703) {
               curMsg = '该用户不存在'
             }
-
             if (curMsg !== '') {
               this.$message({
                 message: curMsg,

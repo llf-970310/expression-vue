@@ -196,6 +196,21 @@
           }).catch(err => {
             console.log('err: ', err)
 
+            let curMsg = '';
+            if (err.code === 4703) {
+              curMsg = '该题号不存在'
+            }
+            if (curMsg !== '') {
+              this.$message({
+                message: curMsg,
+                type: 'error',
+                duration: 5 * 1000,
+                center: true,
+                showClose: true
+              })
+              this.backToOverview();
+            }
+
             if (err.code === 4701) {
               this.$message({
                 message: '暂无成绩数据',
