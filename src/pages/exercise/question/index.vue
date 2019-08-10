@@ -154,7 +154,7 @@
             //上传成功调用，告知服务器进行分析
             uploadSuccess(_this.questionIndex).then(res => {
               if (_this.isLastQuestion) {
-                _this.$emit('showResult', true);
+                _this.$emit('showResult');
               }
               console.log(res);
               resolve();
@@ -176,7 +176,14 @@
 
       // 考试时间超时
       handleExerciseTimeEnd() {
-      //  TODO fjj
+        this.$message({
+          message: '考试时间到，考试结束！为您自动跳转至结果界面～',
+          type: 'error',
+          duration: 5 * 1000,
+          center: true,
+          showClose: true
+        })
+        this.$emit('showResult');
       }
     }
 

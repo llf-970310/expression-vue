@@ -50,8 +50,8 @@
                 background: 'rgba(0, 0, 0, 0.7)'
             });
             this.queryResult();
-            console.log(this.chart);
-            console.log(this.chart.data)
+            // console.log(this.chart);
+            // console.log(this.chart.data)
         },
         beforeDestroy() {
             if (!this.chart) {
