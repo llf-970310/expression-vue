@@ -161,7 +161,7 @@
                                 },
                                 data : [
                                     {
-                                        value : [this.chart['主旨'].toFixed(2),this.chart['细节'].toFixed(2),this.chart['结构'].toFixed(2),this.chart['逻辑'].toFixed(2),this.chart['音质'].toFixed(2)],
+                                        value : [this.chart['主旨'].toFixed(2),this.chart['细节'].toFixed(2),this.chart['音质'].toFixed(2),this.chart['结构'].toFixed(2),this.chart['逻辑'].toFixed(2)],
                                         name : '得分情况',
 //                                        label: {
 //                                            normal: {
