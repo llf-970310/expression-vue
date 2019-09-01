@@ -64,7 +64,7 @@
 
     <el-popover placement="top-start"
                 title="注意"
-                content="历史成绩的显示可能会有所延迟，如果暂时没有，请三小时后再来查看哦～"
+                content="历史成绩的显示有所延迟，如果暂时没有，请明日再来查看哦～"
                 trigger="hover">
       <el-row slot="reference" class="title-container">
         <span class="title">历史成绩</span>
