@@ -1,45 +1,57 @@
 <!--所有的题目控制-->
 <template>
   <d2-container :filename="filename" v-loading="dataLoading">
-    <div v-if="hasFinishedPreparation">
-      <div v-if="hasFinishExercise">
-        <!--考试结束-->
-        <show-result></show-result>
+    <div v-if="isSupportedBrowser">
+      <div v-if="hasFinishedPreparation">
+        <div v-if="hasFinishExercise">
+          <!--考试结束-->
+          <show-result></show-result>
+        </div>
+        <div v-else>
+          <div v-if="hasExerciseTime">
+            <div v-if="isSupportedBrowser">
+              <question-frame :key="curQuestionIndex"
+                              :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
+                              :question-index="curQuestionIndex"
+                              :question-type="curQuestionType"
+                              :question-raw-text="curQuestionRawText"
+                              :question-preparation-time="curQuestionPreparationTime"
+                              :question-answer-time="curQuestionAnswerTime"
+                              :exerciseLeftTime="exerciseLeftTime"
+                              :exerciseTime="exerciseTime"
+                              :is-last-question="isLastQuestion"
+                              :audio-volume="audioVolume"
+                              @showResult="finishTest"
+                              @next="nextQuestion">
+              </question-frame>
+            </div>
+            <div v-else class="really-center">
+              <!--不支持的浏览器-->
+              <h2>请使用 Chrome 浏览器进行评测</h2>
+            </div>
+          </div>
+          <div v-else class="really-center">
+            <!--没有剩余考试次数-->
+            <h2>您的考试次数已用尽</h2>
+          </div>
+        </div>
       </div>
       <div v-else>
-        <div v-if="hasExerciseTime">
-          <question-frame :key="curQuestionIndex"
-                          :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
-                          :question-index="curQuestionIndex"
-                          :question-type="curQuestionType"
-                          :question-raw-text="curQuestionRawText"
-                          :question-preparation-time="curQuestionPreparationTime"
-                          :question-answer-time="curQuestionAnswerTime"
-                          :exerciseLeftTime="exerciseLeftTime"
-                          :exerciseTime="exerciseTime"
-                          :is-last-question="isLastQuestion"
-                          :audio-volume="audioVolume"
-                          @showResult="finishTest"
-                          @next="nextQuestion">
-          </question-frame>
-        </div>
-        <div v-else class="really-center">
-          <!--没有剩余考试次数-->
-          <h2>您的考试次数已用尽</h2>
-        </div>
+        <!--考试预准备-->
+        <preparation :key="preparationId"
+                     :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
+                     :preparation-id="preparationId"
+                     :question-raw-text="curQuestionRawText"
+                     :question-preparation-time="curQuestionPreparationTime"
+                     :question-answer-time="curQuestionAnswerTime"
+                     :audio-volume="audioVolume"
+                     @prepared="finishPreparation">
+        </preparation>
       </div>
     </div>
-    <div v-else>
-      <!--考试预准备-->
-      <preparation :key="preparationId"
-                   :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
-                   :preparation-id="preparationId"
-                   :question-raw-text="curQuestionRawText"
-                   :question-preparation-time="curQuestionPreparationTime"
-                   :question-answer-time="curQuestionAnswerTime"
-                   :audio-volume="audioVolume"
-                   @prepared="finishPreparation">
-      </preparation>
+    <div v-else class="really-center">
+      <!--不支持的浏览器-->
+      <h2>请使用版本高于 52.0 的 Chrome 浏览器进行评测</h2>
     </div>
   </d2-container>
 </template>
@@ -75,6 +87,9 @@
         // 包含可测试次数
         hasExerciseTime: true,
 
+        // 浏览器是否支持
+        isSupportedBrowser: true,
+
         // 测试结束的标志
         hasFinishExercise: false,
 
@@ -97,21 +112,72 @@
       }
     },
     mounted() {
-      // 初始化音频设备
-      const _this = this;
-      initAudio(function (data) {
-        let avg = 0;
-        let max_data = 0;
-        for (let i = 0; i < data.length; i++) {
-          let temp = Math.abs(data[i]);
-          avg += temp;
-          max_data = Math.max(max_data, temp)
-        }
-        avg /= data.length;
-        _this.audioVolume = avg * 800;
-      });
+      this.isSupportedBrowser = this.checkBrowser();
+      if (this.isSupportedBrowser) {
+        // 初始化音频设备
+        const _this = this;
+        initAudio(function (data) {
+          let avg = 0;
+          let max_data = 0;
+          for (let i = 0; i < data.length; i++) {
+            let temp = Math.abs(data[i]);
+            avg += temp;
+            max_data = Math.max(max_data, temp)
+          }
+          avg /= data.length;
+          _this.audioVolume = avg * 800;
+        });
+      }
     },
     methods: {
+      /**
+       * 检查浏览器是否支持录音
+       */
+      checkBrowser() {
+        let Sys = {};
+        let ua = navigator.userAgent.toLowerCase();
+        let s;
+        (s = ua.match(/rv:([\d.]+)\) like gecko/)) ? Sys.ie = s[1] :
+          (s = ua.match(/msie ([\d\.]+)/)) ? Sys.ie = s[1] :
+            (s = ua.match(/edge\/([\d\.]+)/)) ? Sys.edge = s[1] :
+              (s = ua.match(/firefox\/([\d\.]+)/)) ? Sys.firefox = s[1] :
+                (s = ua.match(/(?:opera|opr).([\d\.]+)/)) ? Sys.opera = s[1] :
+                  (s = ua.match(/chrome\/([\d\.]+)/)) ? Sys.chrome = s[1] :
+                    (s = ua.match(/version\/([\d\.]+).*safari/)) ? Sys.safari = s[1] : 0;
+        // 根据关系进行判断
+        if (Sys.ie) {
+          // return ('IE: ' + Sys.ie);
+          return false;
+        }
+        if (Sys.edge) {
+          // return ('EDGE: ' + Sys.edge);
+          return false;
+        }
+        if (Sys.firefox) {
+          // return ('Firefox: ' + Sys.firefox);
+          return false;
+        }
+        if (Sys.chrome) {
+          return this.checkChrome(Sys.chrome);
+        }
+        if (Sys.opera) {
+          // return ('Opera: ' + Sys.opera);
+          return false;
+        }
+        if (Sys.safari) {
+          // return ('Safari: ' + Sys.safari);
+          return false;
+        }
+        return false;
+      },
+
+      /**
+       * 检查 Chrome 浏览器
+       */
+      checkChrome(chromeVersion) {
+        return chromeVersion > '52.0';
+      },
+
       /**
        * 结束预测试的准备阶段，检查是否有未完成的测试
        */

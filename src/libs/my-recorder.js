@@ -32,9 +32,8 @@ export function initAudio(onProcessFunc) {
 
   try {
     // 提醒用户需要使用音频输入设备
-    navigator.getUserMedia(
-      {audio: true},
-      function (stream) {
+    navigator.mediaDevices.getUserMedia({audio: true})
+      .then(function(stream) {
         let input = audio_context.createMediaStreamSource(stream);
         console.log('Media stream created.');
 
@@ -42,9 +41,9 @@ export function initAudio(onProcessFunc) {
           onAudioProcess: onProcessFunc
         });
         console.log('Recorder initialised.');
-      },
-      function (e) {
-        console.log('No live audio input: ' + e);
+      })
+      .catch(function(err) {
+        console.log('No live audio input: ' + err);
       });
   } catch (e) {
     canAudioUse = false;

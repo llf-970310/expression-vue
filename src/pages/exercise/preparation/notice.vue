@@ -21,9 +21,9 @@
         </el-col>
         <el-col :span="18">
           <el-button type="text" @click="pcChecking=true">电脑</el-button>
-          （使用 Chrome 浏览器）、
-          <el-button type="text" @click="ipadChecking=true">iPad</el-button>
-          （使用 Safari 浏览器）。
+          （使用 Chrome 浏览器）
+<!--          <el-button type="text" @click="ipadChecking=true">、iPad</el-button>-->
+<!--          （使用 Safari 浏览器）。-->
         </el-col>
       </el-row>
       <br/>
@@ -56,7 +56,7 @@
             src="https://i.loli.net/2019/07/23/5d3716a183c9398547.png"
             fit="fit">
         </el-image>
-        请确保您的 Chrome 浏览器版本不低于 49。
+        请确保您的 Chrome 浏览器版本不低于 52。
       </el-row>
       <el-row class="dialog-confirm">
         <el-button type="primary" @click="pcChecking = false">确 定</el-button>
