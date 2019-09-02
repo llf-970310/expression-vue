@@ -53,13 +53,6 @@
             // console.log(this.chart);
             // console.log(this.chart.data)
         },
-        beforeDestroy() {
-            if (!this.chart) {
-                return
-            }
-            this.chart.dispose();
-            this.chart = null;
-        },
         methods: {
             queryResult() {
                 new Promise((resolve, reject) => {
