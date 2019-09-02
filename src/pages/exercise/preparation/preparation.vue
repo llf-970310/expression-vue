@@ -209,8 +209,6 @@
               this.analysisResult.msg = '您的声音暂不能识别，请尽可能说清楚，并保持环境安静噢～'
             }
           }).catch(err => {
-            console.log('err: ' + err)
-
             if (err.code === 4002) {
               // test_id 错误，不应该出现的情况
               this.$message({
@@ -233,7 +231,9 @@
         }).then(() => {
             this.isReTrying = false
           }
-        ).catch()
+        ).catch(err => {
+          console.log(err)
+        })
       },
 
       reTry(func, arg) {
