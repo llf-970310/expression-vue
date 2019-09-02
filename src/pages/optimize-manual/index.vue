@@ -94,10 +94,10 @@
             <template>
               <el-table
                   :data="keyTableData.filter(data => !search || data.word.toLowerCase().includes(search.toLowerCase()))"
-                  style="width: 100%" :default-sort="{prop: 'hitRate', order: 'descending'}">
+                  style="width: 100%">
                 <el-table-column prop="word" label="关键词" :show-overflow-tooltip=true></el-table-column>
-                <el-table-column label="击中频率" width="120px" prop="hitRate" sortable></el-table-column>
-                <el-table-column label="权重" sortable prop="weight">
+                <el-table-column label="击中频率" width="120px" prop="hitRate"></el-table-column>
+                <el-table-column label="权重" prop="weight">
                   <template slot-scope="scope">
                     <el-slider v-model="scope.row.weight" show-input :max=50 :step=0.01></el-slider>
                   </template>
@@ -120,10 +120,10 @@
             <template>
               <el-table
                   :data="detailTableData.filter(data => !search || data.word.toLowerCase().includes(search.toLowerCase()))"
-                  style="width: 100%" :default-sort="{prop: 'date', order: 'descending'}">
+                  style="width: 100%">
                 <el-table-column prop="word" label="关键词" :show-overflow-tooltip=true></el-table-column>
-                <el-table-column label="击中频率" width="120px" prop="hitRate" sortable></el-table-column>
-                <el-table-column label="权重" prop="weight" sortable>
+                <el-table-column label="击中频率" width="120px" prop="hitRate"></el-table-column>
+                <el-table-column label="权重" prop="weight">
                   <template slot-scope="scope">
                     <el-slider v-model="scope.row.weight" show-input :max=50 :step=0.01></el-slider>
                   </template>
@@ -299,6 +299,11 @@
             }
             // table部分
             this.keyTableData = [];
+            this.keyTableData.push({
+              word: "常数项",
+              hitRate: 1,
+              weight: res.keyWeight[0],
+            });
             for (let i = 0; i < res.keyWords.length; i++) {
               this.keyTableData.push({
                 word: this.array2str(res.keyWords[i]),
@@ -308,6 +313,11 @@
               });
             }
             this.detailTableData = [];
+            this.detailTableData.push({
+              word: "常数项",
+              hitRate: 1,
+              weight: res.detailWeight[0],
+            });
             for (let i = 0; i < res.detailWords.length; i++) {
               this.detailTableData.push({
                 word: this.array2str(res.detailWords[i]),
@@ -316,16 +326,6 @@
                 weight: res.detailWeight[i + 1],
               });
             }
-            this.keyTableData.push({
-              word: "常数项",
-              hitRate: 1,
-              weight: res.keyWeight[0],
-            });
-            this.detailTableData.push({
-              word: "常数项",
-              hitRate: 1,
-              weight: res.detailWeight[0],
-            });
             resolve();
           }).catch(err => {
             console.log('err: ', err);
