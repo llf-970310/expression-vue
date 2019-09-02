@@ -180,7 +180,7 @@
 
         // 右侧的邀请数据
         allInvitationsLoading: true,
-        allInvitations: {}
+        allInvitations: []
       }
     },
     mounted() {
