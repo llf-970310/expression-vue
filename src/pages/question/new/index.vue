@@ -70,6 +70,7 @@
       <!--题目导入时-->
       <el-button v-if="newFromPool" type="danger" @click="discard">丢弃</el-button>
 
+      <!--修改/新增-->
       <el-button v-if="modifiedQuestionId" type="primary" @click="goBackToQuestionDetail">返回</el-button>
       <el-button v-else type="primary" @click="goBackToAllQuestions">返回</el-button>
     </el-row>
@@ -284,7 +285,7 @@
 
         if (this.modifiedQuestionId) {
           // 修改题目不需要重新初始化，返回详情界面
-          this.$emit('back', this.modifiedQuestionId)
+          this.$emit('back', this.modifiedQuestionId, true)
         } else {
           // 成功保存后，重新初始化组件，连续化工作流程
           this.init()
@@ -336,14 +337,14 @@
         }).catch()
       },
 
-      // 返回全部问题界面
+      // 新增题目时，返回全部问题界面
       goBackToAllQuestions() {
         this.$emit('back', this.changeSucceeded)
       },
 
-      // 返回全部问题界面
+      // 修改题目时，直接返回问题详情界面
       goBackToQuestionDetail() {
-        this.$emit('back', this.modifiedQuestionId)
+        this.$emit('back', this.modifiedQuestionId, false)
       },
 
       // 打开问题的来源链接
@@ -356,7 +357,7 @@
         new Promise((resolve, reject) => {
           getRegeneratedWords(this.curQuestion.rawText).then(res => {
             this.curQuestion.keywords = res.keywords
-            this.curQuestion.detailwords= res.detailwords
+            this.curQuestion.detailwords = res.detailwords
 
             resolve()
           }).catch(err => {
@@ -381,6 +382,7 @@
   .btn-generate-words {
     margin-top: 10px;
   }
+
   .new-synonyms {
     margin-top: 5px;
   }

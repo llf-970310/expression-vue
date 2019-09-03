@@ -226,10 +226,13 @@
       },
 
       // 返回显示当前修改题目的详情界面，通过questionId的变化自动重新加载组件
-      goBackToQuestionDetail(questionId) {
+      goBackToQuestionDetail(questionId, changeSucceeded) {
         this.searchedQuestionId = questionId
         this.isEditableQuestion = false
         this.modifiedQuestionId = ''
+
+        // 成功改变之后，需要重新加载题目表格
+        if (changeSucceeded) this.initQuestions()
       },
 
       curPageChanged(val) {

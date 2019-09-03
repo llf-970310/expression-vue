@@ -114,7 +114,7 @@
 
       // 直接返回查看所有题目的界面
       goBackToAllQuestions() {
-        this.$emit('back')
+        this.$emit('back', false)
       }
     }
   }
