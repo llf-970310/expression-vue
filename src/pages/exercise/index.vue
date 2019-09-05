@@ -113,9 +113,9 @@
     },
     mounted() {
       this.isSupportedBrowser = this.checkBrowser();
+      const _this = this;
       if (this.isSupportedBrowser) {
         // 初始化音频设备
-        const _this = this;
         initAudio(function (data) {
           let avg = 0;
           let max_data = 0;
@@ -128,6 +128,15 @@
           _this.audioVolume = avg * 800;
         });
       }
+
+      // 浏览器页面级提示用户正在离开考试
+      window.onbeforeunload = function (e) {
+        if (_this.hasFinishedPreparation && !_this.hasFinishExercise) {
+          console.log('show show')
+          // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+          return '关闭提示';
+        }
+      };
     },
     methods: {
       /**
