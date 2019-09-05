@@ -142,7 +142,7 @@ export default {
                     })
                     .catch(() => {
                         commit('d2admin/gray/set', false, {root: true})
-                        vm.$message('放弃注销用户')
+                        // vm.$message('放弃注销用户')
                     })
             } else {
                 logout()

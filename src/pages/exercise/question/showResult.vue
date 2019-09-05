@@ -6,8 +6,8 @@
             <div class="chartContainer" id="chart" ref="myEchart"></div>
         </div>
             <div>
-                <el-button @click="returnToIndex()">退出登录</el-button>
-                <el-button @click="logout()">重新测试</el-button>
+                <el-button @click="logOff()">退出登录</el-button>
+                <el-button @click="reExercise()">重新测试</el-button>
             </div>
     </div>
 </template>
@@ -16,6 +16,8 @@
     import tooltip from 'echarts/lib/component/tooltip'
     import toolbox from 'echarts/lib/component/toolbox'
     import { getResult } from '@api/question'
+    import { mapActions } from 'vuex'
+
     export default {
         components: {},
         props: {
@@ -54,6 +56,10 @@
             // console.log(this.chart.data)
         },
         methods: {
+            ...mapActions('d2admin/account', [
+                'logout'
+            ]),
+
             queryResult() {
                 new Promise((resolve, reject) => {
                     getResult().then(res => {
@@ -197,11 +203,14 @@
                     this.loading.close();
                 }
             },
-            returnToIndex() {
-                window.location.href = '/';
+            reExercise() {
+              this.$emit('reExercise')
             },
-            logout() {
-                window.location.href = '/';
+            logOff() {
+                this.logout({
+                    vm: this,
+                    confirm: true
+                })
             },
 
             reTry(func, arg) {

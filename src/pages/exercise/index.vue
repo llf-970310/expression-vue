@@ -5,7 +5,7 @@
       <div v-if="hasFinishedPreparation">
         <div v-if="hasFinishExercise">
           <!--考试结束-->
-          <show-result></show-result>
+          <show-result @reExercise="reExercise"></show-result>
         </div>
         <div v-else>
           <div v-if="hasExerciseTime">
@@ -131,7 +131,7 @@
 
       // 浏览器页面级提示用户正在离开考试
       window.onbeforeunload = function (e) {
-        if (_this.hasFinishedPreparation && !_this.hasFinishExercise) {
+        if (_this.hasFinishedPreparation && !_this.hasFinishExercise && _this.hasExerciseTime) {
           console.log('show show')
           // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
           return '关闭提示';
@@ -285,7 +285,14 @@
       },
       finishTest() {
         this.hasFinishExercise = true
-      }
+      },
+
+      // 重新测试
+      reExercise() {
+        this.hasFinishExercise = false
+        this.isLastQuestion = false
+        this.nextQuestion(true)
+      },
     }
   }
 </script>
