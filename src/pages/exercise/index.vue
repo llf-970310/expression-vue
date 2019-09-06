@@ -58,7 +58,7 @@
   import {initAudio} from '@/libs/my-recorder'
 
   export default {
-    name: "index",
+    name: 'user-exercise',
     components: {
       'preparation': Preparation,
       'question-frame': QuestionFrame,
