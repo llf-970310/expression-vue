@@ -27,6 +27,10 @@
       'preparation': Preparation,
       'notice': Notice,
     },
+    props: {
+      // 音量大小
+      audioVolume: Number,
+    },
     data() {
       return {
         // 展示温馨提示
@@ -48,9 +52,6 @@
         // 预测试的问题时间限制，【以秒为单位】
         questionPreparationTime: 0,
         questionAnswerTime: 0,
-
-        // 音量大小
-        audioVolume: 0,
       }
     },
 

@@ -38,13 +38,7 @@
       </div>
       <div v-else>
         <!--考试预准备-->
-        <preparation :key="preparationId"
-                     :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
-                     :preparation-id="preparationId"
-                     :question-raw-text="curQuestionRawText"
-                     :question-preparation-time="curQuestionPreparationTime"
-                     :question-answer-time="curQuestionAnswerTime"
-                     :audio-volume="audioVolume"
+        <preparation :audio-volume="audioVolume"
                      @prepared="finishPreparation">
         </preparation>
       </div>
