@@ -9,19 +9,24 @@
               :label="variableName">
           </el-table-column>
           <el-table-column
+              prop="times"
+              label="测试次数"
+              width="80">
+          </el-table-column>
+          <el-table-column
               prop="mainScore"
               label="主旨分"
-              width="100">
+              width="80">
           </el-table-column>
           <el-table-column
               prop="detailScore"
               label="细节分"
-              width="100">
+              width="80">
           </el-table-column>
           <el-table-column
               prop="totalScore"
               label="总分"
-              width="100">
+              width="80">
           </el-table-column>
         </el-table>
       </el-col>
