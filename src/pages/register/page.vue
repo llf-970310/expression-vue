@@ -62,7 +62,7 @@
                     <p class="page-login--content-footer-copyright">
                         Copyright
                         <d2-icon name="copyright"/>
-                        2019 南京大学软件学院 ISE Lab
+                        2019 上海迷因网络科技有限公司
                     </p>
                 </div>
             </div>
@@ -482,4 +482,3 @@
         }
     }
 </style>
-
