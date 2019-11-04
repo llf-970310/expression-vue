@@ -2,12 +2,12 @@ import {BosClient, MimeType} from '@baiducloud/sdk'
 
 const config = {
   credentials: {
-    ak: '62d41797b866439b88a516fc4c8e28df',       //您的AK
-    sk: '7b181acf3d5448e9b36e9e9eced6e3c8'        //您的SK
+    ak: '6ff21a46abcf4fa2828478d337f4f91b',       //您的AK
+    sk: 'a244696b2607431090b4a0e7f5c0947a'        //您的SK
   },
   endpoint: 'https://su.bcebos.com'
 };
-const bucketName = 'ise-expression-bos'
+const bucketName = 'bos-parclab-exp'
 
 let client = new BosClient(config);
 
