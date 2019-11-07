@@ -55,18 +55,7 @@
             </el-card>
           </div>
         </div>
-        <div class="page-login--content-footer">
-          <!--<p class="page-login&#45;&#45;content-footer-options">-->
-          <!--<a href="#">帮助</a>-->
-          <!--<a href="#">隐私</a>-->
-          <!--<a href="#">条款</a>-->
-          <!--</p>-->
-          <p class="page-login--content-footer-copyright">
-            Copyright
-            <d2-icon name="copyright"/>
-            2019 上海迷因网络科技有限公司
-          </p>
-        </div>
+        <page-login-footer-copyright></page-login-footer-copyright>
       </div>
     </div>
     <!--<el-dialog title="注册" :visible.sync="dialogToggle"-->
@@ -86,41 +75,43 @@
 
 <script>
   import dayjs from 'dayjs'
-  import {mapActions} from 'vuex'
+  import { mapActions } from 'vuex'
+  import PageLoginFooterCopyright from '../footer/page-login-footer-copyright'
 
   export default {
-    data() {
+    components: { PageLoginFooterCopyright },
+    data () {
       return {
         timeInterval: null,
         time: dayjs().format('HH:mm:ss'),
         // 表单
         formLogin: {
           username: '',
-          password: '',
+          password: ''
           // code: ''
         },
         // 校验
         rules: {
           username: [
-            {required: true, message: '请输入手机号或邮箱', trigger: 'blur'}
+            { required: true, message: '请输入手机号或邮箱', trigger: 'blur' }
           ],
           password: [
-            {required: true, message: '请输入密码', trigger: 'blur'}
-          ],
+            { required: true, message: '请输入密码', trigger: 'blur' }
+          ]
           // code: [
           //   { required: true, message: '请输入验证码', trigger: 'blur' }
           // ]
-        },
+        }
         // registerRules:{},
         // registerData: {},
         // dialogToggle: false
       }
     },
-    mounted() {
+    mounted () {
       //
       const nickname = this.$route.query.nickname
       const headimgurl = this.$route.query.headimgurl
-      if (nickname && nickname !== "undefined" && headimgurl && headimgurl !== "undefined") {
+      if (nickname && nickname !== 'undefined' && headimgurl && headimgurl !== 'undefined') {
         this.nickname = nickname
         this.headimgurl = headimgurl
       }
@@ -131,7 +122,7 @@
         this.refreshTime()
       }, 1000)
     },
-    beforeDestroy() {
+    beforeDestroy () {
       clearInterval(this.timeInterval)
     },
     methods: {
@@ -139,14 +130,14 @@
         'bindWeChat'
       ]),
 
-      refreshTime() {
+      refreshTime () {
         this.time = dayjs().format('HH:mm:ss')
       },
       /**
        * @description 接收选择一个用户快速登录的事件
        * @param {Object} user 用户信息
        */
-      handleUserBtnClick(user) {
+      handleUserBtnClick (user) {
         this.formLogin.username = user.username
         this.formLogin.password = user.password
         this.submit()
@@ -155,7 +146,7 @@
        * @description 提交表单
        */
       // 提交微信绑定账号信息(登录信息)
-      submit() {
+      submit () {
         this.$refs.loginForm.validate((valid) => {
           if (valid) {
             this.bindWeChat({
@@ -327,35 +318,6 @@
         font-size: 12px;
         margin-top: 10px;
         color: $color-text-sub;
-      }
-    }
-
-    // footer
-    .page-login--content-footer {
-      padding: 1em 0;
-
-      .page-login--content-footer-options {
-        padding: 0px;
-        margin: 0px;
-        margin-bottom: 10px;
-        font-size: 14px;
-        text-align: center;
-
-        a {
-          color: $color-text-normal;
-          margin: 0 1em;
-        }
-      }
-
-      .page-login--content-footer-copyright {
-        padding: 0px;
-        margin: 0px;
-        font-size: 12px;
-        color: $color-text-normal;
-
-        a {
-          color: $color-text-normal;
-        }
       }
     }
 

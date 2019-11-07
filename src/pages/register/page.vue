@@ -53,18 +53,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="page-login--content-footer">
-                    <!--<p class="page-login&#45;&#45;content-footer-options">-->
-                    <!--<a href="#">帮助</a>-->
-                    <!--<a href="#">隐私</a>-->
-                    <!--<a href="#">条款</a>-->
-                    <!--</p>-->
-                    <p class="page-login--content-footer-copyright">
-                        Copyright
-                        <d2-icon name="copyright"/>
-                        2019 上海迷因网络科技有限公司
-                    </p>
-                </div>
+                <page-login-footer-copyright></page-login-footer-copyright>
             </div>
         </div>
         <!--<el-dialog title="注册" :visible.sync="dialogToggle"-->
@@ -85,8 +74,10 @@
 <script>
     import dayjs from 'dayjs'
     import {mapActions} from 'vuex'
+    import PageLoginFooterCopyright from "../footer/page-login-footer-copyright";
 
     export default {
+        components: {PageLoginFooterCopyright},
         data() {
             return {
                 timeInterval: null,
@@ -341,35 +332,6 @@
                 font-size: 12px;
                 margin-top: 10px;
                 color: $color-text-sub;
-            }
-        }
-
-        // footer
-        .page-login--content-footer {
-            padding: 1em 0;
-
-            .page-login--content-footer-options {
-                padding: 0px;
-                margin: 0px;
-                margin-bottom: 10px;
-                font-size: 14px;
-                text-align: center;
-
-                a {
-                    color: $color-text-normal;
-                    margin: 0 1em;
-                }
-            }
-
-            .page-login--content-footer-copyright {
-                padding: 0px;
-                margin: 0px;
-                font-size: 12px;
-                color: $color-text-normal;
-
-                a {
-                    color: $color-text-normal;
-                }
             }
         }
 
