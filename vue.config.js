@@ -98,9 +98,9 @@ module.exports = {
       .resourceQuery(/blockType=i18n/)
       .use('i18n')
       .loader('@kazupon/vue-i18n-loader')
-      .end()
+      .end();
     // svg
-    const svgRule = config.module.rule('svg')
+    const svgRule = config.module.rule('svg');
     svgRule.uses.clear()
     svgRule
       .include
@@ -150,7 +150,41 @@ module.exports = {
                 minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
                 deleteOriginalAssets: true // 删除原文件
             })
-        )
+        );
+        // 公共代码抽离
+        config.optimization = {
+            splitChunks: {
+                cacheGroups: {
+                    vendor: {
+                        chunks: 'all',
+                        test: /node_modules/,
+                        name: 'vendor',
+                        minChunks: 1,
+                        maxInitialRequests: 5,
+                        minSize: 0,
+                        priority: 100
+                    },
+                    common: {
+                        chunks: 'all',
+                        test: /[\\/]src[\\/]js[\\/]/,
+                        name: 'common',
+                        minChunks: 2,
+                        maxInitialRequests: 5,
+                        minSize: 0,
+                        priority: 60
+                    },
+                    styles: {
+                        name: 'styles',
+                        test: /\.(sa|sc|c)ss$/,
+                        chunks: 'all',
+                        enforce: true
+                    },
+                    runtimeChunk: {
+                        name: 'manifest'
+                    }
+                }
+            }
+        }
     }
   }
 };
