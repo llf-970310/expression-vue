@@ -1,4 +1,6 @@
 const TerserPlugin = require('terser-webpack-plugin');
+const isProduction = process.env.NODE_ENV !== 'development'; // 是否生产环境
+const CompressionWebpackPlugin = require('compression-webpack-plugin'); // gzip压缩
 
 // 拼接路径
 const resolve = dir => require('path').join(__dirname, dir)
@@ -13,6 +15,7 @@ let publicPath = '/'
 module.exports = {
   publicPath, // 根据你的实际情况更改这里
   lintOnSave: true,
+  productionSourceMap: false,
   devServer: {
     // 这个请求被转发到了百度云服务器上，方便开发，百度云的nginx已经修改过了
     // proxy: {
@@ -130,5 +133,24 @@ module.exports = {
     //     .add('@/mock')
     //     .end()
     // }
+  },
+  configureWebpack: config => {
+    // 生产环境相关配置
+    if (isProduction) {
+        // gzip压缩
+        const productionGzipExtensions = ['html', 'js', 'css'];
+        config.plugins.push(
+            new CompressionWebpackPlugin({
+                filename: '[path].gz[query]',
+                algorithm: 'gzip',
+                test: new RegExp(
+                    '\\.(' + productionGzipExtensions.join('|') + ')$'
+                ),
+                threshold: 10240, // 只有大小大于该值的资源会被处理 10240
+                minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
+                deleteOriginalAssets: true // 删除原文件
+            })
+        )
+    }
   }
-}
+};
