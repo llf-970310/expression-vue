@@ -88,7 +88,7 @@
         hasFinishExercise: false,
 
         // 最后一道题的标志
-        isLastQuestion: false,
+        isLastQuestion: true,
         curQuestionIndex: 0,
         curQuestionType: 1,
         curQuestionRawText: '',
@@ -229,7 +229,7 @@
       nextQuestion(forceNew = false) {
         if (this.isLastQuestion) {
           // TODO 做题已结束
-//          this.hasFinishExercise = true
+         this.hasFinishExercise = true
         } else {
           // 继续做题
           this.dataLoading = true;

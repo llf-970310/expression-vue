@@ -16,31 +16,31 @@ module.exports = {
   publicPath, // 根据你的实际情况更改这里
   lintOnSave: true,
   productionSourceMap: false,
-  devServer: {
-    // 这个请求被转发到了百度云服务器上，方便开发，百度云的nginx已经修改过了
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://106.12.39.88/api',
-    //     ws: true,
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       '^/api': ''
-    //     }
-    //   }
-    // },
-    // 如果需要自己开发后台，上面注释掉换成下面这个
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000/api',
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      }
-    },
-    publicPath // 和 publicPath 保持一致
-  },
+  // devServer: {
+  //   // 这个请求被转发到了百度云服务器上，方便开发，百度云的nginx已经修改过了
+  //   proxy: {
+  //     '/api': {
+  //       target: 'https://106.13.160.74/api',
+  //       ws: true,
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         '^/api': ''
+  //       }
+  //     }
+  //   },
+  //   // 如果需要自己开发后台，上面注释掉换成下面这个
+  //   // proxy: {
+  //   //   '/api': {
+  //   //     target: 'http://localhost:5000/api',
+  //   //     ws: true,
+  //   //     changeOrigin: true,
+  //   //     pathRewrite: {
+  //   //       '^/api': ''
+  //   //     }
+  //   //   }
+  //   // },
+  //   publicPath // 和 publicPath 保持一致
+  // },
   css: {
     loaderOptions: {
       // 设置 scss 公用变量文件

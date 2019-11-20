@@ -24,6 +24,8 @@ export default [
 
   {
     path: '/info', role: 'user', title: '我的信息'
+  },{
+    path:'/history',role:'user',title:'历史成绩'
   },
   {
     path: '/exercise', role: 'user', title: '表达力评测'

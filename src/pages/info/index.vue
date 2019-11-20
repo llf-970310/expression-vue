@@ -2,7 +2,6 @@
 <template>
   <d2-container :filename="filename">
     <template slot="header">我的信息</template>
-
     <el-row class="title-container">
       <span class="title">基本信息</span>
     </el-row>
@@ -33,7 +32,7 @@
         <el-form-item label="上次登录">
           <el-input v-model="form.last_login_time" readonly></el-input>
         </el-form-item>
-        <el-form-item label="剩余题数">
+        <el-form-item label="剩余次数">
           <el-input v-model="form.remaining_exam_num" readonly></el-input>
         </el-form-item>
         <el-form-item label="会员时间">
@@ -61,75 +60,6 @@
         </el-form-item>
       </el-form>
     </div>
-
-    <el-popover placement="top-start"
-                title="注意"
-                content="历史成绩的显示有所延迟，如果暂时没有，请明日再来查看哦～"
-                trigger="hover">
-      <el-row slot="reference" class="title-container">
-        <span class="title">历史成绩</span>
-      </el-row>
-    </el-popover>
-
-    <div v-loading="historyScoreLoading">
-      <el-table v-if="historyScoreList"
-                :data="historyScoreList"
-                empty-text="该账号没有历史测试记录"
-                height="300"
-                border
-                style="width: 100%">
-        <el-table-column
-            prop="test_start_time"
-            label="开始时间"
-            width="155">
-        </el-table-column>
-        <!--        <el-table-column-->
-        <!--            prop="paper_type"-->
-        <!--            label="类型"-->
-        <!--            width="50">-->
-        <!--        </el-table-column>-->
-        <el-table-column
-            prop="score_info.音质"
-            label="音质"
-            width="60">
-        </el-table-column>
-        <el-table-column
-            prop="score_info.结构"
-            label="结构"
-            width="60">
-        </el-table-column>
-        <el-table-column
-            prop="score_info.逻辑"
-            label="逻辑"
-            width="60">
-        </el-table-column>
-        <el-table-column
-            prop="score_info.细节"
-            label="细节"
-            width="60">
-        </el-table-column>
-        <el-table-column
-            prop="score_info.主旨"
-            label="主旨"
-            width="60">
-        </el-table-column>
-        <el-table-column
-            prop="score_info.total"
-            label="总得分"
-            width="70">
-        </el-table-column>
-        <!--        <el-table-column-->
-        <!--            prop="all_analysed"-->
-        <!--            label="是否分析"-->
-        <!--            width="100">-->
-        <!--          <template slot-scope="scope">-->
-        <!--            <el-tag v-if="scope.row.all_analysed" type="success">已分析</el-tag>-->
-        <!--            <el-tag v-else type="info">未分析</el-tag>-->
-        <!--          </template>-->
-        <!--        </el-table-column>-->
-      </el-table>
-
-    </div>
   </d2-container>
 </template>
 
@@ -137,7 +67,6 @@
   import {getInfo} from '@api/user';
   import {modifyInfo} from '@api/user';
   import {untying} from '@api/user';
-  import {showScore} from '@api/user';
 
   export default {
     components: {},
@@ -212,12 +141,6 @@
 
         name: '',
         pass: '',
-
-
-        //历史答题加载等待
-        historyScoreLoading: true,
-        //所有历史答题成绩记录
-        historyScoreList: []
       }
     },
     mounted() {
@@ -226,7 +149,6 @@
 
     },
     methods: {
-
       //初始化个人信息数据
       initInfo() {
         new Promise((resolve, reject) => {
@@ -254,30 +176,6 @@
 
         ).catch();
       },
-
-      //初始化历史成绩表格数据
-      initHistoryScore() {
-        new Promise((resolve, reject) => {
-          showScore().then(res => {
-            console.log(res);
-            this.historyScoreList = res.history;
-            console.log(this.historyScoreList)
-            resolve();
-          }).catch(err => {
-            console.log('err: ', err);
-
-            if (err.code === 4042) {
-              // 用户暂无历史成绩
-              resolve()
-            } else {
-              reject(err)
-            }
-          })
-        }).then(() => {
-          this.historyScoreLoading = false
-        }).catch();
-      },
-
       //修改姓名
       changeName() {
         if (this.isModifyName) {
@@ -397,5 +295,6 @@
   .title {
     font-size: 20px;
     font-weight: bold;
+    cursor: default;
   }
 </style>

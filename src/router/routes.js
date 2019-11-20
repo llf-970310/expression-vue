@@ -7,6 +7,7 @@ import optimize_manual from './modules/optimize-manual'
 
 import exercise from './modules/exercise'
 import info from './modules/info'
+import history from './modules/history'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
@@ -59,7 +60,8 @@ export const asyncRouterMap = [
     optimize_manual,
 
     exercise,
-    info
+    info,
+    history
 ]
 
 /**
