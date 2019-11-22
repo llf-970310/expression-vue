@@ -1,18 +1,22 @@
 <template>
   <div class="result-container" id="result">
-    <el-row>
-      <el-col :span="24">
-        <div class="grid-content">
-            感谢参与本次测试，此版本暂不提供具体测试结果解读。<br/>
-            后续迭代版会提供详细测试结果报告，敬请期待。
+    <div class="main-content">
+      <div v-if="!chart" class="error-container">
+        {{ errorTitle }}
+      </div>
+      <div class="chart-container">
+        <div class="titleContainer">{{ subTitle }}</div>
+        <div>
+          <div class="chartContainer" id="chart" ref="myEchart"></div>
         </div>
-      </el-col>
-    </el-row>
-    <div class="titleContainer">{{ subTitle }}</div>
-    <div>
-      <div class="chartContainer" id="chart" ref="myEchart"></div>
+      </div>
+      <div class="tip" v-if="chart">
+        感谢您参与本次测试，此版本暂不提供具体测试结果解读。
+        <br />
+        <br />后续迭代版会提供详细测试结果报告，敬请期待。
+      </div>
     </div>
-    <div>
+    <div class="buttons">
       <el-button @click="logOff()">退出登录</el-button>
       <el-button @click="reExercise()">重新测试</el-button>
     </div>
@@ -42,6 +46,7 @@ export default {
       chart: null,
       chartData: [],
       subTitle: "",
+      errorTitle:"",
       totalScore: 100,
       counter: 0,
       timer: 0,
@@ -56,11 +61,9 @@ export default {
       lock: true,
       text: "Loading",
       spinner: "el-icon-loading",
-      background: "rgba(0, 0, 0, 0.7)"
+      // background: "rgba(0, 0, 0, 0.7)"
     });
     this.queryResult();
-    // console.log(this.chart);
-    // console.log(this.chart.data)
   },
   methods: {
     ...mapActions("d2admin/account", ["logout"]),
@@ -114,12 +117,6 @@ export default {
     initChart() {
       this.subTitle = "总得分： " + this.totalScore.toFixed(2) + "分";
       let chart = echarts.init(document.getElementById("chart"));
-      //                let indicator = [];
-      //                let value = [];
-      //                Object.keys(this.chart).forEach(function (key) {
-      //                    indicator.push({name: key, max: 100});
-      //                    value.push(this.chart[key].toFixed(2));
-      //                });
       // 把配置和数据放这里
       chart.setOption({
         title: {
@@ -186,8 +183,8 @@ export default {
       try {
         if (e === "timeout") {
           //                        this.$message('获取结果超时');
-          this.subTitle =
-            "作答结果已记录，请等待一小时左右，在历史成绩中查看本次测试结果";
+          this.errorTitle =
+            "作答结果已记录，请稍作等待，在历史成绩中查看本次测试结果";
           clearInterval(this.timer);
           this.loading.close();
           return;
@@ -196,12 +193,12 @@ export default {
         console.log(response);
         if (response.needDisplay) {
           this.$message(response.tip);
-          this.subTitle = "处理错误，请重新测试";
+          this.errorTitle = "处理错误，请重新测试";
         } else {
-          this.subTitle = "处理出错，请重新测试";
+          this.errorTitle = "处理出错，请重新测试";
         }
       } catch (e) {
-        this.subTitle = "处理出错，请重新测试";
+        this.errorTitle = "处理出错，请重新测试";
       } finally {
         clearInterval(this.timer);
         this.loading.close();
@@ -229,14 +226,40 @@ export default {
 .result-container {
   display: flex;
   flex-direction: column;
+}
+.buttons {
+  display: flex;
+  text-align: center;
+  margin: 0 auto;
+}
+.chart-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  float: left;
+  width: 60%;
+}
+.error-message{
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+  float: left;
+  width: 100%;
 }
 .titleContainer {
   margin-top: 20px;
 }
 .chartContainer {
   margin-top: 20px;
-  height: 500px;
-  width: 600px;
+  height: 300px;
+  width: 400px;
+}
+.tip {
+  float: left;
+  margin-top: 20px;
+}
+.error-container {
+  margin-top: 20px;
+  text-align: center;
 }
 </style>
