@@ -54,7 +54,8 @@
             </el-card>
             <p class="page-login--options"
                flex="main:justify cross:center">
-              <span style="cursor: pointer" @click="wechat">微信登录</span>
+<!--              <span style="cursor: pointer" @click="wechat">微信登录</span>-->
+              <span style="color: rgba(211,211,211,0.5)">微信登录</span>
               <span style="cursor: pointer" @click="toRegisterPage">注册用户</span>
             </p>
           </div>

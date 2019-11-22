@@ -16,7 +16,8 @@ module.exports = {
     'object-curly-spacing': 0,
     'comma-dangle': 0,
     'quotes': 0,
-    'object-property-newline': 0
+    'object-property-newline': 0,
+    'no-multi-spaces': 0
   },
   parserOptions: {
     parser: 'babel-eslint'
