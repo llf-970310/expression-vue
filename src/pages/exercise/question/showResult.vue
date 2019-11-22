@@ -256,7 +256,9 @@ export default {
 }
 .tip {
   float: left;
-  margin-top: 20px;
+  margin-top: 150px;
+  font-size: large;
+  width: 40%;
 }
 .error-container {
   margin-top: 20px;
