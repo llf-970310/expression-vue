@@ -19,7 +19,7 @@ export function initAudio(onProcessFunc) {
     audio_context = new AudioContext;
     console.log('Audio context set up.');
     console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
-    if (!navigator.getUserMedia) {
+    if (!navigator.mediaDevices.getUserMedia) {
       canAudioUse = false;
       browserError();
       return canAudioUse;
