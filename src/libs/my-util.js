@@ -9,3 +9,17 @@ export function extractVariableAsList(list, prop) {
     return item[prop]
   })
 }
+
+export function datetime2stdstr(datetime) {
+  if (Object.prototype.toString.call(datetime) === '[object Date]') {
+    return datetime.toISOString().replace('T', ' ').replace('Z', '');
+  }
+  return datetime
+}
+
+export function stdstr2localstr(stdstr) {
+  const localDatetime = new Date(stdstr + ' UTC')
+  const timeStr = localDatetime.toTimeString().substr(0,5)
+  const dateStr = localDatetime.toLocaleDateString().replace(/\//g, '-')
+  return dateStr + ' ' + timeStr
+}

@@ -8,10 +8,11 @@ import request from '@/plugin/axios'
 
 const qs = require('qs')
 
-export function getAllInvitations() {
+export function queryInvitations(data) {
     return request({
         url: '/admin/accounts/invite',
-        method: 'get'
+        method: 'get',
+        params:data
     })
 }
 
