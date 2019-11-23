@@ -22,8 +22,8 @@
         <el-col :span="18">
           <el-button type="text" @click="pcChecking=true">电脑</el-button>
           （使用 Chrome 浏览器）
-<!--          <el-button type="text" @click="ipadChecking=true">、iPad</el-button>-->
-<!--          （使用 Safari 浏览器）。-->
+          <el-button type="text" @click="ipadChecking=true">、iPad</el-button>
+          （使用 Safari 浏览器）。
         </el-col>
       </el-row>
       <br/>
@@ -33,8 +33,9 @@
         </el-col>
         <el-col :span="18">
           1. 由于手机屏幕尺寸较小，可能对题目显示和作答带来不便，不建议您使用。<br/>
-          2. 录音当中需要使用麦克风，iPad 自带耳机，AirPods 以及其他耳机自带麦克都可以满足需求。<br/>
-          3. 测试过程中，请保持麦克风到嘴部 10-20 厘米的距离，过远的距离可能导致您的声音较小，不利于系统识别和分析，过近的距离则可能导致讲话时气流冲击麦克风形成较大噪音（喷麦），导致如录音失败。
+          2. 我们强烈建议您使用电脑端的 Chrome 浏览器，如果您仍选择使用 Safari 或 Firefox 请升级到最新版。<br/>
+          3. 录音当中需要使用麦克风，iPad 自带耳机，AirPods 以及其他耳机自带麦克都可以满足需求。<br/>
+          4. 测试过程中，请保持麦克风到嘴部 10-20 厘米的距离，过远的距离可能导致您的声音较小，不利于系统识别和分析，过近的距离则可能导致讲话时气流冲击麦克风形成较大噪音（喷麦），导致如录音失败。
         </el-col>
       </el-row>
     </div>
