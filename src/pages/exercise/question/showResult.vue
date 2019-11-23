@@ -50,7 +50,7 @@ export default {
       totalScore: 100,
       counter: 0,
       timer: 0,
-      queryTime: 500, //每0。5秒轮询一次
+      queryTime: 3000, //每3秒轮询一次
       limitTime: 120000, //120秒超时
       loading: ""
     };
