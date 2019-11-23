@@ -158,7 +158,7 @@
         }
         if (Sys.firefox) {
           // return ('Firefox: ' + Sys.firefox);
-          return false;
+          return true;
         }
         if (Sys.chrome) {
           return this.checkChrome(Sys.chrome);
@@ -169,7 +169,7 @@
         }
         if (Sys.safari) {
           // return ('Safari: ' + Sys.safari);
-          return false;
+          return true;
         }
         return false;
       },
