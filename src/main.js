@@ -26,6 +26,11 @@ import menuHeader from '@/menu/header'
 import menuAside from '@/menu/aside'
 import { frameInRoutes } from '@/router/routes'
 
+// 点赞
+import VueStarPlus from 'vue-star-plus'
+import 'vue-star-plus/lib/vue-star-plus.css'
+Vue.component('vue-star-plus', VueStarPlus)
+
 // 粘贴板
 import VueClipboard from 'vue-clipboard2';
 Vue.use(VueClipboard)

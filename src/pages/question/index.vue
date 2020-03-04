@@ -77,6 +77,21 @@
               label="detailwords"
               width="300">
           </el-table-column>
+          <el-table-column
+                  prop="upCount"
+                  label="被赞"
+                  width="80">
+          </el-table-column>
+          <el-table-column
+                  prop="downCount"
+                  label="被踩"
+                  width="80">
+          </el-table-column>
+          <el-table-column
+                  prop="usedTimes"
+                  label="已用"
+                  width="80">
+          </el-table-column>
         </el-table>
 
         <el-row class="d2-text-center pagination">

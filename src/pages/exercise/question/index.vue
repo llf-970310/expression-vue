@@ -52,6 +52,7 @@
           </question-three>
         </el-col>
       </el-row>
+      <feedback-bar :question-db-id="questionDbId"></feedback-bar>
     </div>
   </div>
 </template>
@@ -65,10 +66,12 @@
 
   import {getUploadPath, uploadSuccess} from '@/api/question'
   import {uploadRecording} from '@/libs/my-recorder'
+  import FeedbackBar from "../components/feedback-bar";
 
   export default {
     name: "question-frame",
     components: {
+      FeedbackBar,
       tip,
       'exercise-timer': ExerciseTimer,
       'question-one': QuestionOne,
@@ -100,6 +103,9 @@
 
       // 音量大小
       audioVolume: Number,
+
+      // 题目对应数据库id,用于点赞收藏反馈
+      questionDbId: String,
     },
     data() {
       return {

@@ -13,6 +13,7 @@
               <question-frame :key="curQuestionIndex"
                               :question-tip-detail="curQuestionTip.detail" :question-tip="curQuestionTip.tip"
                               :question-index="curQuestionIndex"
+                              :question-db-id="curQuestionDbId"
                               :question-type="curQuestionType"
                               :question-raw-text="curQuestionRawText"
                               :question-preparation-time="curQuestionPreparationTime"
@@ -103,6 +104,9 @@
         exerciseLeftTime: 1800,
         // 整场考试的时间
         exerciseTime: 1800,
+
+        // 题目对应数据库id,用于点赞收藏反馈
+        curQuestionDbId: '',
       }
     },
     mounted() {
@@ -238,6 +242,7 @@
               console.log(res)
               this.curQuestionIndex = res.questionNumber
               this.curQuestionType = res.questionType
+              this.curQuestionDbId = res.questionDbId
               this.curQuestionRawText = res.questionContent
               this.curQuestionTip.detail = res.questionInfo.detail
               this.curQuestionTip.tip = res.questionInfo.tip
