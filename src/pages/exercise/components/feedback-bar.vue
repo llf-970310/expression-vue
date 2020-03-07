@@ -1,16 +1,16 @@
 <template>
     <div>
-        <div class="feedback-left">
+        <div class="feedback-button left">
             <vue-star-plus v-model="upActive" color="#ff0000" class="i-star__component" @change="handleUpClick">
                 <el-button slot="icon" class="i-star__text">{{ upActive ? '👍已点赞' : '这题不错' }}</el-button>
             </vue-star-plus>
         </div>
-        <div class="feedback-middle">
+        <div class="feedback-button middle">
             <vue-star-plus v-model="downActive" color="#ff0000" class="i-star__component" @change="handleDownClick">
                 <el-button slot="icon" class="i-star__text">{{ downActive ? '👎已点踩' : '这题太差' }}</el-button>
             </vue-star-plus>
         </div>
-        <div class="feedback-right">
+        <div class="feedback-button right">
             <vue-star-plus v-model="likeActive" color="#ff0000" class="i-star__component" @change="handleLikeClick">
                 <el-button slot="icon" class="i-star__text">{{ likeActive ? '💖已喜欢' : '喜欢该题' }}</el-button>
             </vue-star-plus>
@@ -64,36 +64,24 @@
 </script>
 
 <style scoped>
-    .feedback-left {
+    .feedback-button {
         position: absolute;
-        width: 10%;
-        left: 40%;
-        -webkit-transform: translate(-50%, -50%);
-        -moz-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        -o-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
+        width: 7.5%;
+        -webkit-transform: translateX(-50%);
+        -moz-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        -o-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+    .left {
+        left: 41%;
     }
 
-    .feedback-middle {
-        position: absolute;
-        width: 10%;
+    .middle {
         left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        -moz-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        -o-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
     }
 
-    .feedback-right {
-        position: absolute;
-        width: 10%;
-        left: 60%;
-        -webkit-transform: translate(-50%, -50%);
-        -moz-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        -o-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
+    .right {
+        left: 59%;
     }
 </style>
