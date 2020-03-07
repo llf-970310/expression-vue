@@ -76,7 +76,7 @@
     </el-dialog>
 
 
-    <div class="d2-text-center">
+    <div class="d2-text-center notice-button">
       <el-button round type="primary" @click="$emit('noticed')">开始测试</el-button>
       <el-button round @click="returnToHome">返回</el-button>
     </div>
@@ -110,5 +110,8 @@
 <style scoped>
   .dialog-confirm {
     text-align: right;
+  }
+  .notice-button {
+    margin: 40px auto;
   }
 </style>

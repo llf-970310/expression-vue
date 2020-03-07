@@ -2,32 +2,46 @@
 export default [
   {path: '/index', title: '首页', icon: 'home'},
   {
-    title: '基本管理',
+    title: '权限管理',
     icon: 'folder-o',
     role: 'admin',
     children: [
       {path: '/account', title: '账户管理'},
       {path: '/invitation', title: '邀请管理'},
-      {path: '/question', title: '题目管理'},
-      {path: '/score', title: '成绩管理'},
     ]
   },
   {
-    title: '评分优化',
+    title: '题目管理',
     icon: 'folder-o',
     role: 'admin',
     children: [
+      {path: '/question', title: '题目管理'},
+      {path: '/score', title: '成绩管理'},
       {path: '/optimize-manual', title: '手动优化'},
       {path: '/optimize-auto', title: '自动优化'},
+    ]
+  },
+  {
+    title: '定时任务',
+    icon: 'folder-o',
+    role: 'admin',
+    children: [
+      {path: '/scheduled-tasks', title: '定时任务管理'},
     ]
   },
 
   {
     path: '/info', role: 'user', title: '我的信息'
-  },{
-    path:'/history',role:'user',title:'历史成绩'
   },
   {
-    path: '/exercise', role: 'user', title: '表达力评测'
-  }
+    title: '评测中心',
+    icon: 'folder-o',
+    role: 'user',
+    children: [
+      {path: '/exercise', title: '表达力评测'},
+      {path: '/history', title: '历史成绩'},
+    ]
+  },
+  // {path: '/exercise', role: 'user', title: '表达力评测'}
+  // {path:'/history',role:'user',title:'历史成绩'},
 ]
