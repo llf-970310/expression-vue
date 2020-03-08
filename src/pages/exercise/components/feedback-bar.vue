@@ -19,6 +19,8 @@
 </template>
 
 <script>
+    import {feedback, FeedbackActions} from '@/api/question'
+
     export default {
         name: "feedback-bar",
         props: {
@@ -33,30 +35,42 @@
         },
         methods: {
             handleUpClick() {
-                //do something
                 if (this.upActive) {
-                    console.log('up clicked');
-                    this.downActive = false;
+                    if (this.downActive) {
+                        this.downActive = false;
+                        feedback(FeedbackActions.downToUp, this.questionDbId);
+                        console.log('down2up:', this.questionDbId);
+                    } else {
+                        feedback(FeedbackActions.up, this.questionDbId);
+                        console.log('up:', this.questionDbId);
+                    }
                 } else {
-                    console.log('up canceled')
+                    feedback(FeedbackActions.cancelUp, this.questionDbId);
+                    console.log('up canceled:', this.questionDbId);
                 }
             },
             handleDownClick() {
-                //do something
                 if (this.downActive) {
-                    console.log('down clicked');
-                    this.upActive = false;
+                    if (this.upActive) {
+                        this.upActive = false;
+                        feedback(FeedbackActions.upToDown, this.questionDbId);
+                        console.log('up2down:', this.questionDbId);
+                    } else {
+                        console.log('down:', this.questionDbId);
+                        feedback(FeedbackActions.down, this.questionDbId)
+                    }
                 } else {
-                    console.log('down canceled')
+                    feedback(FeedbackActions.cancelDown, this.questionDbId);
+                    console.log('down canceled:', this.questionDbId);
                 }
             },
             handleLikeClick() {
-                //do something
                 if (this.likeActive) {
-                    console.log('liked')
-                    console.log(this.questionDbId)
+                    feedback(FeedbackActions.like, this.questionDbId);
+                    console.log('liked:', this.questionDbId);
                 } else {
-                    console.log('unliked')
+                    feedback(FeedbackActions.cancelLike, this.questionDbId);
+                    console.log('like canceled:', this.questionDbId);
                 }
             },
         }
@@ -73,6 +87,7 @@
         -o-transform: translateX(-50%);
         transform: translateX(-50%);
     }
+
     .left {
         left: 41%;
     }
