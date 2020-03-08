@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <el-row class="d2-text-center index">
+    <el-row class="d2-text-center index pretest-title">
       <h3 v-if="isResultShowing">音频环境测试结果</h3>
       <h3 v-else>音频环境测试</h3>
     </el-row>
@@ -245,4 +245,7 @@
 </script>
 
 <style scoped>
+  .pretest-title {
+    margin-top: 1.0rem;
+  }
 </style>

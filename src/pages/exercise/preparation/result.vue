@@ -1,8 +1,8 @@
 <template>
   <div>
     <!--播放录音音频-->
-    <el-row type="flex" justify="center">
-      <el-col :span="12">
+    <el-row type="flex" justify="center" class="vue-player">
+      <el-col :span="10">
         <vue-plyr>
           <audio>
             <source :src="audioUrl" type="audio/wav"/>
@@ -39,7 +39,13 @@
     <el-row class="d2-text-center">
       <p>{{analysisResult.msg}}</p>
 
+      <el-button v-if="analysisResult.canRcg && analysisResult.qualityIsOk" plain disabled
+                 class="button-choose"
+                 type="primary"
+                 @click="$emit('ready')">专项练习
+      </el-button>
       <el-button v-if="analysisResult.canRcg && analysisResult.qualityIsOk"
+                 class="button-choose"
                  type="primary"
                  @click="$emit('ready')">正式测试
       </el-button>
@@ -71,5 +77,11 @@
 </script>
 
 <style scoped>
+  .button-choose {
+    margin: 0.8rem 1.2rem 0 1.2rem;
+  }
 
+  .vue-player {
+    margin-top: 1.0rem;
+  }
 </style>
