@@ -1,9 +1,8 @@
 <!--邀请界面-->
 <template>
   <d2-container :filename="filename">
-    <template slot="header">邀请码管理</template>
     <div>
-      <el-form ref="invitationForm" :model="formData" label-width="100px" :rules="rules">
+      <el-form ref="invitationForm" :model="formData" label-width="100px" :rules="rules" class="code-creator-form">
         <el-row type="flex" justify="space-around">
           <el-col :span="4"><div></div></el-col>
           <el-col :span="6">
@@ -112,22 +111,22 @@
             highlight-current-row
             style="width: 100%"
         >
-          <el-table-column prop="code" label="邀请码" width="150"></el-table-column>
-          <el-table-column label="创建时间" width="140">
+          <el-table-column prop="code" label="邀请码" width="160"></el-table-column>
+          <el-table-column label="创建时间" width="160">
             <template slot-scope="scope">
               <span>{{ scope.row['create_time'] | stdtime2localtime }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="有效时间">
+          <el-table-column label="有效时间" width="360">
             <template slot-scope="scope">
               <span>{{ scope.row['vip_start_time'] | stdtime2localtime }}</span>
               <span style="margin:0 5px">~</span>
               <span>{{ scope.row['vip_end_time'] | stdtime2localtime }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="remaining_exam_num" label="考试次数" width="80"></el-table-column>
-          <el-table-column prop="available_times" label="可用人数" width="80"></el-table-column>
-          <el-table-column label="用户" width="140" prop="activate_users">
+          <el-table-column prop="remaining_exam_num" label="初始考试次数" width="120"></el-table-column>
+          <el-table-column prop="available_times" label="剩余可用人数" width="120"></el-table-column>
+          <el-table-column label="使用人" width="200" prop="activate_users">
           </el-table-column>
         </el-table>
       </el-col>
@@ -361,6 +360,10 @@
   .dividor {
     margin: 0 5px 20px 5px;
     border-top: 1px solid #cfd7e5;
+  }
+
+  .code-creator-form {
+    margin-top: 0.8rem;
   }
 
   .code-creator-row {
