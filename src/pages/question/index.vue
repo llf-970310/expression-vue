@@ -1,9 +1,7 @@
 <!--题目管理界面-->
 <template>
   <d2-container :filename="filename">
-    <template slot="header">题目管理</template>
-
-    <div>
+    <div class="top-spacer">
       <!--通过题号搜索-->
       <el-row>
         <el-col :span="7">
@@ -268,5 +266,9 @@
 <style scoped>
   .pagination {
     margin-top: 15px;
+  }
+
+  .top-spacer {
+    margin-top: 0.4rem;
   }
 </style>
