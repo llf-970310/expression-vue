@@ -1,10 +1,12 @@
 <!--邀请界面-->
 <template>
-  <d2-container :filename="filename">
+  <d2-container :filename="filename" v-loading="isLoading">
     <div>
-      <el-form ref="invitationForm" :model="formData" label-width="100px" :rules="rules" class="code-creator-form">
+      <h3>邀请码创建</h3>
+      <el-form ref="invitationForm" :model="formData" :rules="rules"
+                label-width="100px" class="code-creator-form">
         <el-row type="flex" justify="space-around">
-          <el-col :span="4"><div></div></el-col>
+          <el-col :span="5"><div></div></el-col>
           <el-col :span="6">
             <el-form-item label="开始时间" prop="vipStartTime">
               <el-date-picker
@@ -31,18 +33,23 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="8"><div></div></el-col>
+          <el-col :span="7"><div></div></el-col>
         </el-row>
         <el-row type="flex" justify="space-around">
           <el-col :span="2"><div></div></el-col>
           <el-col :span="6">
             <el-form-item label="测试次数" prop="remainingExamNum">
-              <el-input-number v-model="formData.remainingExamNum" :min="1"></el-input-number>
+              <el-input-number v-model="formData.remainingExamNum" :min="0"></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="练习次数" prop="remainingExerciseNum">
+              <el-input-number v-model="formData.remainingExerciseNum" :min="0"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="邀请码个数" prop="codeNum">
-              <el-input-number v-model="formData.codeNum" :min="1"></el-input-number>
+              <el-input-number v-model="formData.codeNum" :min="1" :max="1000"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -53,7 +60,7 @@
           <el-col :span="6"><div></div></el-col>
         </el-row>
         <el-row>
-          <el-col :span="18" class="code-creator-row">
+          <el-col :span="20" class="code-creator-row">
             <el-form-item>
               <el-button type="primary" plain @click="onSubmit" class="code-creator-button">创建</el-button>
               <el-button type="primary" plain @click="resetForm" class="code-creator-button">重置</el-button>
@@ -62,9 +69,9 @@
         </el-row>
       </el-form>
     </div>
-    <div class="dividor"></div>
-    <el-row>
-      <el-col :span="24">
+    <h3>邀请码查询</h3>
+    <el-row type="flex" justify="space-around">
+      <el-col :span="19">
         <el-form :inline="true" :model="searchCondition">
           <el-form-item>
             <el-input v-model="searchCondition.code" placeholder="邀请码"></el-input>
@@ -91,7 +98,7 @@
             <el-input v-model="searchCondition.availableTimes" placeholder="可用人数"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button round icon="el-icon-search" class="icon-button" @click="handleSearch"></el-button>
+            <el-button round icon="el-icon-refresh" class="icon-button" @click="handleSearch"></el-button>
           </el-form-item>
           <el-form-item>
             <el-button round icon="el-icon-download" class="icon-button" @click="handleExport"></el-button>
@@ -125,6 +132,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="remaining_exam_num" label="初始考试次数" width="120"></el-table-column>
+          <el-table-column prop="remaining_exercise_num" label="初始练习次数" width="120"></el-table-column>
           <el-table-column prop="available_times" label="剩余可用人数" width="120"></el-table-column>
           <el-table-column label="使用人" width="200" prop="activate_users">
           </el-table-column>
@@ -156,11 +164,13 @@
         name: "invitation",
         data() {
             return {
+                isLoading: false,
                 filename: __filename,
                 formData: {
                     vipStartTime: "",
                     vipEndTime: "",
                     remainingExamNum: 3,
+                    remainingExerciseNum: 0,
                     codeNum: 1,
                     availableTimes: 1
                 },
@@ -232,6 +242,30 @@
                             },
                             trigger: "blur"
                         }
+                    ],
+                    remainingExamNum: [
+                        {required: true, message: '次数不能为空，请填写0', trigger: 'blur'},
+                        {
+                            validator: (rule, value, callback) => {
+                                if (value === 0 && this.formData.remainingExerciseNum === 0) {
+                                    return callback(new Error("测试次数和练习次数不能同时为0"));
+                                }
+                                return callback();
+                            },
+                            trigger: 'submit'
+                        }
+                    ],
+                    remainingExerciseNum: [
+                        {required: true, message: '次数不能为空，请填写0', trigger: 'blur'},
+                        {
+                            validator: (rule, value, callback) => {
+                                if (value === 0 && this.formData.remainingExerciseNum === 0) {
+                                    return callback(new Error("测试次数和练习次数不能同时为0"));
+                                }
+                                return callback();
+                            },
+                            trigger: 'submit'
+                        }
                     ]
                 },
 
@@ -261,15 +295,18 @@
                     if (valid) {
                         let start = this.formData.vipStartTime.getTime() / 1000;
                         let end = this.formData.vipEndTime.getTime() / 1000;
+                        this.isLoading = true;
 
                         createInvitation({
                             vipStartTime: start,
                             vipEndTime: end,
                             remainingExamNum: this.formData.remainingExamNum,
+                            remainingExerciseNum: this.formData.remainingExerciseNum,
                             availableTimes: this.formData.availableTimes,
                             codeNum: this.formData.codeNum
                         }).then(response => {
                             // 成功之后做的事情
+                            this.isLoading = false;
                             this.$alert(
                                 "邀请码：</br>" + this.addLine(response["invitationCode"]),
                                 "创建成功",
@@ -298,6 +335,7 @@
                     vipStartTime: "",
                     vipEndTime: "",
                     remainingExamNum: 3,
+                    remainingExerciseNum: 0,
                     codeNum: 1,
                     availableTimes: 1
                 };
@@ -321,6 +359,7 @@
                 this.handleSearch();
             },
             handleSearch() {
+                this.isLoading = true;
                 const {currentPage, pageSize} = this.pagenation;
                 let start = datetime2stdstr(this.searchCondition.createTimeFrom);
                 let end = datetime2stdstr(this.searchCondition.createTimeTo);
@@ -339,6 +378,7 @@
                 queryInvitations(req).then(response => {
                     this.allInvitations = response["invitationCodes"];
                     this.pagenation.total = response["totalCount"];
+                    this.isLoading = false;
                 });
             },
             handleExport() {
