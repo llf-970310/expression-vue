@@ -1,5 +1,4 @@
-import request from '@/plugin/axios'
-import service from '@/plugin/axios'
+import {request, service} from '@/plugin/axios'
 
 const qs = require('qs')
 
@@ -16,43 +15,43 @@ export function getPrepareTestInfo() {
 
 /**
  * 获取当次预测试应该上传的路径
- * @param test_id 此次预测试 ID
+ * @param testId 此次预测试 ID
  * TODO GET
  */
-export function getPrepareTestUploadPath(test_id) {
+export function getPrepareTestUploadPath(testId) {
     return request({
         url: '/exam/get-test-wav-url',
         method: 'post',
         data: qs.stringify({
-            test_id
+            testId
         })
     })
 }
 
 /**
  * 通知服务器，预测试音频已上传成功
- * @param test_id 此次预测试 ID
+ * @param testId 此次预测试 ID
  */
-export function uploadPrepareTestSuccess(test_id) {
+export function uploadPrepareTestSuccess(testId) {
     return request({
         url: '/exam/upload-test-wav-success',
         method: 'post',
         data: qs.stringify({
-            test_id
+            testId
         })
     })
 }
 
 /**
  * 获取预测试音频已上传成功
- * @param test_id 此次预测试 ID
+ * @param testId 此次预测试 ID
  */
-export function getPrepareTestResult(test_id) {
+export function getPrepareTestResult(testId) {
     return request({
         url: '/exam/get_test_result',
         method: 'post',
         data: qs.stringify({
-            test_id
+            testId
         })
     })
 }
