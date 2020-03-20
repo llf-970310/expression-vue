@@ -83,25 +83,22 @@ export function nextQuestion(nowQuestionNum) {
 /**
  * 获取当题回答应该上传的路径
  * @param nowQuestionNum 当前题号
- * TODO GET
  */
 export function getUploadPath(nowQuestionNum) {
+    // GET /api/exam/<question_num>/upload-url
+    let url = '/exam/' + nowQuestionNum + '/upload-url';
     return request({
-        url: '/exam/get-upload-url',
-        method: 'post',
-        data: qs.stringify({
-            nowQuestionNum: nowQuestionNum
-        })
+        url: url,
+        method: 'get'
     })
 }
 
 export function uploadSuccess(nowQuestionNum) {
+    // POST /api/exam/<question_num>/upload-success
+    let url = '/exam/' + nowQuestionNum + '/upload-success';
     return request({
-        url: '/exam/upload-success',
+        url: url,
         method: 'post',
-        data: qs.stringify({
-            nowQuestionNum: nowQuestionNum
-        })
     })
 }
 
