@@ -1,30 +1,29 @@
-import {request, service} from '@/plugin/axios'
+import request from '@/plugin/axios'
+import service from '@/plugin/axios'
+
+// 上述不可合并成 import {request, service} ...
 
 const qs = require('qs')
 
 /**
  * 获取预测试的音频数据
- * TODO GET
  */
 export function getPrepareTestInfo() {
     return request({
-        url: '/exam/get-test-wav-info',
-        method: 'post',
+        url: '/exam/pretest-wav-info',
+        method: 'get',
     })
 }
 
 /**
  * 获取当次预测试应该上传的路径
  * @param testId 此次预测试 ID
- * TODO GET
  */
 export function getPrepareTestUploadPath(testId) {
     return request({
-        url: '/exam/get-test-wav-url',
-        method: 'post',
-        data: qs.stringify({
-            testId
-        })
+        url: '/exam/pretest-wav-url',
+        method: 'get',
+        params: { testId }
     })
 }
 
@@ -34,7 +33,7 @@ export function getPrepareTestUploadPath(testId) {
  */
 export function uploadPrepareTestSuccess(testId) {
     return request({
-        url: '/exam/upload-test-wav-success',
+        url: '/exam/pretest-analysis',
         method: 'post',
         data: qs.stringify({
             testId
@@ -48,11 +47,9 @@ export function uploadPrepareTestSuccess(testId) {
  */
 export function getPrepareTestResult(testId) {
     return request({
-        url: '/exam/get_test_result',
-        method: 'post',
-        data: qs.stringify({
-            testId
-        })
+        url: '/exam/pretest-result',
+        method: 'get',
+        params: { testId }
     })
 }
 
