@@ -174,7 +174,8 @@
             })
           }).then(() => {
             // 重置重试次数
-            _this.checkPreparation()
+            setTimeout(() => _this.checkPreparation(), 2000);
+            // _this.checkPreparation()
           }).catch()
         });
       },
@@ -238,7 +239,7 @@
 
       reTry(func, arg) {
         this.retryCount++;
-        setTimeout(() => func(arg), 500);
+        setTimeout(() => func(arg), 2000);
       },
     }
   }
