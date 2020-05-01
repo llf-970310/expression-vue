@@ -148,7 +148,7 @@
 </template>
 
 <script>
-  import {getAllType2, getScoreData, getWeightData, updateWeight} from '@/api/optimize'
+  import {getAllType2, getScoreData, getWeightData, updateWeight} from '@/api/manager.optimize'
 
   export default {
     name: 'optimize-manual',

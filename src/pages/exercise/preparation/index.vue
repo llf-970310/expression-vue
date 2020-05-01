@@ -19,7 +19,7 @@
 <script>
   import Preparation from './preparation'
   import Notice from './notice'
-  import { getPrepareTestInfo } from '@/api/question'
+  import { getPrepareTestInfo } from '@/api/manager.exam'
 
   export default {
     name: "preparation-index",
@@ -67,7 +67,7 @@
         this.preparationDataLoading = true
         new Promise((resolve, reject) => {
           getPrepareTestInfo().then(res => {
-            console.log(res)
+            // console.log(res)
             this.preparationId = res['test_id']
             this.questionRawText = res.questionContent
             this.questionTipDetail = res.questionInfo.detail
@@ -77,7 +77,7 @@
 
             resolve()
           }).catch(err => {
-            console.log('err: ', err)
+            // console.log('err: ', err)
             reject(err)
           })
         }).then(() => {

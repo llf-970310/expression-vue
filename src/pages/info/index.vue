@@ -64,9 +64,7 @@
 </template>
 
 <script>
-  import {getInfo} from '@api/user';
-  import {modifyInfo} from '@api/user';
-  import {untying} from '@api/user';
+  import { getInfo, modifyInfo, untying} from '@api/manager.user';
 
   export default {
     components: {},

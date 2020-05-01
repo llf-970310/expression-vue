@@ -162,7 +162,7 @@
 </template>
 
 <script>
-  import {getAllType2, getWeightData, getScoreData, getLastCostData, startAutoOpt} from '@/api/optimize'
+  import {getAllType2, getWeightData, getScoreData, getLastCostData, startAutoOpt} from '@/api/manager.optimize'
 
   export default {
     name: 'optimize-auto',

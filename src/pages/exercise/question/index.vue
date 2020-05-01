@@ -64,7 +64,7 @@
   import QuestionTwo from './question-two/index'
   import QuestionThree from './question-three/index'
 
-  import {getUploadPath, uploadSuccess} from '@/api/question'
+  import {getUploadPath, uploadSuccess} from '@/api/manager.exam'
   import {uploadRecording} from '@/libs/my-recorder'
   import FeedbackBar from "../components/feedback-bar";
 

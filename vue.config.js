@@ -20,7 +20,7 @@ module.exports = {
     // 这个请求被转发到了百度云服务器上，方便开发，百度云的nginx已经修改过了
     // proxy: {
     //   '/api': {
-    //     target: 'http://192.168.1.106:5000/api',
+    //     target: 'https://106.13.160.74/api',
     //     ws: true,
     //     changeOrigin: true,
     //     pathRewrite: {

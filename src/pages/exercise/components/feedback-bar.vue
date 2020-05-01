@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import {feedback, FeedbackActions} from '@/api/question'
+    import {feedback, FeedbackActions} from '@/api/manager.exam'
 
     export default {
         name: "feedback-bar",

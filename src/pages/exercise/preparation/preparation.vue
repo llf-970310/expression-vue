@@ -48,7 +48,7 @@
   import QuestionPreparation from './question-preparation/index'
   import ResultPreparation from './result'
 
-  import { getPrepareTestUploadPath, uploadPrepareTestSuccess, getPrepareTestResult } from '@/api/question'
+  import { getPrepareTestUploadPath, uploadPrepareTestSuccess, getPrepareTestResult } from '@/api/manager.exam'
   import { uploadRecording } from '@/libs/my-recorder'
 
   export default {

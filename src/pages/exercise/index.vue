@@ -55,7 +55,7 @@
   import Preparation from './preparation/index'
   import QuestionFrame from './question/index'
   import ShowResult from './question/showResult'
-  import {checkUnfinishedExam, nextQuestion} from '@/api/question'
+  import {checkUnfinishedExam, nextQuestion} from '@/api/manager.exam'
   import {initAudio} from '@/libs/my-recorder'
 
   export default {
@@ -76,7 +76,7 @@
         audioVolume: 0,
 
         // 预测试已完成的标志
-        hasFinishedPreparation: false,
+        hasFinishedPreparation: true,
         preparationId: '',
 
         // 包含可测试次数
@@ -125,6 +125,9 @@
           avg /= data.length;
           _this.audioVolume = avg * 800;
         });
+
+        // 直接开始考试
+        this.finishPreparation()
       }
 
       // 浏览器页面级提示用户正在离开考试
@@ -171,11 +174,8 @@
           // return ('Opera: ' + Sys.opera);
           return false;
         }
-        if (Sys.safari) {
-          // return ('Safari: ' + Sys.safari);
-          return true;
-        }
-        return false;
+        return !!Sys.safari;
+
       },
 
       /**
@@ -217,11 +217,11 @@
           })
         }).then(() => {
           // 恢复原考试
-          console.log('checkUnfinishedExam resolved')
+          // console.log('checkUnfinishedExam resolved')
           this.nextQuestion()
         }).catch(() => {
           // 生成新考试
-          console.log('checkUnfinishedExam reset')
+          // console.log('checkUnfinishedExam reset')
           this.nextQuestion(true)
         })
       },

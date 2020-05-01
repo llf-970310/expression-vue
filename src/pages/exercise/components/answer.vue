@@ -60,7 +60,7 @@
   import { checkRecorderReady, startRecording, endRecording } from '@/libs/my-recorder'
 
   export default {
-    name: "answer",
+    wname: "answer",
     components: {
       read,
       'count-down': MyCountDown

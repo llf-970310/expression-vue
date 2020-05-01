@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { showScore } from "@api/user";
+import { showScore } from "@api/manager.user";
 
 export default {
   components: {},

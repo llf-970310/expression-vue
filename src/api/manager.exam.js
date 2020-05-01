@@ -134,11 +134,11 @@ export function feedback(feedbackAction, qDbId) {
             service.post(url)
                 .then(res => {
                     resolve(res.data);
-                    console.log(res)
+                    // console.log(res)
                 })
                 .catch(err => {
                     reject(err.data);
-                    console.log(err)
+                    // console.log(err)
                 })
         });
     } else if (method === "delete") {
@@ -146,11 +146,11 @@ export function feedback(feedbackAction, qDbId) {
             service.delete(url)
                 .then(res => {
                     resolve(res.data);
-                    console.log(res)
+                    // console.log(res)
                 })
                 .catch(err => {
                     reject(err.data);
-                    console.log(err)
+                    // console.log(err)
                 })
         });
     }
