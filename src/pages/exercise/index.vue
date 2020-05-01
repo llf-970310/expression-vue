@@ -76,7 +76,7 @@
         audioVolume: 0,
 
         // 预测试已完成的标志
-        hasFinishedPreparation: true,
+        hasFinishedPreparation: false,
         preparationId: '',
 
         // 包含可测试次数
@@ -125,9 +125,9 @@
           avg /= data.length;
           _this.audioVolume = avg * 800;
         });
-
-        // 直接开始考试
-        this.finishPreparation()
+        //
+        // // 直接开始考试
+        // this.finishPreparation()
       }
 
       // 浏览器页面级提示用户正在离开考试
@@ -197,7 +197,7 @@
             console.log('don\'t have unfinished exam')
             reject()
           }).catch(err => {
-            console.log('err: ', err)
+            // console.log('err: ', err)
 
             if (err.code === 2) {
               // 有考试正在进行中
