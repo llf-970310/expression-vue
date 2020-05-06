@@ -23,17 +23,17 @@
       </el-col>
     </el-row>
 
-    <div v-if="audioVolume">
+    <div>
       <!--音量满格的图片-->
       <div style="height: 100px; width:100px; margin:0 auto;
-                  background-image: url('https://i.loli.net/2019/06/12/5d00e4ccb034870928.png');
+                  background-image: url('/image/volume/full.jpg');
                   background-size: 100px 100px;">
         <div class="d2-text-center"
              style="width: 100px; overflow: hidden;"
              :style="{height: audioVolumeEmptyHeight}">
           <!--音量空格的图片-->
           <el-image style="width: 100px; height: 100px;"
-                    src="https://i.loli.net/2019/06/12/5d00e4cc1f14874764.png"
+                    :src="`${$baseUrl}image/volume/empty.jpg`"
                     fit="fill">
           </el-image>
         </div>
@@ -87,6 +87,7 @@
     },
     computed: {
       audioVolumeEmptyHeight: function () {
+          // return '30px'
         let audioFullHeight = this.audioVolume > 100 ? 100 : this.audioVolume;
         return (100 - audioFullHeight) + 'px'
       }
