@@ -22,18 +22,17 @@
         </div>
       </el-col>
     </el-row>
-
-    <div>
+    <div v-if="audioVolume">
       <!--音量满格的图片-->
       <div style="height: 100px; width:100px; margin:0 auto;
-                  background-image: url('/image/volume/full.jpg');
+                  background-image: url('/image/volume/full.png');
                   background-size: 100px 100px;">
         <div class="d2-text-center"
              style="width: 100px; overflow: hidden;"
              :style="{height: audioVolumeEmptyHeight}">
           <!--音量空格的图片-->
           <el-image style="width: 100px; height: 100px;"
-                    :src="`${$baseUrl}image/volume/empty.jpg`"
+                    :src="`${$baseUrl}image/volume/empty.png`"
                     fit="fill">
           </el-image>
         </div>
