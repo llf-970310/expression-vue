@@ -1,7 +1,6 @@
 <!--朗读题-->
 <template>
-  <div>
-    {{ text }}
+  <div v-html="text">
   </div>
 </template>
 

@@ -1,14 +1,10 @@
 <!--题目tip-->
 <template>
   <div>
-    <el-row class="d2-text-center">
-      {{ detail }}
+    <el-row class="d2-text-center" v-html="detail">
     </el-row>
-
     <br>
-
-    <el-row class="d2-text-center">
-      {{ tip }}
+    <el-row class="d2-text-center" v-html="tip">
     </el-row>
 
     <br>
