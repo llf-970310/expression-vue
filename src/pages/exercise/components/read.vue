@@ -1,6 +1,6 @@
 <!--朗读题-->
 <template>
-  <div v-html="text">
+  <div v-html="text" style="text-align: justify">
   </div>
 </template>
 
