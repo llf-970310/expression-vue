@@ -26,7 +26,7 @@
 import echarts from "echarts";
 import tooltip from "echarts/lib/component/tooltip";
 import toolbox from "echarts/lib/component/toolbox";
-import { getResult } from "@api/manager.question";
+import { getResult } from "@api/manager.exam";
 import { mapActions } from "vuex";
 
 export default {
