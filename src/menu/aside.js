@@ -38,7 +38,7 @@ export default [
     icon: 'folder-o',
     role: 'user',
     children: [
-      {path: '/exercise', title: '表达力评测'},
+      {path: '/exercise', title: '评测页'},
       {path: '/history', title: '历史成绩'},
     ]
   },

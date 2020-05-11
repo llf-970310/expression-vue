@@ -13,7 +13,7 @@ export default {
       path: 'index',
       name: `${pre}exercise`,
       component: () => import('@/pages/exercise'),
-      meta: {...meta, title: '表达力评测', cache: true}
+      meta: {...meta, title: '评测页', cache: true}
     },
   ])('user-')
 }

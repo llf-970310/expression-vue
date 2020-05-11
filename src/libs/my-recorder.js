@@ -10,7 +10,6 @@ let recorder;
 export function initAudio(onProcessFunc) {
   try {
     // webkit shim
-    console.log('ttttthis')
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
     window.URL = window.URL || window.webkitURL;
@@ -27,7 +26,6 @@ export function initAudio(onProcessFunc) {
     }
   } catch (e) {
     canAudioUse = false;
-    console.log('ttttthat')
     browserError();
     return canAudioUse;
   }

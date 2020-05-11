@@ -58,22 +58,29 @@ export function getPrepareTestResult(testId) {
  */
 export function checkUnfinishedExam() {
     return request({
-        url: '/exam/find-left-exam',
+        url: '/exam/left',
+        method: 'get',
+    })
+}
+
+/**
+ * 初始化考试
+ */
+export function initExam (/*examTemplateID*/) {
+    return request({
+        url: 'exam/new',
         method: 'post',
     })
 }
 
 /**
  * 获取下一题
- * TODO GET
+ * @param nowQuestionNum 获取第一题时为0
  */
 export function nextQuestion(nowQuestionNum) {
     return request({
-        url: '/exam/next-question',
-        method: 'post',
-        data: qs.stringify({
-            nowQuestionNum: nowQuestionNum
-        })
+        url: '/exam/'+nowQuestionNum+'/next-question',
+        method: 'get'
     })
 }
 
@@ -82,19 +89,20 @@ export function nextQuestion(nowQuestionNum) {
  * @param nowQuestionNum 当前题号
  */
 export function getUploadPath(nowQuestionNum) {
-    // GET /api/exam/<question_num>/upload-url
-    let url = '/exam/' + nowQuestionNum + '/upload-url';
     return request({
-        url: url,
+        url: '/exam/' + nowQuestionNum + '/upload-url',
         method: 'get'
     })
 }
 
+/**
+ * 上传成功回调
+ * @param nowQuestionNum 当前题号
+ */
+
 export function uploadSuccess(nowQuestionNum) {
-    // POST /api/exam/<question_num>/upload-success
-    let url = '/exam/' + nowQuestionNum + '/upload-success';
     return request({
-        url: url,
+        url: '/exam/' + nowQuestionNum + '/upload-success',
         method: 'post',
     })
 }
@@ -104,8 +112,8 @@ export function uploadSuccess(nowQuestionNum) {
  */
 export function getResult() {
     return request({
-        url: '/exam/get-result',
-        method: 'post'
+        url: '/exam/result',
+        method: 'get'
     })
 }
 

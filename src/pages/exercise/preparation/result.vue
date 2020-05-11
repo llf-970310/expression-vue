@@ -10,7 +10,7 @@
         </vue-plyr>
       </el-col>
     </el-row>
-
+    
     <el-row type="flex" justify="space-around">
       <el-col :span="8">
         <div style="float: right;">
@@ -35,10 +35,26 @@
         </p>
       </el-col>
     </el-row>
-
+    <!--<el-row class="d2-text-center">-->
+      <!--<p>{{analysisResult.msg}}</p>-->
+      <!--<el-button v-if="!analysisResult.canRcg || !analysisResult.qualityIsOk" type="danger" @click="$emit('fail')">-->
+        <!--重新测试-->
+      <!--</el-button>-->
+      <!--<div v-else>-->
+        <!--<el-select v-model="value" placeholder="请选择评测类型" value="" size="medium" clearable>-->
+          <!--<el-option-->
+              <!--v-for="item in examTemplate"-->
+              <!--:key="item.value"-->
+              <!--:label="item.label"-->
+              <!--:value="item.value">-->
+          <!--</el-option>-->
+        <!--</el-select>-->
+      <!--</div>-->
+    <!--</el-row>-->
+    
     <el-row class="d2-text-center">
       <p>{{analysisResult.msg}}</p>
-
+  
       <el-button v-if="analysisResult.canRcg && analysisResult.qualityIsOk" plain disabled
                  class="button-choose"
                  type="primary"
@@ -59,7 +75,7 @@
 
 <script>
   export default {
-    name: "result-preparation",
+    name: 'result-preparation',
     props: {
       // 预测试的结果对象
       analysisResult: {
@@ -72,6 +88,23 @@
         required: true,
         type: String
       }
+    },
+    data () {
+      return {
+        examTemplate: [],
+        value: ''
+      }
+    },
+    mounted () {
+      this.initExamTemplate()
+    },
+    methods: {
+      initExamTemplate: function () {
+        this.examTemplate.push({
+          value: 'ddd',
+          label: '表达能力评测'
+        })
+      }
     }
   }
 </script>
@@ -80,7 +113,7 @@
   .button-choose {
     margin: 0.8rem 1.2rem 0 1.2rem;
   }
-
+  
   .vue-player {
     margin-top: 1.0rem;
   }
