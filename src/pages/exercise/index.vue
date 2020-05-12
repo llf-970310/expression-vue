@@ -107,6 +107,8 @@
 
         // 题目对应数据库id,用于点赞收藏反馈
         curQuestionDbId: '',
+        // 记录当前试卷templateId
+        templateId:'',
       }
     },
     mounted () {
@@ -190,10 +192,11 @@
        */
       finishPreparation (templateId) {
         this.hasFinishedPreparation = true
+        this.templateId =  templateId;
 
         checkUnfinishedExam().then(() => {
           // 没有未完成的考试，开始考试
-          this.newExam(templateId)
+          this.newExam()
         }).catch(err => {
           // console.log('err: ', err)
           if (err.code === 2) {
@@ -207,14 +210,14 @@
               this.curQuestionIndex = parseInt(questionData['next_q_num']) - 1
               this.nextQuestion()
             }).catch(() => {
-              this.newExam(templateId)
+              this.newExam()
             })
           }
         })
       },
-      newExam (templateId) {
+      newExam () {
         this.dataLoading = true
-        initExam(templateId).then(() => {
+        initExam(this.templateId).then(() => {
           // 初始化成功，下一题开始
           this.nextQuestion()
         }).catch(err => {
