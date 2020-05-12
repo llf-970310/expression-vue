@@ -11,7 +11,7 @@
                  :question-answer-time="questionAnswerTime"
                  :audio-volume="audioVolume"
                  @retest="retest"
-                 @prepared="$emit('prepared')">
+                 @prepared="templateID=>$emit('prepared',templateID)">
     </preparation>
   </div>
 </template>

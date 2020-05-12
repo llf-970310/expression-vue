@@ -63,12 +63,19 @@ export function checkUnfinishedExam() {
     })
 }
 
+export function getPaperTemplates () {
+    return request({
+        url: '/exam/paper-templates',
+        method: 'get',
+    })
+}
+
 /**
  * 初始化考试
  */
-export function initExam (/*examTemplateID*/) {
+export function initExam (paperTemplateID) {
     return request({
-        url: 'exam/new',
+        url: 'exam/new/'+paperTemplateID,
         method: 'post',
     })
 }

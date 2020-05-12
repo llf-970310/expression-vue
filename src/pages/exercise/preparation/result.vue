@@ -35,45 +35,52 @@
         </p>
       </el-col>
     </el-row>
-    <!--<el-row class="d2-text-center">-->
-      <!--<p>{{analysisResult.msg}}</p>-->
-      <!--<el-button v-if="!analysisResult.canRcg || !analysisResult.qualityIsOk" type="danger" @click="$emit('fail')">-->
-        <!--重新测试-->
-      <!--</el-button>-->
-      <!--<div v-else>-->
-        <!--<el-select v-model="value" placeholder="请选择评测类型" value="" size="medium" clearable>-->
-          <!--<el-option-->
-              <!--v-for="item in examTemplate"-->
-              <!--:key="item.value"-->
-              <!--:label="item.label"-->
-              <!--:value="item.value">-->
-          <!--</el-option>-->
-        <!--</el-select>-->
-      <!--</div>-->
-    <!--</el-row>-->
-    
     <el-row class="d2-text-center">
       <p>{{analysisResult.msg}}</p>
-  
-      <el-button v-if="analysisResult.canRcg && analysisResult.qualityIsOk" plain disabled
-                 class="button-choose"
-                 type="primary"
-                 @click="$emit('ready')">专项练习
+      <el-button v-if="!analysisResult.canRcg || !analysisResult.qualityIsOk" type="danger" @click="$emit('fail')">
+        重新测试
       </el-button>
-      <el-button v-if="analysisResult.canRcg && analysisResult.qualityIsOk"
-                 class="button-choose"
-                 type="primary"
-                 @click="$emit('ready')">正式测试
-      </el-button>
-      <el-button v-else
-                 type="danger"
-                 @click="$emit('fail')">重新测试
-      </el-button>
+      <el-row class="d2-text-center" v-else>
+        <el-col :span="8" :offset="4">
+          <el-select v-model="value" placeholder="请选择评测类型" value="" size="medium" clearable>
+            <el-option
+                v-for="item in examTemplate"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="8">
+          <el-button type="primary" @click="$emit('ready',value)" :disabled="value===''">开始评测</el-button>
+        </el-col>
+      </el-row>
     </el-row>
+    
+    <!--<el-row class="d2-text-center">-->
+    <!--<p>{{analysisResult.msg}}</p>-->
+    <!---->
+    <!--<el-button v-if="analysisResult.canRcg && analysisResult.qualityIsOk" plain disabled-->
+    <!--class="button-choose"-->
+    <!--type="primary"-->
+    <!--@click="$emit('ready')">专项练习-->
+    <!--</el-button>-->
+    <!--<el-button v-if="analysisResult.canRcg && analysisResult.qualityIsOk"-->
+    <!--class="button-choose"-->
+    <!--type="primary"-->
+    <!--@click="$emit('ready')">正式测试-->
+    <!--</el-button>-->
+    <!--<el-button v-else-->
+    <!--type="danger"-->
+    <!--@click="$emit('fail')">重新测试-->
+    <!--</el-button>-->
+    <!--</el-row>-->
   </div>
 </template>
 
 <script>
+  import { getPaperTemplates } from '@/api/manager.exam'
+
   export default {
     name: 'result-preparation',
     props: {
@@ -96,14 +103,23 @@
       }
     },
     mounted () {
-      this.initExamTemplate()
+      this.initPaperTemplate()
     },
     methods: {
-      initExamTemplate: function () {
-        this.examTemplate.push({
-          value: 'ddd',
-          label: '表达能力评测'
+      initPaperTemplate: function () {
+        getPaperTemplates().then(res => {
+          let { paperTemplates } = res
+          paperTemplates.forEach(template => {
+            let { tpl_id, name } = template
+            this.examTemplate.push({
+              value: tpl_id,
+              label: name
+            })
+          })
+        }).catch(err => {
+          console.error(err)
         })
+
       }
     }
   }

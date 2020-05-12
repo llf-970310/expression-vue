@@ -188,12 +188,12 @@
       /**
        * 结束预测试的准备阶段，检查是否有未完成的测试
        */
-      finishPreparation () {
+      finishPreparation (templateId) {
         this.hasFinishedPreparation = true
 
         checkUnfinishedExam().then(() => {
           // 没有未完成的考试，开始考试
-          this.newExam()
+          this.newExam(templateId)
         }).catch(err => {
           // console.log('err: ', err)
           if (err.code === 2) {
@@ -207,14 +207,14 @@
               this.curQuestionIndex = parseInt(questionData['next_q_num']) - 1
               this.nextQuestion()
             }).catch(() => {
-              this.newExam()
+              this.newExam(templateId)
             })
           }
         })
       },
-      newExam (/*examTemplate*/) {
+      newExam (templateId) {
         this.dataLoading = true
-        initExam().then(() => {
+        initExam(templateId).then(() => {
           // 初始化成功，下一题开始
           this.nextQuestion()
         }).catch(err => {

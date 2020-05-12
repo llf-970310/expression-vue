@@ -19,7 +19,7 @@
           <el-col :offset="3" :span="18">
             <result-preparation :analysis-result="analysisResult"
                                 :audio-url="audioData"
-                                @ready="$emit('prepared')"
+                                @ready="templateID=>$emit('prepared',templateID)"
                                 @fail="$emit('retest')">
             </result-preparation>
           </el-col>
