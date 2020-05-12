@@ -52,6 +52,7 @@
     methods: {
       finishPreparation() {
         this.isPreparation = false
+        this.$emit('nextStep')
       },
       finishAnswer() {
         this.$emit('next')

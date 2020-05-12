@@ -10,7 +10,7 @@
     <div v-if="isTipShowing">
       <tip :detail="questionTipDetail" :tip="questionTip" @showQuestion="showQuestion"></tip>
     </div>
-
+    
     <!--题目内容-->
     <div v-else>
       <!--测试结果-->
@@ -153,7 +153,7 @@
         const _this = this
         uploadRecording(_this.uploadLocation, _this.uploadUrl, function (audioData) {
           new Promise((resolve, reject) => {
-            //上传成功调用，告知服务器进行分析
+            // 上传成功调用，告知服务器进行分析
             uploadPrepareTestSuccess(_this.preparationId).then(res => {
               // console.log('uploadPrepareTestSuccess');
               _this.audioData = audioData;

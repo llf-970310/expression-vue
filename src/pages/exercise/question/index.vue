@@ -1,7 +1,15 @@
 <!--【一道题目】，包含<题目tip + 准备时间（可选） + 回答时间>-->
 <template>
   <div>
-    
+    <el-row>
+      <el-col :span="12" :offset="6">
+        <el-steps id="dsds" :active="active" finish-status="success" align-center>
+          <el-step title="阅读要求"></el-step>
+          <el-step title="准备作答"></el-step>
+          <el-step title="正在录音"></el-step>
+        </el-steps>
+      </el-col>
+    </el-row>
     <!--题目编号-->
     <el-row class="index">
       <el-col :span="18" class="d2-text-center">
@@ -19,12 +27,10 @@
         </exercise-timer>
       </el-col>
     </el-row>
-    
     <!--题目tip-->
     <div v-if="isTipShowing">
       <tip :detail="questionTipDetail" :tip="questionTip" @showQuestion="showQuestion"></tip>
     </div>
-    
     <!--题目内容-->
     <div v-else>
       <el-row>
@@ -34,28 +40,32 @@
                         :preparation-time="questionPreparationTime"
                         :answer-time="questionAnswerTime"
                         :audio-volume="audioVolume"
-                        @next="nextQuestion">
+                        @next="nextQuestion"
+                        @nextStep="nextStep">
           </question-one>
           <question-two v-if="questionType === 2"
                         :text="questionRawText"
                         :preparation-time="questionPreparationTime"
                         :answer-time="questionAnswerTime"
                         :audio-volume="audioVolume"
-                        @next="nextQuestion">
+                        @next="nextQuestion"
+                        @nextStep="nextStep">
           </question-two>
           <question-three v-if="questionType === 3"
                           :text="questionRawText"
                           :preparation-time="questionPreparationTime"
                           :answer-time="questionAnswerTime"
                           :audio-volume="audioVolume"
-                          @next="nextQuestion">
+                          @next="nextQuestion"
+                          @nextStep="nextStep">
           </question-three>
           <question-five-six v-if="questionType === 5 || questionType === 6"
                              :text="questionRawText"
                              :preparation-time="questionPreparationTime"
                              :answer-time="questionAnswerTime"
                              :audio-volume="audioVolume"
-                             @next="nextQuestion">
+                             @next="nextQuestion"
+                             @nextStep="nextStep">
           </question-five-six>
         </el-col>
       </el-row>
@@ -127,27 +137,33 @@
 
         // 重试相关的参数
         retryCount: 0,
-        maxRetry: 20
+        maxRetry: 20,
+        active: 0
       }
     },
     methods: {
+      // 下一步（展示条用）这种实现绑定了三步做题步骤，实际上不是很好
+      nextStep () {
+        this.active = (this.active + 1) % 3
+      },
       // 点击「显示题目」
       showQuestion () {
         this.isTipShowing = false
+        this.nextStep()
       },
 
       /**
        * 回答结束，在获取下一道题目前，获取录音上传路径，并根据返回的上传 url 将音频上传
        */
       nextQuestion () {
-          getUploadPath(this.questionIndex).then(res => {
-            this.uploadLocation = res.fileLocation
-            this.uploadUrl = res.url
-            this.uploadCurRecording()
-            this.$emit('next')
-          }).catch(err => {
-            console.log('err: ', err)
-          })
+        getUploadPath(this.questionIndex).then(res => {
+          this.uploadLocation = res.fileLocation
+          this.uploadUrl = res.url
+          this.uploadCurRecording()
+          this.$emit('next')
+        }).catch(err => {
+          console.log('err: ', err)
+        })
       },
 
       /**
@@ -157,7 +173,7 @@
         const _this = this
 
         uploadRecording(_this.uploadLocation, _this.uploadUrl, function () {
-          //上传成功调用，告知服务器进行分析
+          // 上传成功调用，告知服务器进行分析
           uploadSuccess(_this.questionIndex).then(res => {
             if (_this.isLastQuestion) {
               _this.$emit('showResult')
@@ -167,6 +183,7 @@
               _this.reTry(([location, url]) => uploadRecording(location, url), [_this.uploadLocation, _this.uploadUrl])
             } else {
               console.log('Try uploadCurRecording() max times!')
+              console.error(err)
             }
           })
         })

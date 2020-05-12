@@ -56,7 +56,6 @@
         </el-col>
       </el-row>
     </el-row>
-    
     <!--<el-row class="d2-text-center">-->
     <!--<p>{{analysisResult.msg}}</p>-->
     <!---->
@@ -110,16 +109,14 @@
         getPaperTemplates().then(res => {
           let { paperTemplates } = res
           paperTemplates.forEach(template => {
-            let { tpl_id, name } = template
             this.examTemplate.push({
-              value: tpl_id,
-              label: name
+              value: template['tpl_id'],
+              label: template['name']
             })
           })
         }).catch(err => {
           console.error(err)
         })
-
       }
     }
   }
@@ -129,7 +126,6 @@
   .button-choose {
     margin: 0.8rem 1.2rem 0 1.2rem;
   }
-  
   .vue-player {
     margin-top: 1.0rem;
   }
