@@ -7,7 +7,7 @@ const qs = require('qs')
  */
 export function getInfo () {
     return request({
-        url: '/auth/user/info',
+        url: '/account/info',
         method: 'get'
     })
 }
@@ -18,7 +18,7 @@ export function getInfo () {
 export function modifyInfo (data) {
     // console.log(data)
     return request({
-        url: '/auth/update',
+        url: '/account/update',
         method: 'post',
         data: qs.stringify(data)
     })
@@ -29,14 +29,14 @@ export function modifyInfo (data) {
  */
 export function untying () {
     return request({
-        url: '/auth/untying',
+        url: '/account/unbind-wx',
         method: 'post'
     })
 }
 
 export function showScore () {
     return request({
-        url: '/auth/showscore',
-        method: 'post'
+        url: '/account/history-scores',
+        method: 'get'
     })
 }
