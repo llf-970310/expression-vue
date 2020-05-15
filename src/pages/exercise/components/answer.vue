@@ -6,7 +6,8 @@
       <read :text="text"></read>
     </div>
 
-    <count-down ref="countdown"
+    <count-down class="answer-countdown d2-text-center"
+                ref="countdown"
                 :time-to-count="timeToCount"
                 :total-time="timeToCount"
                 @end="handleCountDown">
@@ -15,10 +16,10 @@
     <el-row class="answer_btn">
       <el-col class="d2-text-center">
         <div v-if="isPreparation">
-          <el-button type="success" @click="directToAnswer">立刻回答</el-button>
+          <el-button type="success" @click="directToAnswer">开始录音</el-button>
         </div>
         <div v-else>
-          <el-button type="danger" :loading="answerFinishing" @click="finishAnswer">结束回答</el-button>
+          <el-button type="danger" :loading="answerFinishing" @click="finishAnswer">提前结束</el-button>
         </div>
       </el-col>
     </el-row>
@@ -155,5 +156,8 @@
 <style scoped>
   .answer_btn {
     margin-top: 15px;
+  }
+  .answer-countdown{
+    margin: 20px 0 0 0;
   }
 </style>

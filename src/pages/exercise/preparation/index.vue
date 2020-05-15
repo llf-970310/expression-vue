@@ -1,40 +1,31 @@
 <template>
-  <div v-if="isNoticeShowing">
-    <notice @noticed="isNoticeShowing=false"></notice>
-  </div>
-  <div v-else>
-    <preparation v-loading="preparationDataLoading"
-                 :question-tip-detail="questionTipDetail" :question-tip="questionTip"
-                 :preparation-id="preparationId"
-                 :question-raw-text="questionRawText"
-                 :question-preparation-time="questionPreparationTime"
-                 :question-answer-time="questionAnswerTime"
-                 :audio-volume="audioVolume"
-                 @retest="retest"
-                 @prepared="templateID=>$emit('prepared',templateID)">
-    </preparation>
-  </div>
+  <preparation v-loading="preparationDataLoading"
+               :question-tip-detail="questionTipDetail" :question-tip="questionTip"
+               :preparation-id="preparationId"
+               :question-raw-text="questionRawText"
+               :question-answer-time="questionAnswerTime"
+               :audio-volume="audioVolume"
+               @retest="retest"
+               @prepared="templateID=>$emit('prepared',templateID)">
+  </preparation>
 </template>
 
 <script>
   import Preparation from './preparation'
-  import Notice from './notice'
   import { getPrepareTestInfo } from '@/api/manager.exam'
 
   export default {
-    name: "preparation-index",
+    name: 'preparation-index',
     components: {
       'preparation': Preparation,
-      'notice': Notice,
     },
     props: {
       // 音量大小
       audioVolume: Number,
     },
-    data() {
+    data () {
       return {
         // 展示温馨提示
-        isNoticeShowing: true,
 
         // 预测试数据加载中
         preparationDataLoading: false,
@@ -50,12 +41,11 @@
         questionTip: '',
 
         // 预测试的问题时间限制，【以秒为单位】
-        questionPreparationTime: 0,
         questionAnswerTime: 0,
       }
     },
 
-    mounted() {
+    mounted () {
       this.preparation()
     },
 
@@ -63,7 +53,7 @@
       /**
        * 新建一次预测试
        */
-      preparation() {
+      preparation () {
         this.preparationDataLoading = true
         new Promise((resolve, reject) => {
           getPrepareTestInfo().then(res => {
@@ -72,9 +62,7 @@
             this.questionRawText = res.questionContent
             this.questionTipDetail = res.questionInfo.detail
             this.questionTip = res.questionInfo.tip
-            this.questionPreparationTime = res.readLimitTime
             this.questionAnswerTime = res.questionLimitTime
-
             resolve()
           }).catch(err => {
             // console.log('err: ', err)
@@ -88,10 +76,7 @@
       /**
        * 重新测试
        */
-      retest() {
-        // 重新展示温馨提示界面
-        this.isNoticeShowing = true;
-
+      retest () {
         // 重新测试
         this.preparation()
       }

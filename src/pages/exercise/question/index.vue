@@ -3,28 +3,26 @@
   <div>
     <el-row>
       <el-col :span="12" :offset="6">
-        <el-steps id="dsds" :active="active" finish-status="success" align-center>
+        <el-steps :active="active" finish-status="success" align-center>
           <el-step title="阅读要求"></el-step>
           <el-step title="准备作答"></el-step>
           <el-step title="正在录音"></el-step>
         </el-steps>
       </el-col>
     </el-row>
-    <!--题目编号-->
+    <!--考试时间&题目编号-->
     <el-row class="index">
-      <el-col :span="18" class="d2-text-center">
-        <el-row>
-          <el-col :offset="15" :span="2">
-            <h3>{{ questionIndex }}</h3>
-          </el-col>
-        </el-row>
-      </el-col>
-      <el-col :span="6" class="total-timer">
+      <el-col :span="10" class="exercise-left-time">
         <exercise-timer :time-to-count="exerciseLeftTime"
                         :total-time="exerciseTime"
                         :only-seconds="false"
-                        @end="handleExerciseTimeEnd">
+                        @end="handleExerciseTimeEnd"
+                        :show-progress="false"
+                        left-time-string="本次评测剩余时间">
         </exercise-timer>
+      </el-col>
+      <el-col :span="4" class="d2-text-center question-index">
+        {{ questionIndex }}
       </el-col>
     </el-row>
     <!--题目tip-->
@@ -212,10 +210,16 @@
 
 <style scoped>
   .index {
-    margin-bottom: 20px;
+    margin: 20px 0 30px 0;
   }
   
-  .total-timer {
-    text-align: right;
+  .exercise-left-time {
+    font-size: 14px;
+    color: #909399;
+  }
+  
+  .question-index {
+    font-size: 26px;
+    line-height: 26px;
   }
 </style>

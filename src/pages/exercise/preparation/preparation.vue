@@ -8,7 +8,7 @@
 
     <!--题目tip-->
     <div v-if="isTipShowing">
-      <tip :detail="questionTipDetail" :tip="questionTip" @showQuestion="showQuestion"></tip>
+      <tip :detail="questionTipDetail" :tip="questionTip" button-name="显示文字" @showQuestion="showQuestion"></tip>
     </div>
     
     <!--题目内容-->
@@ -20,7 +20,7 @@
             <result-preparation :analysis-result="analysisResult"
                                 :audio-url="audioData"
                                 @ready="templateID=>$emit('prepared',templateID)"
-                                @fail="$emit('retest')">
+                                @fail="reTest()">
             </result-preparation>
           </el-col>
         </el-row>
@@ -31,7 +31,6 @@
         <el-row>
           <el-col :offset="3" :span="18">
             <question-preparation :text="questionRawText"
-                                  :preparation-time="questionPreparationTime"
                                   :answer-time="questionAnswerTime"
                                   :audio-volume="audioVolume"
                                   @next="uploadAndCheckPreparation">
@@ -70,7 +69,6 @@
       questionRawText: String,
 
       // 预测试的问题时间限制，【以秒为单位】
-      questionPreparationTime: Number,
       questionAnswerTime: Number,
 
       // 音量大小
@@ -110,6 +108,11 @@
        */
       showQuestion() {
         this.isTipShowing = false
+      },
+      reTest(){
+        this.isTipShowing = true
+        this.isResultShowing = false
+        this.$emit('retest')
       },
 
       /**
@@ -203,11 +206,11 @@
                 resolve()
               } else {
                 // 声音预测试不通过，重新测试
-                this.analysisResult.msg = '您的声音质量不高，这可能由环境或麦克风记录导致，请进行调整噢～'
+                this.analysisResult.msg = '您的声音质量不高，这可能由环境或麦克风记录导致。参看'
               }
             } else {
               // 不能识别，重新测试
-              this.analysisResult.msg = '您的声音暂不能识别，请尽可能说清楚，并保持环境安静噢～'
+              this.analysisResult.msg = '您的声音暂不能识别，请尽可能说清楚，并保持环境安静。参看'
             }
           }).catch(err => {
             if (err.code === 4002) {

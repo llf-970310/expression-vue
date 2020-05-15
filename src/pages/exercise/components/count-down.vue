@@ -5,10 +5,10 @@
     <!--倒计时只管剩余多久，进度条才关心总时间及比例-->
     <countdown ref="countdown" :time="timeToCountByMilliSec" @end="handleEnd">
       <template slot-scope="props">
-        <p v-if="onlySeconds" class="d2-text-center">剩余时间 {{ props.totalSeconds }} 秒</p>
-        <p v-else class="d2-text-center">剩余时间 {{ props.minutes }} 分 {{ props.seconds }} 秒</p>
+        <span v-if="onlySeconds">{{leftTimeString}} {{ props.totalSeconds }} 秒</span>
+        <span v-else>{{leftTimeString}} {{ props.minutes }} 分 {{ props.seconds }} 秒</span>
         <!--timeToCount为秒单位，countdown组件接受的time属性单位为ms，props.totalSeconds为秒单位-->
-        <el-progress :show-text="false" :stroke-width="18" :percentage="props.totalSeconds / totalTime * 100"
+        <el-progress class="count-down-progress" v-if="showProgress" :show-text="false" :stroke-width="18" :percentage="props.totalSeconds / totalTime * 100"
                      status="exception"></el-progress>
       </template>
     </countdown>
@@ -39,6 +39,16 @@
         type: Boolean,
         default: true
       },
+      showProgress:{
+        required: false,
+        type: Boolean,
+        default: true
+      },
+      leftTimeString:{
+        required:false,
+        type: String,
+        default: "剩余时间"
+      }
     },
     components: {
       'countdown': VueCountdown
@@ -68,5 +78,7 @@
 </script>
 
 <style scoped>
-
+  .count-down-progress{
+    margin: 20px 0 0 0;
+  }
 </style>
