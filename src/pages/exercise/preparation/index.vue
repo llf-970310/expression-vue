@@ -58,7 +58,7 @@
         new Promise((resolve, reject) => {
           getPrepareTestInfo().then(res => {
             // console.log(res)
-            this.preparationId = res['test_id']
+            this.preparationId = res.testId
             this.questionRawText = res.questionContent
             this.questionTipDetail = res.questionInfo.detail
             this.questionTip = res.questionInfo.tip
