@@ -177,7 +177,7 @@
             })
           }).then(() => {
             // 重置重试次数
-            setTimeout(() => _this.checkPreparation(), 2000);
+            setTimeout(() => _this.checkPreparation(), 1000);
             // _this.checkPreparation()
           }).catch()
         });
