@@ -143,7 +143,7 @@
     },
     mounted() {
       this.initInfo();
-      this.initHistoryScore();
+      // this.initHistoryScore();
 
     },
     methods: {
