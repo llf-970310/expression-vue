@@ -1,5 +1,8 @@
 import util from '@/libs/util.js'
 import api from '@/api/sys.auth'
+import store from '@/store/index'
+import router from '@/router'
+
 
 export default {
     namespaced: true,
@@ -27,6 +30,17 @@ export default {
                         }, {root: true})
                         // 用户登录后从持久化数据加载一系列的设置
                         await dispatch('load')
+                        let curRole = res.role
+                        store.dispatch('d2admin/permission/GenerateRoutes', curRole).then(() => { // 根据roles权限生成可访问的路由表
+                            // console.log('1234')
+                            // console.log(store.getters['d2admin/permission/addRouters'])
+
+                            router.addRoutes(store.getters['d2admin/permission/addRouters']) // 动态添加可访问路由表
+                            // console.log(router)
+                            // next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+                        })
+                        // TODO 更新其他可能相关的前端信息
+                        store.dispatch('d2admin/user/setRole', curRole).then()
                         // 结束
                         resolve()
                     })
