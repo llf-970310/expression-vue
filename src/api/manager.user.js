@@ -34,6 +34,16 @@ export function untying () {
     })
 }
 
+/**
+ * 使用邀请码更新权限
+ */
+export function updatePrivilege (code) {
+    return request({
+        url: '/account/update-privilege/' + code,
+        method: 'post'
+    })
+}
+
 export function showScore () {
     return request({
         url: '/account/history-scores',

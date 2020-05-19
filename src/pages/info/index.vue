@@ -54,6 +54,11 @@
             <el-button slot="append" @click="releaseBind">{{ bindText }}</el-button>
           </el-input>
         </el-form-item>
+        <el-form-item label="邀请码">
+          <el-input v-model="invitationCode">
+            <el-button slot="append" @click="updatePrivilege">更新权限</el-button>
+          </el-input>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="save">保存</el-button>
           <!--          <el-button>取消</el-button>-->
@@ -64,7 +69,7 @@
 </template>
 
 <script>
-  import { getInfo, modifyInfo, untying} from '@api/manager.user';
+  import { getInfo, modifyInfo, untying, updatePrivilege} from '@api/manager.user';
 
   export default {
     components: {},
@@ -112,6 +117,7 @@
         nameText: '修改',
         passText: '修改',
         bindText: '解除绑定',
+        invitationCode: '',
         form: {
           name: '',
           email: '',
@@ -229,6 +235,43 @@
         }
 
       },
+
+        //更新权限
+        updatePrivilege() {
+            if (this.invitationCode === '') {
+                this.$message({
+                    showClose: true,
+                    message: '邀请码无效！',
+                    type: 'warning'
+                });
+            } else {
+                this.$confirm('该操作将覆盖您已有的权限, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    new Promise((resolve, reject) => {
+                        updatePrivilege(this.invitationCode).then(res => {
+                            this.$message({
+                                showClose: true,
+                                message: '更新成功!',
+                                type: 'success'
+                            });
+                            resolve()
+                        }).catch((err) => {
+                            this.$message({
+                                showClose: true,
+                                message: err,
+                                type: 'warning'
+                            });
+                        })
+                    }).then(() => {
+                        this.invitationCode = ''
+                    }).catch();
+                }).catch(() => {
+                });
+            }
+        },
 
       //保存修改
       save() {
