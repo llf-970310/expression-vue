@@ -68,6 +68,7 @@
 
 <script>
     import {queryAllTasks, pauseTask, resumeTask} from '@api/manager.scheduler'
+    import { submitEdit } from "@/api/manage.async";
     import Edit from "./edit";
 
     export default {
@@ -145,7 +146,6 @@
                 this.isEditBoxShown = true;
             },
             newConfigReceived(confJson) {
-                // 当前仅修改本地显示，未向服务器提交
                 console.log(confJson);
                 if (confJson !== null) {
                     let tmpObj = JSON.parse(confJson);
@@ -156,7 +156,9 @@
                         }
                     }
                 }
-                this.isEditBoxShown = false
+                this.isEditBoxShown = false;
+                // 未向服务器提交，需服务器开放接口
+                // submitEdit(confJson)
             }
         }
     }
