@@ -259,7 +259,7 @@
                         {required: true, message: '次数不能为空，请填写0', trigger: 'blur'},
                         {
                             validator: (rule, value, callback) => {
-                                if (value === 0 && this.formData.remainingExerciseNum === 0) {
+                                if (value === 0 && this.formData.remainingExamNum === 0) {
                                     return callback(new Error("测试次数和练习次数不能同时为0"));
                                 }
                                 return callback();
