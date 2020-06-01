@@ -1,16 +1,5 @@
 <template>
   <div>
-    <!--播放录音音频-->
-    <!--<el-row type="flex" justify="center" class="vue-player">-->
-    <!--<el-col :span="10">-->
-    <!--<vue-plyr>-->
-    <!--<audio>-->
-    <!--<source :src="audioUrl" type="audio/wav"/>-->
-    <!--</audio>-->
-    <!--</vue-plyr>-->
-    <!--</el-col>-->
-    <!--</el-row>-->
-    
     <el-row type="flex" justify="space-around">
       <el-col :span="8">
         <div style="float: right;">
@@ -25,6 +14,16 @@
           <span v-if="analysisResult.qualityIsOk" class="success">合格</span>
           <span v-else class="danger">不合格</span>
         </p>
+      </el-col>
+    </el-row>
+    <!-- 环境测试失败时可播放录音音频 -->
+    <el-row v-if="!analysisResult.qualityIsOk" type="flex" justify="center" class="vue-player">
+      <el-col :span="10">
+      <vue-plyr>
+      <audio>
+      <source :src="audioUrl" type="audio/wav"/>
+      </audio>
+      </vue-plyr>
       </el-col>
     </el-row>
     <el-row class="d2-text-center result-msg">
@@ -143,30 +142,30 @@
   .success {
     color: #67C23A;
   }
-  
+
   .danger {
     color: #F56C6C;
   }
-  
+
   .result-msg {
     margin: 10px 0 20px 0;
   }
-  
+
   .divider {
     margin: 40px 0 30px 0;
     border-bottom: #e9e9eb 1px solid;
   }
-  
+
   .select-title {
     margin: 0 0 20px 0;
   }
-  
+
   .notice {
     cursor: pointer;
     font-size: 16px;
     color: #909399;
   }
-  
+
   .notice:hover {
     color: #a6a9ad;
   }
