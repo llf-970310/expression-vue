@@ -40,7 +40,7 @@
                                               placeholder="确认密码"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="code">
-                                    <el-input type="text" v-model="registerForm.code" placeholder="邀请码"></el-input>
+                                    <el-input type="text" v-model="registerForm.code" placeholder="邀请码" disabled=""></el-input>
                                 </el-form-item>
                                 <el-button size="mini" @click="submit" type="primary" class="button-login">注册
                                 </el-button>
@@ -134,15 +134,15 @@
                         },
                         trigger: 'blur'
                     }],
-                    code: [{
-                        validator: (rule, value, callback) => {
-                            if (!value) {
-                                return callback(new Error('邀请码不能为空'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }]
+                    // code: [{
+                    //     validator: (rule, value, callback) => {
+                    //         if (!value) {
+                    //             return callback(new Error('邀请码不能为空'))
+                    //         }
+                    //         return callback()
+                    //     },
+                    //     trigger: 'blur'
+                    // }]
                 }
             }
         },
