@@ -261,7 +261,7 @@
                         }).catch((err) => {
                             this.$message({
                                 showClose: true,
-                                message: err,
+                                message: err.msg,
                                 type: 'warning'
                             });
                         })
