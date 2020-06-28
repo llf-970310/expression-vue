@@ -153,6 +153,7 @@
               this.$router.push(this.$route.query.redirect || '/')
             }).catch(err => {
               console.log(err)
+
               if (err.code === 4301) {
                 this.$message({
                   message: err.msg,
