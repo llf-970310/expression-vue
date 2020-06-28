@@ -19,6 +19,7 @@
     "@d2-projects/vue-filters-date": "^1.0.9",
     "axios": "^0.17.1",
     "better-scroll": "^1.15.1",
+    "blueimp-md5": "^2.16.0",
     "countup.js": "^2.0.4",
     "dayjs": "^1.8.12",
     "echarts": "^4.2.1",

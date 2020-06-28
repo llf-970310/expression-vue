@@ -30,6 +30,7 @@
       <div v-else>
         <el-row>
           <el-col :offset="3" :span="18">
+            <span>请阅读下面这段文字：</span>
             <question-preparation :text="questionRawText"
                                   :answer-time="questionAnswerTime"
                                   :audio-volume="audioVolume"
@@ -244,7 +245,7 @@
         this.retryCount++;
         setTimeout(() => func(arg), 2000);
       },
-    }
+    },
   }
 </script>
 

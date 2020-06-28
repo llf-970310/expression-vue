@@ -130,11 +130,11 @@
           polar: [
             {
               indicator: [
-                { text: '主旨', max: 100 },
-                { text: '细节', max: 100 },
-                { text: '音质', max: 100 },
-                { text: '结构', max: 100 },
-                { text: '逻辑', max: 100 }
+                { text: '主旨：'+this.chart['主旨'].toFixed(2), max: 100 },
+                { text: '细节：'+ this.chart['细节'].toFixed(2), max: 100 },
+                { text: '音质：'+this.chart['音质'].toFixed(2), max: 100 },
+                { text: '结构：'+ this.chart['结构'].toFixed(2), max: 100 },
+                { text: '逻辑：'+  this.chart['逻辑'].toFixed(2), max: 100 }
               ]
             }
           ],

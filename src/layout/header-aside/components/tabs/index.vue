@@ -32,8 +32,9 @@
       <el-dropdown
         size="default"
         split-button
-        @click="closeAll"
-        @command="command => handleControlItemClick(command)">
+        @click="deleteMakeSure"
+        @command="command => handleControlItemClick(command)"
+        v-if="opened.length>1">
         <d2-icon name="times-circle"/>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="left">
@@ -48,10 +49,10 @@
             <d2-icon name="times" class="d2-mr-10"/>
             关闭其它
           </el-dropdown-item>
-          <el-dropdown-item command="all">
-            <d2-icon name="times-circle" class="d2-mr-10"/>
-            全部关闭
-          </el-dropdown-item>
+<!--          <el-dropdown-item command="all">-->
+<!--            <d2-icon name="times-circle" class="d2-mr-10"/>-->
+<!--            全部关闭-->
+<!--          </el-dropdown-item>-->
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -144,12 +145,13 @@ export default {
           this.closeOther(params)
           break
         case 'all':
-          this.closeAll()
+          this.deleteMakeSure()
           break
         default:
           this.$message.error('无效的操作')
           break
       }
+
     },
     /**
      * @description 接收点击 tab 标签的事件
@@ -161,6 +163,22 @@ export default {
       if (page) {
         this.$router.push({ name, params, query })
       }
+    },
+
+    deleteMakeSure(){
+
+      console.log("deleteMakesure");
+      this.$confirm('此操作将关闭所有已打开的标签页, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.closeAll();
+
+      }).catch(() => {
+
+      });
+
     },
     /**
      * @description 点击 tab 上的删除按钮触发这里 首页的删除按钮已经隐藏 因此这里不用判断是 index

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row type="flex" justify="space-around">
+    <el-row type="flex" justify="space-around" style="margin-top: 20px">
       <el-col :span="8">
         <div style="float: right;">
           <p>是否能识别：
@@ -16,17 +16,7 @@
         </p>
       </el-col>
     </el-row>
-    <!-- 环境测试失败时可播放录音音频 -->
-    <el-row v-if="!analysisResult.qualityIsOk" type="flex" justify="center" class="vue-player">
-      <el-col :span="10">
-      <vue-plyr>
-      <audio>
-      <source :src="audioUrl" type="audio/wav"/>
-      </audio>
-      </vue-plyr>
-      </el-col>
-    </el-row>
-    <el-row class="d2-text-center result-msg">
+    <el-row class="d2-text-center result-msg" style="margin-top: 20px;">
       <span>{{analysisResult.msg}}</span>
       <span class="notice" v-if="!analysisResult.canRcg || !analysisResult.qualityIsOk"  @click="envNotice = true">
         环境说明
@@ -35,16 +25,27 @@
     <el-dialog title="环境说明"
                :visible.sync="envNotice"
                width="70%">
-      <el-row>
-          1. 由于手机屏幕尺寸较小，可能对题目显示和作答带来不便，不建议您使用。<br/><br/>
-          2. 建议您使用电脑端的 Chrome 浏览器，如果您仍选择使用 Safari 或 Firefox 请升级到最新版。<br/><br/>
-          3. 录音当中需要使用麦克风，iPad 自带耳机，AirPods 以及其他耳机自带麦克都可以满足需求。<br/><br/>
-          4. 测试过程中，请保持麦克风到嘴部 10-20 厘米的距离，过远的距离可能导致您的声音较小，不利于系统识别和分析，过近的距离则可能导致讲话时气流冲击麦克风形成较大噪音（喷麦），导致如录音失败。
+      <el-row style="margin-top: 30px">
+        1. 由于手机屏幕尺寸较小，可能对题目显示和作答带来不便，不建议您使用。<br/><br/>
+        2. 建议您使用电脑端的 Chrome 浏览器，如果您仍选择使用 Safari 或 Firefox 请升级到最新版。<br/><br/>
+        3. 录音当中需要使用麦克风，iPad 自带耳机，AirPods 以及其他耳机自带麦克都可以满足需求。<br/><br/>
+        4. 测试过程中，请保持麦克风到嘴部 10-20 厘米的距离，过远的距离可能导致您的声音较小，不利于系统识别和分析，过近的距离则可能导致讲话时气流冲击麦克风形成较大噪音（喷麦），导致如录音失败。
       </el-row>
       <el-row class="dialog-confirm">
         <el-button type="primary" @click="envNotice = false">确 定</el-button>
       </el-row>
     </el-dialog>
+
+    <!-- 环境测试失败时可播放录音音频 -->
+    <el-row v-if="!analysisResult.qualityIsOk" type="flex" justify="center" class="vue-player" style="margin-top: 70px">
+      <el-col :span="10">
+      <vue-plyr>
+      <audio>
+      <source :src="audioUrl" type="audio/wav"/>
+      </audio>
+      </vue-plyr>
+      </el-col>
+    </el-row>
     <el-row class="d2-text-center">
       <el-button v-if="!analysisResult.canRcg || !analysisResult.qualityIsOk" type="danger" @click="$emit('fail')">
         重新测试
@@ -59,10 +60,10 @@
         <el-col :span="8" :offset="4">
           <el-select v-model="value" placeholder="评测模板" value="" size="medium" clearable>
             <el-option
-                v-for="item in examTemplate"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                    v-for="item in examTemplate"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
             </el-option>
           </el-select>
         </el-col>
@@ -71,6 +72,7 @@
         </el-col>
       </el-row>
     </el-row>
+
     <!--<el-row class="d2-text-center">-->
     <!--<p>{{analysisResult.msg}}</p>-->
     <!---->

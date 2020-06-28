@@ -74,6 +74,7 @@
 <script>
     import dayjs from 'dayjs'
     import {mapActions} from 'vuex'
+    import md5 from 'blueimp-md5'
     import PageLoginFooterCopyright from "../footer/page-login-footer-copyright";
 
     export default {
@@ -87,18 +88,27 @@
                     name: '',
                     password: '',
                     passwordConfirm: '',
-                    code: ''
+                    code: '',
+                    errorMsg:''
                 },
                 rules: {
                     username: [{
                         validator: (rule, value, callback) => {
                             if (!value) {
+                                this.errorMsg='手机/邮箱不能为空'
                                 return callback(new Error('手机/邮箱不能为空'))
                             }
-                            // let reg = /^([^@]+@[^@]+\.[^@]+)$/
-                            // if (!reg.test(value)) {
-                            //     return callback(new Error('邮箱格式不正确'))
-                            // }
+                             let reg = /^([^@]+@[^@]+\.[^@]+)$/
+
+                            let phone=/^1(3|4|5|6|7|8|9)\d{9}$/
+                            if(!phone.test(value)){
+                                //不能匹配手机号码
+                                if (!reg.test(value)) {
+                                    //不能匹配邮箱
+                                    this.errorMsg='手机/邮箱号码格式不正确'
+                                    return callback(new Error('邮箱/手机号码格式不正确'))
+                                }
+                            }
                             return callback()
                         },
                         trigger: 'blur'
@@ -106,6 +116,7 @@
                     name: [{
                         validator: (rule, value, callback) => {
                             if (!value) {
+                                this.errorMsg='用户名不能为空'
                                 return callback(new Error('用户名不能为空'))
                             }
                             return callback()
@@ -115,6 +126,7 @@
                     password: [{
                         validator: (rule, value, callback) => {
                             if (!value) {
+                                this.errorMsg='密码不能为空'
                                 return callback(new Error('密码不能为空'))
                             }
                             return callback()
@@ -124,10 +136,12 @@
                     passwordConfirm: [{
                         validator: (rule, value, callback) => {
                             if (!value) {
+                                this.errorMsg='确认密码不能为空'
                                 return callback(new Error('确认密码不能为空'))
                             }
                             let password = this.registerForm.password
                             if (password && password !== value) {
+                                this.errorMsg='密码不一致'
                                 return callback(new Error('密码不一致'))
                             }
                             return callback()
@@ -165,7 +179,7 @@
                             vm: this,
                             formData: {
                                 username: this.registerForm.username,
-                                password: this.registerForm.password,
+                                password: md5(this.registerForm.password),
                                 name: this.registerForm.name,
                                 code: this.registerForm.code
                             }
@@ -195,7 +209,12 @@
                         })
                     } else {
                         // 登录表单校验失败
-                        this.$message.error('表单校验失败')
+                        if(this.errorMsg!=''){
+                            this.$message.error(this.errorMsg)
+                        }
+                        else{
+                            this.$message.error('表单校验失败')
+                        }
                     }
                 })
             },

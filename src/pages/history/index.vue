@@ -8,7 +8,7 @@
     <div v-loading="historyScoreLoading">
       <el-table
         v-if="historyScoreList"
-        :data="historyScoreList"
+        :data="historyScoreList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         empty-text="该账号没有历史测试记录"
         border
         style="width: 100%"
@@ -21,8 +21,19 @@
         <el-table-column prop="score_info.主旨" label="主旨"></el-table-column>
         <el-table-column prop="score_info.total" label="总得分"></el-table-column>
       </el-table>
+      <el-pagination align='center'
+                     @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page="currentPage"
+                     :page-sizes="[1,5,10,20]"
+                     :page-size="pageSize"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="historyScoreList.length"
+                      style="margin-top: 10px">
+      </el-pagination>
     </div>
   </d2-container>
+
 </template>
 
 <script>
@@ -37,13 +48,25 @@ export default {
       //历史答题加载等待
       historyScoreLoading: true,
       //所有历史答题成绩记录
-      historyScoreList: []
+      historyScoreList: [],
+      currentPage:1,
+      pageSize:10
     };
   },
   mounted() {
     this.initHistoryScore();
   },
   methods: {
+
+    //页面中的元素数量改变时
+    handleSizeChange(val){
+      this.currentPage=1;
+      this.pageSize=val;
+    },
+    //跳转到特定页面
+    handleCurrentChange(val){
+      this.currentPage=val;
+    },
     //初始化历史成绩表格数据
     initHistoryScore() {
       new Promise((resolve, reject) => {

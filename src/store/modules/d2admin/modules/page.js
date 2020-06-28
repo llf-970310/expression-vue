@@ -309,6 +309,7 @@ export default {
      * @param {Object} state vuex state
      */
     closeAll ({ state, commit, dispatch }) {
+      console.log("kkk"+state.opened.length)
       return new Promise(async resolve => {
         // 删除打开的页面 并在缓存设置中删除
         state.opened.splice(1).forEach(({ name }) => commit('keepAliveRemove', name))
@@ -325,6 +326,9 @@ export default {
       })
     }
   },
+
+
+
   mutations: {
     /**
      * @class keepAlive

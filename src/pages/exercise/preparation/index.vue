@@ -13,6 +13,7 @@
 <script>
   import Preparation from './preparation'
   import { getPrepareTestInfo } from '@/api/manager.exam'
+  import { initAudio } from '@/libs/my-recorder'
 
   export default {
     name: 'preparation-index',
@@ -47,6 +48,20 @@
 
     mounted () {
       this.preparation()
+      console.log("初始化音频设备")
+      // 初始化音频设备
+      const _this = this
+      initAudio(function (data) {
+        let avg = 0
+        let max_data = 0
+        for (let i = 0; i < data.length; i++) {
+          let temp = Math.abs(data[i])
+          avg += temp
+          max_data = Math.max(max_data, temp)
+        }
+        avg /= data.length
+        _this.audioVolume = avg * 800
+      })
     },
 
     methods: {

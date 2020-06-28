@@ -31,15 +31,15 @@ export default [
   },
 
   {
-    path: '/info', role: 'user', title: '我的信息'
+    path: '/info', role: 'user', title: '我的信息',icon:'vcard-o'
   },
   {
     title: '评测中心',
-    icon: 'folder-o',
+    icon: 'inbox',
     role: 'user',
     children: [
-      {path: '/exercise', title: '评测页'},
-      {path: '/history', title: '历史成绩'},
+      {path: '/exercise', title: '评测页',icon:'flask'},
+      {path: '/history', title: '历史成绩',icon:'bar-chart'},
     ]
   },
   // {path: '/exercise', role: 'user', title: '表达力评测'}

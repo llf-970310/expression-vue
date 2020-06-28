@@ -28,7 +28,7 @@
           <div class="page-login--form">
             <el-card shadow="never">
               <el-form ref="loginForm" label-position="top" :rules="rules" :model="formLogin"
-                       size="default">
+                       size="default"  @submit.native.prevent>
                 <p align="center">表达力评测登录</p>
                 <el-form-item prop="username">
                   <el-input type="text" v-model="formLogin.username" placeholder="手机/邮箱">
@@ -48,7 +48,7 @@
                 <!--</template>-->
                 <!--</el-input>-->
                 <!--</el-form-item>-->
-                <el-button size="default" @click="submit" type="primary" class="button-login">登录
+                <el-button size="default" @click="submit" type="primary"  native-type="submit" class="button-login">登录
                 </el-button>
               </el-form>
             </el-card>
@@ -82,6 +82,7 @@
   import dayjs from 'dayjs'
   import { mapActions } from 'vuex'
   import PageLoginFooterCopyright from '../footer/page-login-footer-copyright'
+  import md5 from 'blueimp-md5'
 
   export default {
     components: { PageLoginFooterCopyright },
@@ -147,12 +148,11 @@
             this.login({
               vm: this,
               username: this.formLogin.username,
-              password: this.formLogin.password
+              password: md5(this.formLogin.password)
             }).then(() => {
               this.$router.push(this.$route.query.redirect || '/')
             }).catch(err => {
               console.log(err)
-
               if (err.code === 4301) {
                 this.$message({
                   message: err.msg,

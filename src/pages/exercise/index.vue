@@ -112,8 +112,9 @@
       }
     },
     mounted () {
-      this.isSupportedBrowser = this.checkBrowser()
+       this.isSupportedBrowser = this.checkBrowser()
       const _this = this
+      //准备录音
       if (this.isSupportedBrowser) {
         // 初始化音频设备
         initAudio(function (data) {

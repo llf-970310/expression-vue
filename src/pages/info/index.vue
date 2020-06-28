@@ -8,7 +8,7 @@
     <div style="width: 50%">
       <el-form :model="form" ref="form" :rules="rules" label-width="80px" label-position="left">
         <el-form-item label="姓名" prop="name">
-          <el-input id="name" v-model="form.name" :readonly="!isModifyName" ref="username">
+          <el-input id="name" v-model="form.name" :readonly="!isModifyName" ref="username" @change="userNameChange">
             <el-button slot="append" @click="changeName">{{ nameText }}</el-button>
           </el-input>
         </el-form-item>
@@ -69,6 +69,8 @@
 </template>
 
 <script>
+
+  import md5 from 'blueimp-md5'
   import { getInfo, modifyInfo, untying, updatePrivilege} from '@api/manager.user';
 
   export default {
@@ -118,6 +120,7 @@
         passText: '修改',
         bindText: '解除绑定',
         invitationCode: '',
+        isPassChanged:false,
         form: {
           name: '',
           email: '',
@@ -191,6 +194,14 @@
         this.isModifyName = !this.isModifyName;
 //                document.getElementById("name").focus();
         this.$refs.username.focus();
+      },
+
+      //当姓名修改好后
+      userNameChange(){
+        if(this.form.name.length>20){
+          this.$message.error('修改后的用户名不能超过20个字符');
+          this.form.name=this.info.name;
+        }
       },
       //修改密码
       changePass() {
@@ -290,17 +301,44 @@
             });
           } else {
             if (this.form.name != this.info.name) {
+              //说明用户修改了用户名
               if (this.form.pass == '') {
 
               } else {
+                //用户修改了密码
+                this.isPassChanged=true;
                 this.pass = this.form.pass;
               }
             } else {
+              //用户修改了密码
+              this.isPassChanged=true;
               this.pass = this.form.pass;
+            }
+            if(this.isPassChanged){
+              //密码被修改了
+              if(this.form.pass.length>18){
+                //新的密码长度大于是18位
+                this.$message({
+                  showClose: true,
+                  message: '新修改的密码不能超过18位!',
+                  type: 'warning'
+                });
+                return;
+              }
+
+              //判断新修改的密码是不是空格
+              if(this.form.pass==' '){
+                this.$message({
+                  showClose: true,
+                  message: '新修改的密码不能是空格!',
+                  type: 'warning'
+                });
+                return;
+              }
             }
             new Promise((resolve, reject) => {
               modifyInfo({
-                password: this.pass,
+                password: md5(this.pass),
                 name: this.form.name
               }).then(res => {
                 // window.location.reload();
@@ -317,6 +355,12 @@
                   showClose: true,
                   duration: 5000
                 });
+                if(this.isPassChanged){
+                  //密码被修改需要退出去重新登录
+                  console.log("密码修改")
+                  this.$router.push("/");
+                }
+
               }).catch();
             }).then().catch()
           }
