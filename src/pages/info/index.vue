@@ -71,7 +71,9 @@
 <script>
 
   import md5 from 'blueimp-md5'
+  import { mapActions } from 'vuex'
   import { getInfo, modifyInfo, untying, updatePrivilege} from '@api/manager.user';
+
 
   export default {
     components: {},
@@ -156,6 +158,8 @@
 
     },
     methods: {
+
+      ...mapActions('d2admin/account', ['logout']),
       //初始化个人信息数据
       initInfo() {
         new Promise((resolve, reject) => {
@@ -283,6 +287,12 @@
                 });
             }
         },
+      logOff () {
+        this.logout({
+          vm: this,
+          confirm: false
+        })
+      },
 
       //保存修改
       save() {
@@ -338,7 +348,7 @@
             }
             new Promise((resolve, reject) => {
               modifyInfo({
-                password: md5(this.pass),
+                password: this.pass,
                 name: this.form.name
               }).then(res => {
                 // window.location.reload();
@@ -362,7 +372,7 @@
                 if(this.isPassChanged){
                   //密码被修改需要退出去重新登录
                   console.log("密码修改")
-                  this.$router.push("/");
+                  this.logOff();
                 }
 
               }).catch();

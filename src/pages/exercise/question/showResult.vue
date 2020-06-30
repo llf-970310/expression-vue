@@ -102,12 +102,14 @@
       },
 
       initChart () {
-        this.subTitle = '总得分： ' + this.totalScore.toFixed(2) + '分'
+        this.subTitle = '得分情况'
         let chart = echarts.init(document.getElementById('chart'))
         // 把配置和数据放这里
         chart.setOption({
           title: {
-            text: '各项得分'
+            text: '总得分： ' + this.totalScore.toFixed(2) + '分',
+            left:'center',
+            top:'bottom',
           },
           tooltip: {},
           name: {
@@ -122,7 +124,28 @@
             show: true,
             feature: {
               mark: { show: true },
-              dataView: { show: true, readOnly: false },
+              dataView: { show: true, readOnly: true,optionToContent: function (opt) {
+                  var series = opt.series;
+                  console.log(series[0].data[0].name[0]+"kkkkk")
+                  var tdHeads = '<td  style="padding:0 10px">单项名称</td>';
+                  for(var i=0;i<series[0].data[0].name.length;i++){
+                    tdHeads += '<td style="padding: 0 10px">'+series[0].data[0].name[i]+'</td>';
+                  }
+
+                  // series[0].data.name.forEach(function (item) {
+                  //   tdHeads += '<td style="padding: 0 10px">'+item+'</td>';
+                  // });
+                  var table = '<table border="1" style="margin-left:20px;border-collapse:collapse;font-size:14px;text-align:center"><tbody><tr>'+tdHeads+'</tr>';
+                  var tdBodys = '';
+                    for (var j = 0; j < series[0].data[0].value.length; j++) {
+                        tdBodys += '<td>'+series[0].data[0].value[j]+'</td>';
+                    }
+                    table += '<tr><td>具体得分</td>'+ tdBodys +'</tr>';
+
+
+                  table += '</tbody></table>';
+                  return table;
+                } },
               restore: { show: true },
               saveAsImage: { show: true }
             }
@@ -159,7 +182,7 @@
                     this.chart['结构'].toFixed(2),
                     this.chart['逻辑'].toFixed(2)
                   ],
-                  name: '得分情况'
+                  name: ['主旨','细节','音质','结构','逻辑']
                 }
               ]
             }
