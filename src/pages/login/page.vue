@@ -148,7 +148,7 @@
             this.login({
               vm: this,
               username: this.formLogin.username,
-              password: md5(this.formLogin.password)
+              password: this.formLogin.password
             }).then(() => {
               this.$router.push(this.$route.query.redirect || '/')
             }).catch(err => {
