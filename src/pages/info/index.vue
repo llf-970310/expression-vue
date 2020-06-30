@@ -348,6 +348,10 @@
                 this.passText = '修改';
                 this.initInfo();
 
+                this.$store.dispatch('d2admin/user/set', {
+                  name: this.form.name
+                }, {root: true})
+
                 this.$message({
                   message: '已成功保存！',
                   type: 'success',

@@ -194,6 +194,8 @@
                                 showClose: true,
                                 duration: 5000
                             });
+
+                            location.reload()
                         }).catch(err => {
                             // Params_error = {'code': 4000, 'msg': '请求参数错误'}
                             // Register_not_allowed = {'code': 4305, 'msg': '当前不允许注册'}
