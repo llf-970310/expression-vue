@@ -154,7 +154,7 @@
             }).catch(err => {
               console.log(err)
 
-              if (err.code === 4301) {
+              if (err.code === 4301||err.code===4302) {
                 this.$message({
                   message: err.msg,
                   type: 'error',
