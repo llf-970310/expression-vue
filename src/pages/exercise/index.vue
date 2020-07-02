@@ -79,6 +79,9 @@
         hasFinishedPreparation: false,
         preparationId: '',
 
+        //判断是否是重新测试的，如果是重新测试的话不需要再测试环境但是要回到选择模板
+        preparationAlready:false,
+
         // 包含可测试次数
         hasExerciseTime: true,
 
@@ -109,6 +112,8 @@
         curQuestionDbId: '',
         // 记录当前试卷templateId
         templateId:'',
+        //模板的总题数
+        templateQuestionSum:0
       }
     },
     mounted () {
@@ -305,7 +310,8 @@
         this.curQuestionIndex = 0
         this.hasFinishExercise = false
         this.isLastQuestion = false
-        this.newExam()
+        this.hasFinishedPreparation=false
+        //this.newExam()
       },
     }
   }

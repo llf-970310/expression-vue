@@ -21,8 +21,12 @@
                         left-time-string="本次评测剩余时间">
         </exercise-timer>
       </el-col>
+
       <el-col :span="4" class="d2-text-center question-index">
         {{ questionIndex }}
+      </el-col>
+      <el-col :span="3" offset="7" class="last-question">
+        剩余题数:
       </el-col>
     </el-row>
     <!--题目tip-->
@@ -230,6 +234,11 @@
   
   .exercise-left-time {
     font-size: 14px;
+    color: #909399;
+  }
+
+  .last-question{
+    font-size:14px;
     color: #909399;
   }
   

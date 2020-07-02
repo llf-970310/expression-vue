@@ -135,7 +135,12 @@
         }).catch(err => {
           console.error(err)
         })
-      }
+      },
+      // startExam(){
+      //   //获取模板题目数量
+      //   this.templateQuestionSum=0;
+      //   this.$emit('ready',value);
+      // }
     }
   }
 </script>
