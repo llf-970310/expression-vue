@@ -14,11 +14,11 @@
         style="width: 100%"
       >
         <el-table-column prop="test_start_time" label="开始时间" width="170"></el-table-column>
+        <el-table-column prop="score_info.主旨" label="主旨"></el-table-column>
+        <el-table-column prop="score_info.细节" label="细节"></el-table-column>
         <el-table-column prop="score_info.音质" label="音质"></el-table-column>
         <el-table-column prop="score_info.结构" label="结构"></el-table-column>
         <el-table-column prop="score_info.逻辑" label="逻辑"></el-table-column>
-        <el-table-column prop="score_info.细节" label="细节"></el-table-column>
-        <el-table-column prop="score_info.主旨" label="主旨"></el-table-column>
         <el-table-column prop="score_info.total" label="总得分"></el-table-column>
       </el-table>
       <el-pagination align='center'

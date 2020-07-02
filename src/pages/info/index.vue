@@ -93,6 +93,7 @@
 //                }, 100)
 //            };
 
+
       let validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
@@ -105,8 +106,12 @@
       };
       let validatePass2 = (rule, value, callback) => {
         if (value === '') {
+          this.passError=true;
+          this.errorMsg='请输入再次确认密码'
           callback(new Error('请再次输入密码'))
         } else if (value !== this.form.pass) {
+          this.passError=true;
+          this.errorMsg='两次输入密码不一致!'
           callback(new Error('两次输入密码不一致!'))
         } else {
           callback()
@@ -123,6 +128,9 @@
         bindText: '解除绑定',
         invitationCode: '',
         isPassChanged:false,
+        passError:false,
+        errorMsg:'',
+
         form: {
           name: '',
           email: '',
@@ -345,6 +353,16 @@
                 });
                 return;
               }
+            }
+
+            //判断确认密码是否有错
+            if(this.passError){
+              this.$message({
+                showClose: true,
+                message: this.errorMsg,
+                type: 'warning'
+              });
+              return;
             }
             new Promise((resolve, reject) => {
               modifyInfo({
