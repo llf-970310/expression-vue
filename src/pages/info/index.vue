@@ -49,12 +49,12 @@
           </el-col>
 
         </el-form-item>
-        <el-form-item label="微信id">
+        <el-form-item label="微信id" v-if="isTesting==false">
           <el-input v-model="form.wx_id" readonly>
             <el-button slot="append" @click="releaseBind">{{ bindText }}</el-button>
           </el-input>
         </el-form-item>
-        <el-form-item label="邀请码">
+        <el-form-item label="邀请码" v-if="isTesting==false">
           <el-input v-model="invitationCode">
             <el-button slot="append" @click="updatePrivilege">更新权限</el-button>
           </el-input>
@@ -118,6 +118,7 @@
         }
       };
       return {
+        isTesting:true,
         filename: __filename,
         info: '',
         isModifyPass: false,
