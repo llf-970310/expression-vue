@@ -25,9 +25,9 @@
       <el-col :span="4" class="d2-text-center question-index">
         {{ questionIndex }}
       </el-col>
-      <el-col :span="3" offset="7" class="last-question">
-        剩余题数:
-      </el-col>
+<!--      <el-col :span="3" offset="7" class="last-question">-->
+<!--        剩余题数:-->
+<!--      </el-col>-->
     </el-row>
     <!--题目tip-->
     <div v-if="isTipShowing">
