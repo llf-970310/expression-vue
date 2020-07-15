@@ -37,7 +37,11 @@
       height: {
         type: String,
         default: '600px'
-      }
+      },
+      //题目模板id
+      templateId:String,
+      //题目模板名称
+      templateLabel:String,
     },
     data () {
       return {
@@ -61,6 +65,7 @@
         spinner: 'el-icon-loading',
       })
       this.queryResult()
+      console.log("结果页面"+this.templateLabel);
     },
     methods: {
       ...mapActions('d2admin/account', ['logout']),
@@ -102,12 +107,12 @@
       },
 
       initChart () {
-        this.subTitle = '得分情况'
+        this.subTitle = this.templateLabel+'得分情况'
         let chart = echarts.init(document.getElementById('chart'))
         // 把配置和数据放这里
         chart.setOption({
           title: {
-            text: '总得分： ' + this.totalScore.toFixed(2) + '分',
+            text: this.templateLabel+'总得分： ' + this.totalScore.toFixed(2) + '分',
             left:'center',
             top:'bottom',
           },
@@ -267,7 +272,7 @@
   .chartContainer {
     margin-top: 20px;
     height: 300px;
-    width: 400px;
+    width: 450px;
   }
   
   .tip {

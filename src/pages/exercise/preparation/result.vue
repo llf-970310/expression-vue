@@ -63,7 +63,7 @@
                     v-for="item in examTemplate"
                     :key="item.value"
                     :label="item.label"
-                    :value="item.value">
+                    :value="item">
             </el-option>
           </el-select>
         </el-col>
@@ -115,14 +115,16 @@
     data () {
       return {
         examTemplate: [],
-        value: '',
+        value: {},
         envNotice : false
       }
     },
+
     mounted () {
       this.initPaperTemplate()
     },
     methods: {
+
       initPaperTemplate: function () {
         getPaperTemplates().then(res => {
           let { paperTemplates } = res

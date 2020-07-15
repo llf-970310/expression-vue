@@ -12,7 +12,7 @@
             <el-button slot="append" @click="changeName">{{ nameText }}</el-button>
           </el-input>
         </el-form-item>
-        <el-form-item label="邮箱" required>
+        <el-form-item label="用户名" required>
           <el-input v-model="form.email" readonly></el-input>
         </el-form-item>
         <el-form-item label="密码" required>
@@ -321,6 +321,25 @@
           } else {
             if (this.form.name != this.info.name) {
               //说明用户修改了用户名
+              //判断新修改的密码是不是空格
+              let zz=new RegExp("/^[\u4e00-\u9fa5_a-zA-Z0-9]+$/")
+              if(!zz.exec(this.form.name)){
+                this.$message({
+                  showClose: true,
+                  message: '新修改的密码只能包含字母、数字和中文',
+                  type: 'warning'
+                });
+                return;
+              }
+              //判断新修改的密码是不是空
+              if(this.form.name==''){
+                this.$message({
+                  showClose: true,
+                  message: '新修改的密码不能为空',
+                  type: 'warning'
+                });
+                return;
+              }
               if (this.form.pass == '') {
 
               } else {
@@ -355,6 +374,7 @@
                 return;
               }
             }
+
 
             //判断确认密码是否有错
             if(this.passError){

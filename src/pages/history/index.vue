@@ -3,6 +3,20 @@
     <el-row class="title-container">
       <span class="title">历史成绩</span>
       <span class="title-tip">(历史成绩的显示有所延迟，如果暂时没有，请稍后再来)</span>
+      <el-select v-model="selectedTemp"
+                 placeholder="选择评测模板"
+                 value=""
+                 size="medium"
+                 clearable
+                 style="float: right"
+                 @change="tempchanged">
+        <el-option
+                v-for="item in examTemplate"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+        </el-option>
+      </el-select>
     </el-row>
 
     <div v-loading="historyScoreLoading">
@@ -38,6 +52,7 @@
 
 <script>
 import { showScore } from "@api/manager.user";
+import { getPaperTemplates } from '@/api/manager.exam'
 
 export default {
   components: {},
@@ -50,14 +65,36 @@ export default {
       //所有历史答题成绩记录
       historyScoreList: [],
       currentPage:1,
-      pageSize:10
+      pageSize:10,
+      examTemplate:[],
+      //选择了的模板
+      selectedTempId: 0,
     };
   },
   mounted() {
     this.initHistoryScore();
+    this.initPaperTemplate();
   },
   methods: {
 
+    //获取所有的模板类型
+    initPaperTemplate: function () {
+      getPaperTemplates().then(res => {
+        let { paperTemplates } = res
+        this.examTemplate.push({
+          value:0,
+          label:'全部'
+        }),
+        paperTemplates.forEach(template => {
+          this.examTemplate.push({
+            value: template['tpl_id'],
+            label: template['name']
+          })
+        })
+      }).catch(err => {
+        console.error(err)
+      })
+    },
     //页面中的元素数量改变时
     handleSizeChange(val){
       this.currentPage=1;
@@ -91,6 +128,11 @@ export default {
           this.historyScoreLoading = false;
         })
         .catch();
+    },
+
+    //选择的模板改变时
+    tempChanged(){
+
     }
   }
 };

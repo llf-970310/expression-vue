@@ -11,7 +11,10 @@
       <div v-else>
         <div v-if="hasFinishExercise">
           <!--考试结束-->
-          <show-result @reExercise="reExercise"></show-result>
+          <show-result
+                  :templateId="templateId"
+                  :templateLabel="tempLabel"
+                  @reExercise="reExercise"></show-result>
         </div>
         <div v-else>
           <div v-if="hasExerciseTime">
@@ -110,12 +113,16 @@
 
         // 题目对应数据库id,用于点赞收藏反馈
         curQuestionDbId: '',
-        // 记录当前试卷templateId
-        templateId:'',
         //模板的总题数
-        templateQuestionSum:0
+        templateQuestionSum:0,
+        //对应的模板id
+        templateId:'',
+        //对应的模板label
+        tempLabel:'hhhhhhh'
+
       }
     },
+
     mounted () {
        this.isSupportedBrowser = this.checkBrowser()
       const _this = this
@@ -196,9 +203,12 @@
       /**
        * 结束预测试的准备阶段，检查是否有未完成的测试
        */
-      finishPreparation (templateId) {
-        this.hasFinishedPreparation = true
-        this.templateId =  templateId;
+      finishPreparation (templateValue) {
+        this.hasFinishedPreparation = true;
+        this.templateId=templateValue['value'];
+        this.tempLabel=templateValue['label'];
+        console.log(this.tempLabel+"]]]]]]]]]")
+
 
         checkUnfinishedExam().then(() => {
           // 没有未完成的考试，开始考试

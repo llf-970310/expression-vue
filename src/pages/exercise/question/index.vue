@@ -127,6 +127,7 @@
 
       // 题目对应数据库id,用于点赞收藏反馈
       questionDbId: String,
+
     },
     data () {
       return {
