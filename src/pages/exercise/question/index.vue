@@ -71,7 +71,7 @@
           </question-five-six>
         </el-col>
       </el-row>
-      <feedback-bar :question-db-id="questionDbId"></feedback-bar>
+      <feedback-bar :question-db-id="questionDbId" style="margin-top: 20px"></feedback-bar>
     </div>
   </div>
 </template>
@@ -152,6 +152,7 @@
       showQuestion () {
         this.isTipShowing = false
         this.nextStep()
+
       },
 
       /**

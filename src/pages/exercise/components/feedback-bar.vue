@@ -1,5 +1,22 @@
 <template>
     <div>
+<!--        <el-row>-->
+<!--            <el-col :span="2" :offset="8">-->
+<!--                <vue-star-plus v-model="upActive" color="#ff0000" class="i-star__component" @change="handleUpClick">-->
+<!--                    <el-button slot="icon" class="i-star__text">{{ upActive ? '👍已点赞' : '这题不错' }}</el-button>-->
+<!--                </vue-star-plus>-->
+<!--            </el-col>-->
+<!--            <el-col :span="2" :offset="11" >-->
+<!--                <vue-star-plus v-model="downActive" color="#ff0000" class="i-star__component" @change="handleDownClick">-->
+<!--                    <el-button slot="icon" class="i-star__text">{{ downActive ? '👎已点踩' : '这题太差' }}</el-button>-->
+<!--                </vue-star-plus>-->
+<!--            </el-col>-->
+<!--            <el-col :span="2" :offset="14">-->
+<!--                <vue-star-plus v-model="likeActive" color="#ff0000" class="i-star__component" @change="handleLikeClick">-->
+<!--                    <el-button slot="icon" class="i-star__text">{{ likeActive ? '💖已喜欢' : '喜欢该题' }}</el-button>-->
+<!--                </vue-star-plus>-->
+<!--            </el-col>-->
+<!--        </el-row>-->
         <div class="feedback-button left">
             <vue-star-plus v-model="upActive" color="#ff0000" class="i-star__component" @change="handleUpClick">
                 <el-button slot="icon" class="i-star__text">{{ upActive ? '👍已点赞' : '这题不错' }}</el-button>
@@ -89,7 +106,7 @@
     }
 
     .left {
-        left: 41%;
+        left: 35%;
     }
 
     .middle {
@@ -97,6 +114,6 @@
     }
 
     .right {
-        left: 59%;
+        left: 65%;
     }
 </style>
