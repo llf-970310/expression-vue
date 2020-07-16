@@ -116,7 +116,17 @@
             left:'center',
             top:'bottom',
           },
-          tooltip: {},
+          tooltip : {
+            trigger: 'axis',
+            padding:10,
+            formatter:function(params){
+              var data = '';
+              $.each(params,function (index,item) {
+                data += item.name+':'+item.value+'&nbsp;万元 '+ '<br/>';
+              });
+              return ' ';
+            }
+          },
           name: {
             textStyle: {
               color: '#fff',
@@ -129,7 +139,9 @@
             show: true,
             feature: {
               mark: { show: true },
-              dataView: { show: true, readOnly: true,optionToContent: function (opt) {
+              dataView: { show: true,
+                readOnly: true,
+                optionToContent: function (opt) {
                   var series = opt.series;
                   console.log(series[0].data[0].name[0]+"kkkkk")
                   var tdHeads = '<td  style="padding:0 10px">单项名称</td>';
@@ -151,7 +163,6 @@
                   table += '</tbody></table>';
                   return table;
                 } },
-              restore: { show: true },
               saveAsImage: { show: true }
             }
           },

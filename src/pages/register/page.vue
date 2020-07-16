@@ -112,6 +112,9 @@
                                     return callback(new Error('邮箱/手机号码格式不正确'))
                                 }
                             }
+                            if(value.indexOf(" ")!=-1){
+                                return callback(new Error('邮箱/手机号码格式不正确'))
+                            }
                             return callback()
                         },
                         trigger: 'blur'

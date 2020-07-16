@@ -98,9 +98,27 @@
         },
         // 校验
         rules: {
-          username: [
-            { required: true, message: '请输入手机号或邮箱', trigger: 'blur' }
-          ],
+          username: [{
+            validator: (rule, value, callback) => {
+              if (!value) {
+                this.errorMsg='手机/邮箱不能为空'
+                return callback(new Error('手机/邮箱不能为空'))
+              }
+              let reg = /^([^@]+@[^@]+\.[^@]+)$/
+
+              let phone=/^1(3|4|5|6|7|8|9)\d{9}$/
+              if(!phone.test(value)){
+                //不能匹配手机号码
+                if (!reg.test(value)) {
+                  //不能匹配邮箱
+                  this.errorMsg='手机/邮箱号码格式不正确'
+                  return callback(new Error('邮箱/手机号码格式不正确'))
+                }
+              }
+              return callback()
+            },
+            trigger: 'blur'
+          }],
           password: [
             { required: true, message: '请输入密码', trigger: 'blur' }
           ]

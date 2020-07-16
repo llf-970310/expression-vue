@@ -53,6 +53,7 @@
         methods: {
             handleUpClick() {
                 if (this.upActive) {
+                    //已经点赞
                     if (this.downActive) {
                         this.downActive = false;
                         feedback(FeedbackActions.downToUp, this.questionDbId);
@@ -82,9 +83,27 @@
                 }
             },
             handleLikeClick() {
+                // if (this.likeActive) {
+                //     feedback(FeedbackActions.like, this.questionDbId);
+                //     console.log('liked:', this.questionDbId);
+                // } else {
+                //     feedback(FeedbackActions.cancelLike, this.questionDbId);
+                //     console.log('like canceled:', this.questionDbId);
+                // }
+
                 if (this.likeActive) {
-                    feedback(FeedbackActions.like, this.questionDbId);
-                    console.log('liked:', this.questionDbId);
+                    if (this.downActive) {
+                        this.likeActive=false;
+                        this.$message({
+                            showClose: true,
+                            message: '可以先取消这道题的点踩，再表达对这道题的喜欢哦~',
+                            type: 'warning'
+                        });
+                        return;
+                    } else {
+                        feedback(FeedbackActions.like, this.questionDbId);
+                        console.log('liked:', this.questionDbId);
+                    }
                 } else {
                     feedback(FeedbackActions.cancelLike, this.questionDbId);
                     console.log('like canceled:', this.questionDbId);

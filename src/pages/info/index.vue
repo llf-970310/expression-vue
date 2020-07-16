@@ -101,6 +101,7 @@
           if (this.form.checkPass !== '') {
             this.$refs.form.validateField('checkPass');
           }
+          this.passError=false;
           callback();
         }
       };
@@ -114,6 +115,7 @@
           this.errorMsg='两次输入密码不一致!'
           callback(new Error('两次输入密码不一致!'))
         } else {
+          this.passError=false;
           callback()
         }
       };
@@ -213,7 +215,6 @@
       userNameChange(){
         if(this.form.name.length>20){
           this.$message.error('修改后的用户名不能超过20个字符');
-          this.form.name=this.info.name;
         }
       },
       //修改密码
@@ -311,6 +312,7 @@
           type: 'warning'
         }).then(() => {
 
+
           //如果当前的姓名与原来姓名一致且新密码为空，则表示没有修改动作
           if (this.form.name == this.info.name && this.form.pass == '') {
             this.$message({
@@ -318,28 +320,40 @@
               message: '您尚未作出任何修改!',
               type: 'warning'
             });
+
+            return;
           } else {
             if (this.form.name != this.info.name) {
               //说明用户修改了用户名
-              //判断新修改的密码是不是空格
-              let zz=new RegExp("/^[\u4e00-\u9fa5_a-zA-Z0-9]+$/")
-              if(!zz.exec(this.form.name)){
+              //判断新修改的姓名是不是包含空格
+              if(this.form.name.indexOf(" ")!=-1){
                 this.$message({
                   showClose: true,
-                  message: '新修改的密码只能包含字母、数字和中文',
+                  message: '新修改的姓名不能包含空格',
                   type: 'warning'
                 });
                 return;
               }
-              //判断新修改的密码是不是空
+
+            //判断新修改的姓名长度
+              if(this.form.name.length>20){
+                this.$message({
+                  showClose: true,
+                  message: '修改后的用户名不能超过20个字符',
+                  type: 'warning'
+                });
+                return;
+              }
+              //判断新修改的姓名是不是空
               if(this.form.name==''){
                 this.$message({
                   showClose: true,
-                  message: '新修改的密码不能为空',
+                  message: '新修改的姓名不能为空',
                   type: 'warning'
                 });
                 return;
               }
+
               if (this.form.pass == '') {
 
               } else {
@@ -373,6 +387,15 @@
                 });
                 return;
               }
+
+              if(this.form.checkPass==''){
+                this.$message({
+                  showClose: true,
+                  message: '请输入确认密码!',
+                  type: 'warning'
+                });
+                return;
+              }
             }
 
 
@@ -385,6 +408,7 @@
               });
               return;
             }
+
             new Promise((resolve, reject) => {
               modifyInfo({
                 password: this.pass,
