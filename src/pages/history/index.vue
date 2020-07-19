@@ -3,13 +3,13 @@
     <el-row class="title-container">
       <span class="title">历史成绩</span>
       <span class="title-tip">(历史成绩的显示有所延迟，如果暂时没有，请稍后再来)</span>
-      <el-select v-model="selectedTemp"
+      <el-select v-model="selectedTempId"
                  placeholder="选择评测模板"
                  value=""
                  size="medium"
                  clearable
                  style="float: right"
-                 @change="tempchanged">
+                 @change="tempChanged">
         <el-option
                 v-for="item in examTemplate"
                 :key="item.value"
@@ -28,6 +28,7 @@
         style="width: 100%"
       >
         <el-table-column prop="test_start_time" label="开始时间" width="170"></el-table-column>
+        <el-table-column prop="paper_tpl_id" label="模板类型" width="170"></el-table-column>
         <el-table-column prop="score_info.主旨" label="主旨"></el-table-column>
         <el-table-column prop="score_info.细节" label="细节"></el-table-column>
         <el-table-column prop="score_info.音质" label="音质"></el-table-column>
@@ -68,7 +69,7 @@ export default {
       pageSize:10,
       examTemplate:[],
       //选择了的模板
-      selectedTempId: 0,
+      selectedTempId: '0',
     };
   },
   mounted() {
@@ -82,7 +83,7 @@ export default {
       getPaperTemplates().then(res => {
         let { paperTemplates } = res
         this.examTemplate.push({
-          value:0,
+          value:'0',
           label:'全部'
         }),
         paperTemplates.forEach(template => {
@@ -107,11 +108,19 @@ export default {
     //初始化历史成绩表格数据
     initHistoryScore() {
       new Promise((resolve, reject) => {
-        showScore()
+        showScore('0')
           .then(res => {
             console.log(res);
             this.historyScoreList = res.history.reverse();
             console.log(this.historyScoreList);
+            for(let score of this.historyScoreList){
+              for(let template of this.examTemplate){
+                if(template.value===score.paper_tpl_id){
+                  score.paper_tpl_id=template.label;
+                  break;
+                }
+              }
+            }
             resolve();
           })
           .catch(err => {
@@ -131,8 +140,39 @@ export default {
     },
 
     //选择的模板改变时
-    tempChanged(){
-
+    tempChanged() {
+      console.log(this.selectedTempId)
+        this.historyScoreList=[]
+      new Promise((resolve, reject) => {
+        showScore(this.selectedTempId).then(res => {
+                  console.log(res);
+                  this.historyScoreList = res.history.reverse();
+                  console.log(this.historyScoreList);
+                  console.log(this.examTemplate)
+                  for(let score of this.historyScoreList){
+                    for(let template of this.examTemplate){
+                      if(template.value===score.paper_tpl_id){
+                        score.paper_tpl_id=template.label;
+                        break;
+                      }
+                    }
+                  }
+                  resolve();
+                })
+                .catch(err => {
+                  console.log("err: ", err);
+                  if (err.code === 4042) {
+                    // 用户暂无历史成绩
+                    resolve();
+                  } else {
+                    reject(err);
+                  }
+                });
+            })
+              .then(() => {
+                this.historyScoreLoading = false;
+              })
+              .catch();
     }
   }
 };

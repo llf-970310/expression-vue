@@ -44,9 +44,9 @@ export function updatePrivilege (code) {
     })
 }
 
-export function showScore () {
+export function showScore (code) {
     return request({
-        url: '/account/history-scores',
+        url: '/account/history-scores/'+code,
         method: 'get'
     })
 }
