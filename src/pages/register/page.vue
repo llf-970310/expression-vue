@@ -185,7 +185,7 @@
                             vm: this,
                             formData: {
                                 username: this.registerForm.username,
-                                password: md5(this.registerForm.password),
+                                password: this.registerForm.password,
                                 name: this.registerForm.name,
                                 code: this.registerForm.code
                             }
