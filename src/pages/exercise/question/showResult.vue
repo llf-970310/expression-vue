@@ -1,34 +1,47 @@
 <template>
-  <div class="result-container" id="result">
-    <div class="main-content">
-      <div v-if="!chart" class="error-container">
-        {{ errorTitle }}
-      </div>
-      <div class="chart-container">
-        <div class="titleContainer">{{ subTitle }}</div>
-        <div>
-          <div class="chartContainer" id="chart" ref="myEchart"></div>
+  <div>
+    <div class="result-container" id="result" v-if="isDetail==false">
+      <div class="main-content" >
+        <div v-if="!chart" class="error-container">
+          {{ errorTitle }}
+        </div>
+        <div class="chart-container">
+          <div class="titleContainer">{{ subTitle }}</div>
+          <div>
+            <div class="chartContainer" id="chart" ref="myEchart"></div>
+          </div>
+        </div>
+        <div class="tip" v-if="chart">
+          <!--        感谢您参与本次测试，此版本暂不提供具体测试结果解读。-->
+          <!--        <br/>-->
+          <!--        <br/>后续迭代版会提供详细测试结果报告，敬请期待。-->
+          感谢您参与本次测试，<a @click="goToDetail">点击此处</a>查看详细结果
         </div>
       </div>
-      <div class="tip" v-if="chart">
-        感谢您参与本次测试，此版本暂不提供具体测试结果解读。
-        <br/>
-        <br/>后续迭代版会提供详细测试结果报告，敬请期待。
+
+      <div class="buttons">
+        <el-button @click="logOff()">退出登录</el-button>
+        <el-button @click="reExercise()">重新测试</el-button>
       </div>
     </div>
-    <div class="buttons">
-      <el-button @click="logOff()">退出登录</el-button>
-      <el-button @click="reExercise()">重新测试</el-button>
+    <div v-else>
+      <!--      查看结果的详细评价-->
+      <result-detail
+              @totalScore="totalScore">
+
+      </result-detail>
     </div>
   </div>
+
 </template>
 <script>
   import echarts from 'echarts'
   import { getResult } from '@api/manager.exam'
   import { mapActions } from 'vuex'
+  import ResultDetail from "./resultDetail";
 
   export default {
-    components: {},
+    components: {ResultDetail},
     props: {
       width: {
         type: String,
@@ -54,7 +67,8 @@
         timer: 0,
         queryTime: 3000, //每3秒轮询一次
         limitTime: 120000, //120秒超时
-        loading: ''
+        loading: '',
+        isDetail:false
       }
     },
     mounted () {
@@ -243,6 +257,10 @@
       reTry (func, arg) {
         this.counter++
         setTimeout(() => func(arg), this.queryTime)
+      },
+      goToDetail(){
+        console.log("查看详细页面结果")
+        this.isDetail=!this.isDetail;
       }
     }
   }
