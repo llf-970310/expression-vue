@@ -28,6 +28,29 @@
                             综合作用的结果。在表达的时候，最基本的层次是确保对方能够听清你说的话，也就是说，一个人的说话方式不能让对方的理解产生障碍，在确保了这一点之后，其次
                             才是怎么能够让对方更好地理解你所表达的意思。好听的声音，是加分项，但并不是必然导致表达力好的因素。
                         </div>
+                        <div class="item-result">
+                            <div class="item-result-title">
+                                评测结果：
+                            </div>
+                            <div v-for="(val,key,index) in report.音质" style="margin-top: 10px;margin-bottom: 10px">
+                                <el-row>
+                                    <span class="quality-index">
+                                        0{{index+1}}
+                                    </span>
+                                    <span class="quality-key">
+                                        {{key}}
+                                    </span>
+                                </el-row>
+                                <div class="quality-val" v-if="val!=''">
+                                    {{val}}
+                                </div>
+                                <div class="quality-val" v-else>
+                                    无
+                                </div>
+                                <el-divider v-if="index!=3"></el-divider>
+                            </div>
+
+                        </div>
                     </el-tab-pane>
                     <el-tab-pane label="主旨" name="second">
                         <div class="item-description">
@@ -39,6 +62,9 @@
                         <div class="item-result">
                             <div class="item-result-title">
                                 评测结果：
+                            </div>
+                            <div class="item-result-content">
+                                {{report.主旨}}
                             </div>
                         </div>
 
@@ -53,6 +79,9 @@
                             <div class="item-result-title">
                                 评测结果：
                             </div>
+                            <div class="item-result-content">
+                                {{report.细节}}
+                            </div>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="结构" name="fourth">
@@ -64,6 +93,9 @@
                         <div class="item-result">
                             <div class="item-result-title">
                                 评测结果：
+                            </div>
+                            <div class="item-result-content">
+                                <div v-for="(item,index) in report.结构" class="item-result-array">{{index+1}}.{{item}}</div>
                             </div>
                         </div>
                     </el-tab-pane>
@@ -78,6 +110,9 @@
                             <div class="item-result-title">
                                 评测结果：
                             </div>
+                            <div class="item-result-content">
+                                <div v-for="(item,index) in report.逻辑" class="item-result-array">{{index+1}}.{{item}}</div>
+                            </div>
                         </div>
                     </el-tab-pane>
                 </el-tabs>
@@ -89,16 +124,40 @@
 </template>
 
 <script>
+
+    import { getInfo} from '@api/manager.user';
     export default {
         name: "resultDetail",
         props:{
-            totalScore:100,
+            totalScore:{
+                type:Number,
+                default:0
+            },
+            report:{
+                type:Object,
+                default(){
+                    return {}
+                }
+            }
         },
         data(){
             return{
                 userName:'helu',//用户名
                 itemName:'first',//选中的小项name
             }
+        },
+        mounted(){
+            new Promise((resolve, reject) => {
+                getInfo().then(
+                    res => {
+                        this.userName = res.name;
+                        resolve();
+                    }
+                ).catch(err => {
+                    console.log('err: ', err);
+                    reject(err)
+                })
+            }).then().catch();
         },
         methods:{
             handleClick(){
@@ -125,7 +184,7 @@
     .title{
         width:100%;
         text-align: center;
-        font-size: 20pt;
+        font-size: 40px;
     }
 
     .card-container{
@@ -137,7 +196,7 @@
     .total{
         width:100%;
         text-align: center;
-        font-size: 14pt;
+        font-size: 24px;
         font-weight: bold;
         margin-top: 10px;
     }
@@ -147,7 +206,7 @@
         margin-left: 3%;
         margin-top:20px;
         margin-bottom: 15px;
-        font-size: 11pt;
+        font-size: 16px;
         line-height: 23px;
     }
 
@@ -159,7 +218,7 @@
 
     .item-description{
         margin-top:10px;
-        font-size: 10pt;
+        font-size: 14px;
         line-height: 20px;
         width:90%;
         margin-left: 5%;
@@ -167,11 +226,45 @@
 
     .item-result{
         margin-top: 20px;
-        width:100%;
+        width:90%;
+        margin-left: 5%;
+        margin-bottom: 100px;
     }
 
     .item-result-title{
-        font-size: 13pt;
+        font-size: 20px;
         font-weight: bold;
+        margin-bottom: 20px;
+    }
+    
+    .item-result-content{
+        font-size: 14px;
+        margin-left: 5%;
+        width:95%;
+
+    }
+
+    .quality-index{
+        font-style: italic;
+        color: #409EFF;
+        font-size: 20px;
+    }
+
+    .quality-key{
+        font-weight: bold;
+        font-size: 16px;
+        margin-left: 10px;
+    }
+
+    .quality-val{
+        font-size: 14px;
+        margin-top: 10px;
+        margin-left: 35px;
+    }
+
+    .item-result-array{
+        font-size: 14px;
+        margin-top: 10px;
+        line-height: 24px;
     }
 </style>

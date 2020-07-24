@@ -15,7 +15,7 @@
           <!--        感谢您参与本次测试，此版本暂不提供具体测试结果解读。-->
           <!--        <br/>-->
           <!--        <br/>后续迭代版会提供详细测试结果报告，敬请期待。-->
-          感谢您参与本次测试，<a @click="goToDetail">点击此处</a>查看详细结果
+          感谢您参与本次测试，<i><a @click="goToDetail">点击此处</a></i>查看详细结果
         </div>
       </div>
 
@@ -27,8 +27,8 @@
     <div v-else>
       <!--      查看结果的详细评价-->
       <result-detail
-              @totalScore="totalScore">
-
+              :totalScore="totalScore"
+              :report="report">
       </result-detail>
     </div>
   </div>
@@ -68,7 +68,8 @@
         queryTime: 3000, //每3秒轮询一次
         limitTime: 120000, //120秒超时
         loading: '',
-        isDetail:false
+        isDetail:false,
+        report:{},//文字报告
       }
     },
     mounted () {
@@ -89,9 +90,13 @@
               let status = res.status
               if (status === 'Success') {
                 clearInterval(this.timer)
+                console.log("kkkkkkkkkkk")
+                console.log(res)
                 this.loading.close()
                 this.chart = res.data
+                console.log(this.chart)
                 this.totalScore = res.totalScore
+                this.report=res.report
                 this.initChart()
               } else {
                 // 不可能的情况
@@ -126,7 +131,7 @@
         // 把配置和数据放这里
         chart.setOption({
           title: {
-            text: this.templateLabel+'总得分： ' + this.totalScore.toFixed(2) + '分',
+            text: this.templateLabel+'总得分： ' + this.totalScore.toFixed(2)+ '分',
             left:'center',
             top:'bottom',
           },
@@ -259,6 +264,8 @@
         setTimeout(() => func(arg), this.queryTime)
       },
       goToDetail(){
+        console.log(this.isDetail)
+        console.log('kkkkkk')
         console.log("查看详细页面结果")
         this.isDetail=!this.isDetail;
       }

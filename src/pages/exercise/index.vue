@@ -118,7 +118,7 @@
         //对应的模板id
         templateId:'',
         //对应的模板label
-        tempLabel:'hhhhhhh'
+        tempLabel:''
 
       }
     },
