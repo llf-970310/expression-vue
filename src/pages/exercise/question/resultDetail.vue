@@ -21,7 +21,7 @@
 
             <div class="item-container">
 
-                <el-tabs v-model="itemName" @tab-click="handleClick" stretch="true">
+                <el-tabs v-model="itemName" @tab-click="handleClick" :stretch="true">
                     <el-tab-pane label="音质" name="first">
                         <div class="item-description">
                             音质并非指你的声音是否好听，也跟你说话的口音没有太大关系。音质的意思，是声音的整体素质，包括你的语速、重音、停顿、节奏等等，是一个多重维度
@@ -190,7 +190,7 @@
     .card-container{
         width:70%;
         margin-left:15%;
-        margin-top:40px;
+        margin-top:5%;
     }
 
     .total{

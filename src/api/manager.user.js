@@ -50,3 +50,10 @@ export function showScore (code) {
         method: 'get'
     })
 }
+
+export function showReport (code) {
+    return request({
+        url: '/account/history-report/'+code,
+        method: 'get'
+    })
+}

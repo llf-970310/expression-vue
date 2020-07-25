@@ -90,7 +90,6 @@
               let status = res.status
               if (status === 'Success') {
                 clearInterval(this.timer)
-                console.log("kkkkkkkkkkk")
                 console.log(res)
                 this.loading.close()
                 this.chart = res.data

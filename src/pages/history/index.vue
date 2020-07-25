@@ -35,6 +35,16 @@
         <el-table-column prop="score_info.结构" label="结构"></el-table-column>
         <el-table-column prop="score_info.逻辑" label="逻辑"></el-table-column>
         <el-table-column prop="score_info.total" label="总得分"></el-table-column>
+        <el-table-column  label="详细评价" >
+          <template slot-scope="scope">
+            <el-button
+                    @click.native.prevent="EvaDetail(scope.$index)"
+                    type="text"
+                    size="small">
+              查看报告
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination align='center'
                      @size-change="handleSizeChange"
@@ -46,6 +56,13 @@
                      :total="historyScoreList.length"
                       style="margin-top: 10px">
       </el-pagination>
+
+      <el-drawer  :visible.sync="evaDetailVisible"  :with-header="false" size="60%" @closed="drawerClosed">
+
+        <result-detail :report="itemReport"
+                       :total-score="itemTotal">
+        </result-detail>
+      </el-drawer>
     </div>
   </d2-container>
 
@@ -54,9 +71,11 @@
 <script>
 import { showScore } from "@api/manager.user";
 import { getPaperTemplates } from '@/api/manager.exam'
+import ResultDetail from "../exercise/question/resultDetail";
+import {showReport} from "../../api/manager.user";
 
 export default {
-  components: {},
+  components: {ResultDetail},
   name: "userInfo",
   data() {
     return {
@@ -70,11 +89,18 @@ export default {
       examTemplate:[],
       //选择了的模板
       selectedTempId: '0',
+      //评价详情的弹出框是否可见
+      evaDetailVisible:false,
+
+      //选择查看详情的测试的总分
+      itemTotal:0,
+      //选择查看评价详情报告
+      itemReport:{},
     };
   },
   mounted() {
-    this.initHistoryScore();
     this.initPaperTemplate();
+    this.initHistoryScore();
   },
   methods: {
 
@@ -121,6 +147,8 @@ export default {
                 }
               }
             }
+            console.log('ppppp');
+            console.log(this.historyScoreList);
             resolve();
           })
           .catch(err => {
@@ -142,13 +170,10 @@ export default {
     //选择的模板改变时
     tempChanged() {
       console.log(this.selectedTempId)
-        this.historyScoreList=[]
       new Promise((resolve, reject) => {
         showScore(this.selectedTempId).then(res => {
                   console.log(res);
                   this.historyScoreList = res.history.reverse();
-                  console.log(this.historyScoreList);
-                  console.log(this.examTemplate)
                   for(let score of this.historyScoreList){
                     for(let template of this.examTemplate){
                       if(template.value===score.paper_tpl_id){
@@ -163,6 +188,7 @@ export default {
                   console.log("err: ", err);
                   if (err.code === 4042) {
                     // 用户暂无历史成绩
+                    this.historyScoreList=[];
                     resolve();
                   } else {
                     reject(err);
@@ -173,6 +199,55 @@ export default {
                 this.historyScoreLoading = false;
               })
               .catch();
+    },
+
+    //查看评价详情
+    EvaDetail(index){
+      this.evaDetailVisible=true;
+        let testId=this.historyScoreList[index].test_id;
+        this.itemTotal=this.historyScoreList[index].score_info.total;
+        showReport(testId).then(res => {
+          this.itemReport=res.report
+
+        //   console.log(res)
+        // let status = res.msg
+        //   console.log(status)
+        // if (status === 'success') {
+        //   console.log(res)
+        //   // this.itemTotal = res.totalScore
+        //
+        //
+        // } else {
+        //   // 不可能的情况
+        //   this.$message({
+        //     message: '系统出了点状况，请联系管理员解决噢～',
+        //     type: 'error',
+        //     duration: 5 * 1000,
+        //     center: true,
+        //     showClose: true
+        //   })
+        // }
+      }).catch(err => {
+        console.log('err: ' + err)
+
+        if (err.code === 5104) {
+          if (this.counter * this.queryTime <= this.limitTime) {
+            this.reTry(() => this.EvaDetail())
+          } else {
+            console.log(
+                    'Try EvaDetail() max times! But the task is still waiting'
+            )
+          }
+        } else {
+          this.errorMessage(err)
+        }
+      })
+    },
+
+    //关闭评价详情窗口
+    drawerClosed(){
+      this.itemTotal=0;
+      this.itemReport={};
     }
   }
 };
@@ -194,4 +269,11 @@ export default {
   padding: 6px;
   color: #909399;
 }
+
+
+</style>
+<style >
+  .el-drawer.rtl{
+    overflow: scroll;
+  }
 </style>
