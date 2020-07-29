@@ -29,8 +29,10 @@ export const constantRouterMap = [
                 path: 'refresh',
                 name: 'refresh',
                 hidden: true,
+                // component:()=>import('system/function/addRoutes')
                 component: {
                     beforeRouteEnter(to, from, next) {
+                        console.log('页面刷新了');
                         next(vm => vm.$router.replace(from.fullPath))
                     },
                     render: h => h()
@@ -101,14 +103,14 @@ const frameOut = [
 /**
  * 错误页面
  */
-const errorPage = [
-    // 404
-    {
-        path: '*',
-        name: '404',
-        component: () => import('@/pages/error-page-404')
-    }
-]
+// const errorPage = [
+//     // 404
+//     {
+//         path: '*',
+//         name: '404',
+//         component: () => import('@/pages/error-page-404')
+//     }
+// ]
 
 // 导出需要显示菜单的
 export const frameInRoutes = frameIn
@@ -117,5 +119,5 @@ export const frameInRoutes = frameIn
 export const routes = [
     ...constantRouterMap,
     ...frameOut,
-    ...errorPage
+    // ...errorPage
 ]
