@@ -7,7 +7,6 @@
                  placeholder="选择评测模板"
                  value=""
                  size="medium"
-                 clearable
                  style="float: right"
                  @change="tempChanged">
         <el-option
@@ -103,7 +102,6 @@ export default {
     this.initHistoryScore();
   },
   methods: {
-
     //获取所有的模板类型
     initPaperTemplate: function () {
       getPaperTemplates().then(res => {
@@ -203,33 +201,14 @@ export default {
 
     //查看评价详情
     EvaDetail(index){
-      this.evaDetailVisible=true;
+        index=(this.currentPage-1)*this.pageSize+index;
         let testId=this.historyScoreList[index].test_id;
         this.itemTotal=this.historyScoreList[index].score_info.total;
         showReport(testId).then(res => {
           this.itemReport=res.report
-
-        //   console.log(res)
-        // let status = res.msg
-        //   console.log(status)
-        // if (status === 'success') {
-        //   console.log(res)
-        //   // this.itemTotal = res.totalScore
-        //
-        //
-        // } else {
-        //   // 不可能的情况
-        //   this.$message({
-        //     message: '系统出了点状况，请联系管理员解决噢～',
-        //     type: 'error',
-        //     duration: 5 * 1000,
-        //     center: true,
-        //     showClose: true
-        //   })
-        // }
+          this.evaDetailVisible=true;
       }).catch(err => {
-        console.log('err: ' + err)
-
+          console.log('err: ' + err)
         if (err.code === 5104) {
           if (this.counter * this.queryTime <= this.limitTime) {
             this.reTry(() => this.EvaDetail())
@@ -239,7 +218,8 @@ export default {
             )
           }
         } else {
-          this.errorMessage(err)
+          console.log(err)
+          console.log('xia')
         }
       })
     },
