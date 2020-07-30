@@ -142,6 +142,7 @@ export default {
             for(let score of this.historyScoreList){
               for(let template of this.examTemplate){
                 if(template.value===score.paper_tpl_id){
+                  console.log('333333333')
                   score.paper_tpl_label=template.label;
                   break;
                 }
