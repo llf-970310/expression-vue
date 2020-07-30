@@ -8,7 +8,7 @@
                  value=""
                  size="medium"
                  style="float: right"
-                 @change="tempChanged">
+                  @change="tempChanged">
         <el-option
                 v-for="item in examTemplate"
                 :key="item.value"
@@ -20,14 +20,14 @@
 
     <div v-loading="historyScoreLoading">
       <el-table
-        v-if="historyScoreList"
-        :data="historyScoreList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        v-if="selectedScoreList"
+        :data="selectedScoreList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         empty-text="该账号没有历史测试记录"
         border
         style="width: 100%"
       >
         <el-table-column prop="test_start_time" label="开始时间" width="170"></el-table-column>
-        <el-table-column prop="paper_tpl_id" label="模板类型" width="170"></el-table-column>
+        <el-table-column prop="paper_tpl_label" label="模板类型" width="170"></el-table-column>
         <el-table-column prop="score_info.主旨" label="主旨"></el-table-column>
         <el-table-column prop="score_info.细节" label="细节"></el-table-column>
         <el-table-column prop="score_info.音质" label="音质"></el-table-column>
@@ -37,7 +37,7 @@
         <el-table-column  label="详细评价" >
           <template slot-scope="scope">
             <el-button
-                    @click.native.prevent="EvaDetail(scope.$index)"
+                    @click.native.prevent="EvaDetail(scope.row)"
                     type="text"
                     size="small">
               查看报告
@@ -52,7 +52,7 @@
                      :page-sizes="[1,5,10,20]"
                      :page-size="pageSize"
                      layout="total, sizes, prev, pager, next, jumper"
-                     :total="historyScoreList.length"
+                     :total="selectedScoreList.length"
                       style="margin-top: 10px">
       </el-pagination>
 
@@ -83,6 +83,7 @@ export default {
       historyScoreLoading: true,
       //所有历史答题成绩记录
       historyScoreList: [],
+      selectedScoreList:[],
       currentPage:1,
       pageSize:10,
       examTemplate:[],
@@ -95,6 +96,7 @@ export default {
       itemTotal:0,
       //选择查看评价详情报告
       itemReport:{},
+
     };
   },
   mounted() {
@@ -140,13 +142,13 @@ export default {
             for(let score of this.historyScoreList){
               for(let template of this.examTemplate){
                 if(template.value===score.paper_tpl_id){
-                  score.paper_tpl_id=template.label;
+                  score.paper_tpl_label=template.label;
                   break;
                 }
               }
             }
-            console.log('ppppp');
-            console.log(this.historyScoreList);
+            this.selectedScoreList=this.historyScoreList;
+            console.log(this.historyScoreList)
             resolve();
           })
           .catch(err => {
@@ -168,42 +170,50 @@ export default {
     //选择的模板改变时
     tempChanged() {
       console.log(this.selectedTempId)
-      new Promise((resolve, reject) => {
-        showScore(this.selectedTempId).then(res => {
-                  console.log(res);
-                  this.historyScoreList = res.history.reverse();
-                  for(let score of this.historyScoreList){
-                    for(let template of this.examTemplate){
-                      if(template.value===score.paper_tpl_id){
-                        score.paper_tpl_id=template.label;
-                        break;
-                      }
-                    }
-                  }
-                  resolve();
-                })
-                .catch(err => {
-                  console.log("err: ", err);
-                  if (err.code === 4042) {
-                    // 用户暂无历史成绩
-                    this.historyScoreList=[];
-                    resolve();
-                  } else {
-                    reject(err);
-                  }
-                });
-            })
-              .then(() => {
-                this.historyScoreLoading = false;
-              })
-              .catch();
+     if(this.selectedTempId==='0'){
+       this.selectedScoreList=this.historyScoreList;
+     }else{
+       this.selectedScoreList=this.historyScoreList.filter(n=>{
+         return  n.paper_tpl_id===this.selectedTempId;
+       })
+     }
+
+
+      // new Promise((resolve, reject) => {
+      //   showScore(this.selectedTempId).then(res => {
+      //             console.log(res);
+      //             this.historyScoreList = res.history.reverse();
+      //             for(let score of this.historyScoreList){
+      //               for(let template of this.examTemplate){
+      //                 if(template.value===score.paper_tpl_id){
+      //                   score.paper_tpl_id=template.label;
+      //                   break;
+      //                 }
+      //               }
+      //             }
+      //             resolve();
+      //           })
+      //           .catch(err => {
+      //             console.log("err: ", err);
+      //             if (err.code === 4042) {
+      //               // 用户暂无历史成绩
+      //               this.historyScoreList=[];
+      //               resolve();
+      //             } else {
+      //               reject(err);
+      //             }
+      //           });
+      //       })
+      //         .then(() => {
+      //           this.historyScoreLoading = false;
+      //         })
+      //         .catch();
     },
 
     //查看评价详情
-    EvaDetail(index){
-        index=(this.currentPage-1)*this.pageSize+index;
-        let testId=this.historyScoreList[index].test_id;
-        this.itemTotal=this.historyScoreList[index].score_info.total;
+    EvaDetail(item){
+        let testId=item.test_id;
+        this.itemTotal=item.score_info.total;
         showReport(testId).then(res => {
           this.itemReport=res.report
           this.evaDetailVisible=true;
