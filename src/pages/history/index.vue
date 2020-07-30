@@ -27,7 +27,13 @@
         style="width: 100%"
       >
         <el-table-column prop="test_start_time" label="开始时间" width="170"></el-table-column>
-        <el-table-column prop="paper_tpl_label" label="模板类型" width="170"></el-table-column>
+        <el-table-column  label="模板类型" width="170">
+          <template slot-scope="paper">
+              <div v-for="item in examTemplate">
+                <span v-if="item.value===paper.row.paper_tpl_id">{{item.label}}</span>
+              </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="score_info.主旨" label="主旨"></el-table-column>
         <el-table-column prop="score_info.细节" label="细节"></el-table-column>
         <el-table-column prop="score_info.音质" label="音质"></el-table-column>
@@ -139,15 +145,15 @@ export default {
             console.log(res);
             this.historyScoreList = res.history.reverse();
             console.log(this.historyScoreList);
-            for(let score of this.historyScoreList){
-              for(let template of this.examTemplate){
-                if(template.value===score.paper_tpl_id){
-                  console.log('333333333')
-                  score.paper_tpl_label=template.label;
-                  break;
-                }
-              }
-            }
+            // for(let score of this.historyScoreList){
+            //   for(let template of this.examTemplate){
+            //     if(template.value===score.paper_tpl_id){
+            //       console.log('333333333')
+            //       score.paper_tpl_label=template.label;
+            //       break;
+            //     }
+            //   }
+            // }
             this.selectedScoreList=this.historyScoreList;
             console.log(this.historyScoreList)
             resolve();
