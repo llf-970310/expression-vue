@@ -39,7 +39,7 @@
                                     <el-input type="password" v-model="registerForm.passwordConfirm"
                                               placeholder="确认密码"></el-input>
                                 </el-form-item>
-                                <el-form-item prop="code" v-if="isTesting==false">
+                                <el-form-item prop="code" v-if="$store.state.isTesting==false">
                                     <el-input type="text" v-model="registerForm.code" placeholder="邀请码" disabled=""></el-input>
                                 </el-form-item>
                                 <el-button size="mini" @click="submit" type="primary" class="button-login">注册
@@ -48,8 +48,8 @@
                         </el-card>
                         <p class="page-login--options"
                            flex="main:justify cross:center" >
-                            <span  v-if="isTesting"></span>
-                            <span  v-if="isTesting==false"><d2-icon name="question-circle" /> 邀请码</span>
+                            <span  v-if="$store.state.isTesting"></span>
+                            <span  v-if="$store.state.isTesting==false"><d2-icon name="question-circle" /> 邀请码</span>
                             <span style="cursor: pointer;margin-right: 5px" @click="toLoginPage">返回登录</span>
 
                         </p>
@@ -83,7 +83,6 @@
         components: {PageLoginFooterCopyright},
         data() {
             return {
-                isTesting:true,
                 timeInterval: null,
                 time: dayjs().format('HH:mm:ss'),
                 registerForm: {

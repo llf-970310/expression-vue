@@ -6,6 +6,9 @@ import d2admin from './modules/d2admin'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  state:{
+    isTesting:true,
+  },
   modules: {
     d2admin
   }
