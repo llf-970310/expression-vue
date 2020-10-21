@@ -121,14 +121,14 @@
           <el-table-column prop="code" label="邀请码" width="160"></el-table-column>
           <el-table-column label="创建时间" width="160">
             <template slot-scope="scope">
-              <span>{{ scope.row['create_time'] | stdtime2localtime }}</span>
+              <span>{{ scope.row['create_time'] }}</span>
             </template>
           </el-table-column>
           <el-table-column label="有效时间" width="360">
             <template slot-scope="scope">
-              <span>{{ scope.row['vip_start_time'] | stdtime2localtime }}</span>
+              <span>{{ scope.row['vip_start_time'] }}</span>
               <span style="margin:0 5px">~</span>
-              <span>{{ scope.row['vip_end_time'] | stdtime2localtime }}</span>
+              <span>{{ scope.row['vip_end_time'] }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="remaining_exam_num" label="初始考试次数" width="120"></el-table-column>
