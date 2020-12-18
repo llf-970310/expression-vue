@@ -22,11 +22,12 @@ export default [
     ]
   },
   {
-    title: '定时任务',
+    title: '系统管理',
     icon: 'folder-o',
     role: 'admin',
     children: [
       {path: '/scheduled-tasks', title: '定时任务管理'},
+      {path: '/system-status', title: '系统运行状态'},
     ]
   },
 

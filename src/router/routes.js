@@ -9,6 +9,7 @@ import exercise from './modules/exercise'
 import info from './modules/info'
 import history from './modules/history'
 import scheduled_tasks from './modules/scheduled-tasks'
+import system_status from './modules/system-status'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
@@ -65,7 +66,8 @@ export const asyncRouterMap = [
     exercise,
     info,
     history,
-    scheduled_tasks
+    scheduled_tasks,
+    system_status
 ]
 
 /**
