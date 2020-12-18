@@ -25,3 +25,10 @@ export function resumeTask(taskId) {
         method: 'post',
     })
 }
+
+export function runTask(taskId) {
+    return request({
+        url: '/apscheduler/jobs/' + taskId + '/run',
+        method: 'post',
+    })
+}

@@ -30,7 +30,7 @@
             <p v-else> 已禁用 </p>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="160">
+        <el-table-column label="操作" width="250">
           <template slot-scope="scope">
             <el-button size="mini" type="danger"
                        v-if="scope.row.next_run_time"
@@ -42,6 +42,10 @@
             </el-button>
             <el-button size="mini" plain type="warning"
                        @click="showEditBox(scope.row)">编辑
+            </el-button>
+            <el-button size="mini" type="primary"
+                       v-if="scope.row.next_run_time"
+                       @click="runTask(scope.row.id)">现在执行
             </el-button>
           </template>
         </el-table-column>
@@ -67,7 +71,7 @@
 </template>
 
 <script>
-    import {queryAllTasks, pauseTask, resumeTask} from '@api/manager.scheduler'
+    import {queryAllTasks, pauseTask, resumeTask, runTask} from '@api/manager.scheduler'
     import { submitEdit } from "@/api/manage.async";
     import Edit from "./edit";
 
@@ -159,7 +163,21 @@
                 this.isEditBoxShown = false;
                 // 未向服务器提交，需服务器开放接口
                 // submitEdit(confJson)
-            }
+            },
+            runTask(taskId) {
+                this.allTasksLoading = true
+                new Promise((resolve, reject) => {
+                    runTask(taskId).then(res => {
+                        console.log(res)
+                        resolve()
+                    }).catch(err => {
+                        console.log('err:', err)
+                        reject(err)
+                    })
+                }).then(() => {
+                    this.getTasks()
+                }).catch()
+            },
         }
     }
 </script>
