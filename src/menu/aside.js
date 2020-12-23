@@ -3,7 +3,7 @@ export default [
   {path: '/index', title: '首页', icon: 'home'},
   {
     title: '权限管理',
-    icon: 'folder-o',
+    icon: 'user',
     role: 'admin',
     children: [
       {path: '/account', title: '账户管理'},
@@ -12,7 +12,7 @@ export default [
   },
   {
     title: '题目管理',
-    icon: 'folder-o',
+    icon: 'question-circle',
     role: 'admin',
     children: [
       {path: '/question', title: '题目管理'},
@@ -22,8 +22,11 @@ export default [
     ]
   },
   {
+    path: '/paper-template', role: 'admin', title: '模板管理',icon:'paste'
+  },
+  {
     title: '系统管理',
-    icon: 'folder-o',
+    icon: 'cog',
     role: 'admin',
     children: [
       {path: '/scheduled-tasks', title: '定时任务管理'},

@@ -10,6 +10,7 @@ import info from './modules/info'
 import history from './modules/history'
 import scheduled_tasks from './modules/scheduled-tasks'
 import system_status from './modules/system-status'
+import paper_template from './modules/paper-template'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
@@ -67,7 +68,8 @@ export const asyncRouterMap = [
     info,
     history,
     scheduled_tasks,
-    system_status
+    system_status,
+    paper_template
 ]
 
 /**

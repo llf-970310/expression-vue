@@ -71,7 +71,7 @@
           style="width: 100%"
           :default-sort="{prop: 'modify', order: 'descending'}"
         >
-          <el-table-column prop="questionId" label="题号" width="50"></el-table-column>
+          <el-table-column prop="questionIndex" label="题号" width="50"></el-table-column>
           <el-table-column
             prop="type"
             label="类别"
@@ -134,7 +134,7 @@ import QuestionDetail from "./detail/index";
 import NewQuestion from "./new/index";
 
 import { validateQuestionId } from "@/libs/validator";
-import { getAllQuestionsOfTypeTwo } from "@api/manager.question";
+import { getAllQuestionsOfTypeTwo, getAllQuestions } from "@api/manager.question";
 
 export default {
   name: "question",
@@ -145,7 +145,7 @@ export default {
   data() {
     return {
       filename: __filename,
-      typeEnum: ["朗读题", "转述题", "问答题"],
+      typeEnum: ["", "朗读题", "转述题", "问答题", "选择", "短文本英文阅读", "长文本英文阅读"],
       labelEnum: ["新闻", "科普", "传记", "社会"],
       modifyEnum: ["紧急", "一般", "稳定"],
       // 题目搜索部分
@@ -192,14 +192,14 @@ export default {
 
       // console.log(this.curPage + "    " + this.curSizePerPage);
       new Promise((resolve, reject) => {
-        getAllQuestionsOfTypeTwo(this.curPage, this.curSizePerPage)
+        getAllQuestions(this.curPage, this.curSizePerPage, null)
           .then(res => {
             // console.log(res);
             this.allQuestions = res.questions;
             // 前端桩数据，随机添加级别、修改紧急度、标签等
             this.allQuestions.forEach(question => {
               question.level = 1 + parseInt(Math.random() * 4); // 1-4
-              question.type = this.typeEnum[1];
+              question.type = this.typeEnum[question.type];
               question.label = this.labelEnum[1];
               question.modify = this.modifyEnum[parseInt(Math.random() * 3)];
               question.diff = parseInt(Math.random() * 3); // 0-2
