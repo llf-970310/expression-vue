@@ -22,11 +22,19 @@ export function getRegeneratedWords(text) {
  * @param page 页数，从 1 开始
  * @param size 每页大小
  */
-export function getAllQuestions(page, size) {
-  return request({
-    url: '/admin/questions?page=' + page + '&size=' + size,
-    method: 'get'
-  })
+export function getAllQuestions(page, size, type) {
+  if (type === null) {
+    return request({
+      url: '/admin/questions?page=' + page + '&size=' + size,
+      method: 'get'
+    })
+  } else {
+    return request({
+      url: '/admin/questions?page=' + page + '&size=' + size + '&type=' + type,
+      method: 'get'
+    })
+  }
+
 }
 
 /**
